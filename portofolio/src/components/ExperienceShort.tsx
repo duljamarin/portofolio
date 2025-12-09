@@ -3,19 +3,19 @@ import '../styles/main.css';
 
 const experiences = [
   {
-    title: 'Backend Software Engineer',
+    title: 'Backend Software Engineer (Contractor)',
     company: 'ADUS Technologies s.r.o ',
     period: '04/2025 – 10/2025',
     summary: 'Delivered core backend features for an AI-driven trading platform. Built real-time trading signal processing workflows, subscription billing, and multi-channel notifications.'
   },
   {
-    title: 'Backend Software Engineer',
+    title: 'Backend Software Engineer (Contractor)',
     company: 'Noema Consulting',
     period: '08/2024 – 02/2025',
     summary: 'Contributed to a large-scale banking system with 240+ microservices. Designed REST/GraphQL APIs and improved system stability.'
   },
   {
-    title: 'Backend Java Developer',
+    title: 'Backend Java Developer (Contractor)',
     company: 'Candidatis GmbH',
     period: '05/2023 – 12/2023',
     summary: 'Maintained and optimized JobAd portal. Enhanced web crawler and mentored junior developer.'
