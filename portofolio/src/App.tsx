@@ -23,9 +23,9 @@ const App: React.FC = () => {
       <ContactButtons />
       <Home />
       <ExperienceShort />
+      <Testimonials /> 
       <HardSkills />
       <Certifications />
-      <Testimonials /> 
       <SoftSkills />
       <Education />
       <SocialCards />
