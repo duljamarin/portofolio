@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import '../styles/main.css';
 
 const aboutText = [
-  "Hi, I'm Marin Dulja — a full-stack software engineer focused on building scalable, reliable, and modern web applications.",
+  "Hi, I'm Marin Dulja, a full-stack software engineer focused on building scalable, reliable, and modern web applications.",
   "I work with Java, Kotlin, Spring Boot and React.js to deliver solutions that are fast, maintainable, and built to last."
 ];
 
