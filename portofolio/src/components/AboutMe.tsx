@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import '../styles/main.css';
 
 const aboutText = [
-  "Hi, I'm Marin Dulja, a results-driven software engineer passionate about building impactful digital experiences.",
-  "My expertise covers full-stack and backend development, modern web technologies, and delivering high-quality solutions across a wide range of projects."
+  "Hi, I'm Marin Dulja — a full-stack software engineer focused on building scalable, reliable, and modern web applications.",
+  "I work with Java, Kotlin, Spring Boot and React.js to deliver solutions that are fast, maintainable, and built to last."
 ];
 
 const TYPING_SPEED = 45; // ms per character (slower)
