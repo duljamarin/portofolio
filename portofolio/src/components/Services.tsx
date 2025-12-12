@@ -60,7 +60,7 @@ export default function Services() {
           </a>
           <a
             className="services-btn services-btn-secondary"
-            href="https://wa.me/355692084861?text=Hi%20Marin,%20I%20saw%20your%20portfolio%20and%20I'm%20interested%20in%20a%20website."
+            href="https://wa.me/+355684448934"
             target="_blank"
             rel="noopener noreferrer"
           >
