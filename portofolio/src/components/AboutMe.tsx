@@ -3,9 +3,8 @@ import '../styles/main.css';
 
 const aboutText = [
   "Hi, I'm Marin Dulja, a full-stack software engineer focused on building scalable, reliable, and modern web applications.",
-  "I work with Java, Kotlin, Spring Boot and React.js to deliver solutions that are fast, maintainable, and built to last."
+  "Using Java, Kotlin, Spring Boot, and React.js, I help businesses turn ideas into fast and maintainable web solutions."
 ];
-
 const TYPING_SPEED = 45; // ms per character (slower)
 
 const AboutMe: React.FC = () => {
