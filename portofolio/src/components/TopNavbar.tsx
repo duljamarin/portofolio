@@ -3,6 +3,7 @@ import '../styles/main.css';
 
 const sections = [
   { label: 'About me', href: '#about' },
+  { label: 'Services', href: '#services' },
   { label: 'Projects', href: '#projects' },
   { label: 'Experience', href: '#experience' },
   { label: 'Testimonials', href: '#testimonials' },

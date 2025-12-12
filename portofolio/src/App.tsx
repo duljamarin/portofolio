@@ -8,9 +8,9 @@ import SocialCards from './components/SocialCards';
 import SoftSkills from './components/SoftSkills';
 import ExperienceShort from './components/ExperienceShort';
 import HardSkills from './components/HardSkills';
-import ContactButtons from './components/ContactButtons'; 
 import Testimonials from './components/Testimonials';
 import Certifications from './components/Certifications';
+import Services from './components/Services';
 
 const App: React.FC = () => {
   useEffect(() => {
@@ -20,7 +20,7 @@ const App: React.FC = () => {
     <div>
       <TopNavbar />
       <AboutMe />
-      <ContactButtons />
+      <Services />
       <Home />
       <ExperienceShort />
       <Testimonials /> 
