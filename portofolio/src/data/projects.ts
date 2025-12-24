@@ -37,7 +37,7 @@ export const projects: Project[] = [
     tags: ['React', 'Tailwind', 'Supabase', 'Full-Stack'],
     type: 'fullstack',
     badge: {
-      text: 'Featured on FIP.al • Website with 3000+ Daily Views',
+      text: 'Featured on fip.al • Website with 3000+ Daily Views',
       url: 'https://www.fip.al/pages/mjete-financiare.html',
       color: 'green',
     },
