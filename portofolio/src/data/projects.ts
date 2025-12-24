@@ -7,7 +7,7 @@ export type Project = {
   gallery?: string[];
   links: { label: string; url: string }[];
   tags: string[];
-  type: 'main' | 'frontend-learning' | 'fullstack' | 'contractor';
+  type: 'main' | 'fullstack' | 'contractor';
   badge?: {
     text: string;
     url?: string;
@@ -53,16 +53,6 @@ export const projects: Project[] = [
     ],
     tags: ['React', 'CSS', 'Supabase'],
     type: 'fullstack',
-  },
-  {
-    title: 'Trattoria Verde Restaurant Page',
-    description:
-      'A stylish contact page for a restaurant, built to practice frontend skills and UI/UX. Features a modern form and responsive design.',
-    links: [
-      { label: 'Live Site', url: 'https://trattoriaverde.netlify.app/contact.html' }
-    ],
-    tags: ['HTML', 'CSS', 'JavaScript', 'Frontend'],
-    type: 'frontend-learning',
   },
   // ...existing main projects from your portfolio...
 
