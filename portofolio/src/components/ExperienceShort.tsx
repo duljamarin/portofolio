@@ -5,7 +5,7 @@ const experiences = [
   {
     title: 'Backend Software Engineer (Contractor)',
     company: 'ADUS Technologies s.r.o ',
-    period: '04/2025 – 10/2025',
+    period: '04/2025 – 11/2025',
     summary: 'Delivered core backend features for an AI-driven trading platform. Built real-time trading signal processing workflows, subscription billing, and multi-channel notifications.'
   },
   {
