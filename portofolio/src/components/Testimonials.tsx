@@ -46,6 +46,8 @@ export default function Testimonials() {
 					gap: "2.2rem",
 					justifyContent: "center",
 					flexWrap: "wrap",
+					margin: "0 auto",
+					maxWidth: "100%",
 				}}
 			>
 				{testimonials.map((t, idx) => (

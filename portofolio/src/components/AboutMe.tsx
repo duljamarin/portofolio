@@ -52,7 +52,7 @@ const AboutMe: React.FC = () => {
             <p
               key={i}
               className="about-text about-animate"
-              style={{ color: 'var(--text-soft)', fontSize: '1.35rem', lineHeight: 1.6, minHeight: '2.2em' }}
+              style={{ color: 'var(--text-soft)', fontSize: '1.35rem', lineHeight: 1.7, minHeight: '2.2em', textAlign: 'left' }}
             >
               {line}
               {i === activeLine && line.length < aboutText[i].length && <span className="blinking-cursor">|</span>}

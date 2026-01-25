@@ -6,7 +6,7 @@ import AnimationWrapper from '../components/AnimationWrapper';
 const Home: React.FC = () => {
    return (
       <AnimationWrapper>
-         <section id="projects" className="container">
+         <section id="projects" className="container" style={{ textAlign: 'center' }}>
             <h2 className="fancy" style={{color: '#fff'}}>Projects</h2>
             <div className="project-grid">
                {projects.map((project) => (

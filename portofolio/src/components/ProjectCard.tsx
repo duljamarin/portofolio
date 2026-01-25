@@ -33,7 +33,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
       <>
          <motion.div
             ref={cardRef}
-            className={`project-card${zoomed ? ' zoomed-inplace-card' : ''}`}
+            className={`project-card${zoomed ? ' zoomed-inplace-card' : ''}${project.gallery && project.gallery.length > 0 ? ' project-card-featured' : ''}`}
             initial="hidden"
             animate="visible"
             variants={cardVariants}
@@ -42,24 +42,6 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
             onClick={handleCardClick}
             style={{ cursor: 'pointer' }}
          >
-            {project.gallery && project.gallery.length > 0 ? (
-               <div className="project-gallery" onClick={handleGalleryOpen}>
-                  <div className="gallery-container">
-                     <img
-                        src={project.gallery[0]}
-                        alt={`${project.title} - Featured screenshot`}
-                        loading="lazy"
-                     />
-                     <div className="gallery-overlay">
-                        <span className="gallery-hint">View Gallery</span>
-                     </div>
-                  </div>
-                  {project.gallery.length > 1 && (
-                     <div className="gallery-badge">{project.gallery.length}</div>
-                  )}
-               </div>
-            ) : null}
-         
          {/* Featured Badge */}
          {project.badge && (
             <div style={{
@@ -118,8 +100,28 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
             fontWeight: 800,
             fontSize: '1.55rem',
             letterSpacing: '0.02em',
-            textShadow: '0 0 8px rgba(79,248,210,0.25)'
+            textShadow: '0 0 8px rgba(79,248,210,0.25)',
+            marginBottom: '1rem'
          }}>{project.title}</div>
+
+            {project.gallery && project.gallery.length > 0 ? (
+               <div className="project-gallery-featured" onClick={handleGalleryOpen}>
+                  <div className="gallery-container-featured">
+                     <img
+                        src={project.gallery[0]}
+                        alt={`${project.title} - Featured screenshot`}
+                        loading="lazy"
+                     />
+                     <div className="gallery-overlay">
+                        <span className="gallery-hint">🖼️ Click to View Full Gallery</span>
+                     </div>
+                  </div>
+                  {project.gallery.length > 1 && (
+                     <div className="gallery-badge-featured">{project.gallery.length} Images</div>
+                  )}
+               </div>
+            ) : null}
+
          <div className="project-desc" style={{
             fontFamily: 'Montserrat, Inter, Segoe UI, Roboto, Arial, sans-serif',
             color: 'var(--text-main)',

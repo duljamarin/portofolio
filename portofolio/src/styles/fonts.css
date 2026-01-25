@@ -4,8 +4,8 @@
 /* Base text */
 body {
   font-family: 'Inter', Arial, Helvetica, sans-serif;
-  font-size: 1.15rem;
-  line-height: 1.7;
+  font-size: 1.1rem;
+  line-height: 1.8;
   color: #e8ecf3;
   background: #0b0f16;
   margin: 0;
@@ -24,13 +24,15 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Section title style */
 h1 {
-  font-size: 3rem;
+  font-size: 3.2rem;
+  margin-bottom: 1.2rem;
 }
 h2 {
-  font-size: 2.4rem;
+  font-size: 2.6rem;
+  margin-bottom: 1rem;
 }
 h3 {
-  font-size: 1.9rem;
+  font-size: 2rem;
 }
 
 /* Fancy hero title (gradient neon) */
