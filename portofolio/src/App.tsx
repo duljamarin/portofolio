@@ -44,12 +44,19 @@ const App: React.FC = () => {
 
       <Navbar />
       <Hero />
+      <div className="section-divider" />
       <About />
+      <div className="section-divider" />
       <Projects />
+      <div className="section-divider" />
       <Experience />
+      <div className="section-divider" />
       <Skills />
+      <div className="section-divider" />
       <TestimonialsSection />
+      <div className="section-divider" />
       <EducationSection />
+      <div className="section-divider" />
       <Contact />
       <Footer />
     </div>

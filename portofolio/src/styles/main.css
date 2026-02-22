@@ -2,18 +2,16 @@
    DESIGN SYSTEM — CSS Variables
    ============================================ */
 :root {
-  --primary: #00FF88;
-  --primary-dark: #00C96A;
+  --primary: #3FB950;
+  --primary-dark: #2EA043;
+  --primary-deep: #014421;
   --bg: #080C10;
   --surface: #0D1117;
   --surface-elevated: #161B22;
   --text-primary: #E6EDF3;
   --text-secondary: #9BA4AE;
-  --glow: rgba(0, 255, 136, 0.15);
-  --glow-strong: rgba(0, 255, 136, 0.3);
-  --glow-subtle: rgba(0, 255, 136, 0.08);
-  --border-subtle: rgba(0, 255, 136, 0.1);
-  --border-hover: rgba(0, 255, 136, 0.3);
+  --border-subtle: rgba(63, 185, 80, 0.18);
+  --border-hover: rgba(63, 185, 80, 0.45);
   --radius: 12px;
   --radius-lg: 20px;
   --radius-pill: 999px;
@@ -55,7 +53,7 @@ a:hover {
 }
 
 ::selection {
-  background: rgba(0, 255, 136, 0.2);
+  background: rgba(63, 185, 80, 0.2);
   color: var(--text-primary);
 }
 
@@ -139,7 +137,7 @@ a:hover {
    ============================================ */
 .section {
   padding: 64px 24px;
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
 }
 
@@ -223,7 +221,6 @@ a:hover {
   height: 4px;
   background: var(--primary);
   border-radius: 50%;
-  box-shadow: 0 0 8px var(--primary), 0 0 16px var(--glow);
 }
 
 /* Mobile hamburger */
@@ -294,7 +291,6 @@ a:hover {
 .nav-mobile-overlay .mobile-nav-link:hover,
 .nav-mobile-overlay .mobile-nav-link.active {
   color: var(--primary);
-  text-shadow: 0 0 20px var(--glow);
 }
 
 @media (max-width: 768px) {
@@ -320,12 +316,13 @@ a:hover {
    ============================================ */
 .hero {
   position: relative;
-  min-height: 100vh;
+  min-height: 85vh;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  padding: 100px 24px 60px;
+  padding: 80px 24px 40px;
+  background: radial-gradient(ellipse 80% 60% at 50% 40%, rgba(63, 185, 80, 0.04) 0%, transparent 70%);
 }
 
 .hero-canvas {
@@ -346,7 +343,6 @@ a:hover {
   opacity: 0.6;
   z-index: 1;
   animation: scanDown 3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  box-shadow: 0 0 15px var(--primary), 0 0 30px var(--glow);
 }
 
 @keyframes scanDown {
@@ -359,7 +355,7 @@ a:hover {
   position: relative;
   z-index: 2;
   text-align: center;
-  max-width: 900px;
+  max-width: 1000px;
 }
 
 .hero-name {
@@ -370,7 +366,6 @@ a:hover {
   letter-spacing: -0.03em;
   line-height: 1.05;
   margin-bottom: 1rem;
-  text-shadow: 0 0 40px var(--glow), 0 0 80px rgba(0, 255, 136, 0.08);
 }
 
 /* Typewriter effect */
@@ -411,7 +406,7 @@ a:hover {
   color: var(--text-secondary);
   line-height: 1.7;
   margin-bottom: 2.5rem;
-  max-width: 640px;
+  max-width: 720px;
   margin-left: auto;
   margin-right: auto;
 }
@@ -441,7 +436,6 @@ a:hover {
 .btn-primary:hover {
   background: var(--primary-dark);
   border-color: var(--primary-dark);
-  box-shadow: 0 0 20px var(--glow), 0 8px 24px rgba(0, 255, 136, 0.15);
   transform: scale(1.03);
   color: var(--bg);
 }
@@ -461,10 +455,20 @@ a:hover {
 }
 
 .btn-ghost:hover {
-  background: rgba(0, 255, 136, 0.08);
-  box-shadow: 0 0 20px var(--glow);
+  background: rgba(63, 185, 80, 0.08);
   transform: scale(1.03);
   color: var(--primary);
+}
+
+/* ============================================
+   SECTION DIVIDERS
+   ============================================ */
+.section-divider {
+  width: 100%;
+  max-width: 200px;
+  height: 1px;
+  margin: 0 auto;
+  background: linear-gradient(90deg, transparent, var(--border-hover), transparent);
 }
 
 /* ============================================
@@ -475,10 +479,10 @@ a:hover {
 }
 
 .about-container {
-  max-width: 1100px;
+  max-width: 1300px;
   margin: 0 auto;
   display: grid;
-  grid-template-columns: 300px 1fr;
+  grid-template-columns: 320px 1fr;
   gap: 4rem;
   align-items: start;
 }
@@ -548,17 +552,22 @@ a:hover {
 
 .stat-number {
   font-family: var(--font-heading);
-  font-size: 3rem;
+  font-size: 2.6rem;
   font-weight: 700;
   color: var(--primary);
-  line-height: 1.2;
-  text-shadow: 0 0 20px var(--glow);
+  line-height: 1;
+  background: rgba(63, 185, 80, 0.06);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius);
+  padding: 12px 20px;
+  display: inline-block;
+  min-width: 80px;
 }
 
 .stat-label {
   font-size: 0.95rem;
   color: var(--text-secondary);
-  margin-top: 0.25rem;
+  margin-top: 0.5rem;
 }
 
 /* Tech stack pills */
@@ -574,7 +583,7 @@ a:hover {
   font-size: 0.9rem;
   font-weight: 500;
   color: var(--primary);
-  background: rgba(0, 255, 136, 0.06);
+  background: rgba(63, 185, 80, 0.06);
   border: 1px solid var(--border-subtle);
   padding: 6px 14px;
   border-radius: var(--radius-pill);
@@ -582,9 +591,8 @@ a:hover {
 }
 
 .tech-pill:hover {
-  background: rgba(0, 255, 136, 0.12);
+  background: rgba(63, 185, 80, 0.12);
   border-color: var(--border-hover);
-  box-shadow: 0 0 10px var(--glow);
 }
 
 @media (max-width: 768px) {
@@ -610,7 +618,7 @@ a:hover {
    ============================================ */
 .projects-section {
   padding: 64px 24px;
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
 }
 
@@ -623,7 +631,7 @@ a:hover {
 
 .project-card {
   background: var(--surface);
-  border: 1px solid var(--glow-subtle);
+  border: 1px solid var(--border-subtle);
   border-radius: var(--radius);
   padding: 1.75rem;
   transition: var(--transition-slow);
@@ -633,9 +641,13 @@ a:hover {
 }
 
 .project-card:hover {
-  border-color: var(--border-hover);
+  border-color: var(--primary);
   transform: translateY(-4px);
-  box-shadow: 0 8px 32px rgba(0, 255, 136, 0.08), 0 0 0 1px var(--border-hover);
+}
+
+/* Featured project cards get a green left accent */
+.project-card:has(.project-badge.featured) {
+  border-left: 3px solid var(--primary);
 }
 
 .project-card-icon {
@@ -656,13 +668,13 @@ a:hover {
   font-weight: 500;
   padding: 3px 10px;
   border-radius: var(--radius-pill);
-  background: rgba(0, 255, 136, 0.06);
+  background: rgba(63, 185, 80, 0.06);
   color: var(--primary);
   border: 1px solid var(--border-subtle);
 }
 
 .project-badge.featured {
-  background: linear-gradient(135deg, rgba(0, 255, 136, 0.15), rgba(0, 201, 106, 0.1));
+  background: linear-gradient(135deg, rgba(63, 185, 80, 0.15), rgba(46, 160, 67, 0.1));
   color: var(--primary);
   border-color: var(--border-hover);
 }
@@ -782,7 +794,6 @@ a:hover {
 
 .view-all-btn:hover {
   border-color: var(--primary);
-  box-shadow: 0 0 20px var(--glow);
   transform: scale(1.03);
   color: var(--primary);
 }
@@ -798,7 +809,7 @@ a:hover {
    ============================================ */
 .experience-section {
   padding: 64px 24px;
-  max-width: 900px;
+  max-width: 1100px;
   margin: 0 auto;
 }
 
@@ -833,7 +844,6 @@ a:hover {
   height: 12px;
   background: var(--primary);
   border-radius: 50%;
-  box-shadow: 0 0 12px var(--primary), 0 0 24px var(--glow);
   z-index: 1;
 }
 
@@ -842,9 +852,9 @@ a:hover {
 }
 
 @keyframes nodePulse {
-  0% { transform: scale(1); box-shadow: 0 0 12px var(--primary); }
-  50% { transform: scale(1.4); box-shadow: 0 0 24px var(--primary), 0 0 40px var(--glow); }
-  100% { transform: scale(1); box-shadow: 0 0 12px var(--primary); }
+  0% { transform: scale(1); }
+  50% { transform: scale(1.4); }
+  100% { transform: scale(1); }
 }
 
 .timeline-date {
@@ -894,7 +904,7 @@ a:hover {
    ============================================ */
 .skills-section {
   padding: 64px 24px;
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
 }
 
@@ -907,7 +917,7 @@ a:hover {
 
 .bento-card {
   background: var(--surface);
-  border: 1px solid var(--glow-subtle);
+  border: 1px solid var(--border-subtle);
   border-radius: var(--radius);
   padding: 1.5rem;
   transition: var(--transition-slow);
@@ -919,7 +929,6 @@ a:hover {
 .bento-card:hover {
   border-color: var(--border-hover);
   transform: scale(1.02);
-  box-shadow: 0 0 20px rgba(0, 255, 136, 0.06);
 }
 
 /* Card size variants */
@@ -935,8 +944,9 @@ a:hover {
 .bento-card.anchor {
   grid-column: span 2;
   grid-row: span 2;
-  background: linear-gradient(135deg, var(--surface) 0%, rgba(0, 255, 136, 0.03) 100%);
-  border-color: var(--border-hover);
+  background: linear-gradient(135deg, var(--surface) 0%, rgba(63, 185, 80, 0.06) 100%);
+  border-color: var(--primary);
+  border-width: 1px 1px 1px 3px;
 }
 
 .bento-card-icon {
@@ -946,10 +956,9 @@ a:hover {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(0, 255, 136, 0.08);
+  background: rgba(63, 185, 80, 0.08);
   border-radius: 10px;
   color: var(--primary);
-  text-shadow: 0 0 12px var(--glow);
 }
 
 .bento-card-title {
@@ -977,7 +986,7 @@ a:hover {
 
 .bento-skill:hover {
   color: var(--primary);
-  background: rgba(0, 255, 136, 0.08);
+  background: rgba(63, 185, 80, 0.08);
 }
 
 @media (max-width: 1024px) {
@@ -1005,7 +1014,7 @@ a:hover {
    ============================================ */
 .testimonials-section {
   padding: 64px 24px;
-  max-width: 1100px;
+  max-width: 1400px;
   margin: 0 auto;
 }
 
@@ -1018,7 +1027,7 @@ a:hover {
 
 .testimonial-card {
   background: var(--surface);
-  border: 1px solid var(--glow-subtle);
+  border: 1px solid var(--border-subtle);
   border-radius: var(--radius);
   padding: 2rem;
   transition: var(--transition-slow);
@@ -1026,7 +1035,6 @@ a:hover {
 
 .testimonial-card:hover {
   border-color: var(--border-hover);
-  box-shadow: 0 4px 20px rgba(0, 255, 136, 0.06);
 }
 
 .testimonial-quote-icon {
@@ -1084,7 +1092,7 @@ a:hover {
    ============================================ */
 .education-section {
   padding: 56px 24px;
-  max-width: 900px;
+  max-width: 1100px;
   margin: 0 auto;
 }
 
@@ -1097,7 +1105,7 @@ a:hover {
 
 .education-card {
   background: var(--surface);
-  border: 1px solid var(--glow-subtle);
+  border: 1px solid var(--border-subtle);
   border-radius: var(--radius);
   padding: 1.75rem;
   transition: var(--transition-slow);
@@ -1108,7 +1116,6 @@ a:hover {
 .education-card:hover {
   border-color: var(--border-hover);
   transform: translateY(-2px);
-  box-shadow: 0 4px 16px rgba(0, 255, 136, 0.06);
 }
 
 .education-card h3 {
@@ -1137,7 +1144,7 @@ a:hover {
    ============================================ */
 .certifications-section {
   padding: 56px 24px;
-  max-width: 900px;
+  max-width: 1100px;
   margin: 0 auto;
 }
 
@@ -1150,7 +1157,7 @@ a:hover {
 
 .certification-card {
   background: var(--surface);
-  border: 1px solid var(--glow-subtle);
+  border: 1px solid var(--border-subtle);
   border-radius: var(--radius);
   padding: 2rem;
   text-align: center;
@@ -1160,7 +1167,6 @@ a:hover {
 
 .certification-card:hover {
   border-color: var(--border-hover);
-  box-shadow: 0 4px 20px rgba(0, 255, 136, 0.06);
 }
 
 .certification-card img {
@@ -1185,7 +1191,7 @@ a:hover {
   font-size: 1rem;
   font-weight: 600;
   color: var(--primary);
-  background: rgba(0, 255, 136, 0.06);
+  background: rgba(63, 185, 80, 0.06);
   border: 1px solid var(--border-subtle);
   padding: 8px 20px;
   border-radius: var(--radius-pill);
@@ -1194,9 +1200,8 @@ a:hover {
 }
 
 .cert-verify-btn:hover {
-  background: rgba(0, 255, 136, 0.12);
+  background: rgba(63, 185, 80, 0.12);
   border-color: var(--primary);
-  box-shadow: 0 0 12px var(--glow);
   color: var(--primary);
 }
 
@@ -1208,24 +1213,8 @@ a:hover {
   text-align: center;
   position: relative;
   overflow: hidden;
-}
-
-.contact-glow {
-  position: absolute;
-  width: 500px;
-  height: 500px;
-  border-radius: 50%;
-  background: radial-gradient(circle, var(--glow) 0%, transparent 70%);
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  pointer-events: none;
-  animation: contactPulse 4s ease-in-out infinite;
-}
-
-@keyframes contactPulse {
-  0%, 100% { opacity: 0.3; transform: translate(-50%, -50%) scale(1); }
-  50% { opacity: 0.5; transform: translate(-50%, -50%) scale(1.1); }
+  background: var(--surface);
+  border-top: 1px solid var(--border-subtle);
 }
 
 .contact-content {
@@ -1268,7 +1257,6 @@ a:hover {
 
 .contact-email-btn:hover {
   background: var(--primary-dark);
-  box-shadow: 0 0 30px var(--glow), 0 0 60px rgba(0, 255, 136, 0.1);
   transform: scale(1.03);
   color: var(--bg);
 }
@@ -1299,7 +1287,6 @@ a:hover {
 
 .contact-whatsapp-btn:hover {
   border-color: var(--primary);
-  box-shadow: 0 0 16px var(--glow);
   color: var(--primary);
 }
 
@@ -1347,8 +1334,7 @@ a:hover {
 .contact-social-link:hover {
   border-color: var(--primary);
   color: var(--primary);
-  box-shadow: 0 0 16px var(--glow);
-  background: rgba(0, 255, 136, 0.06);
+  background: rgba(63, 185, 80, 0.06);
 }
 
 .contact-social-link svg {
@@ -1385,7 +1371,7 @@ a:hover {
   position: fixed;
   width: 32px;
   height: 32px;
-  border: 1.5px solid rgba(0, 255, 136, 0.4);
+  border: 1.5px solid rgba(63, 185, 80, 0.4);
   border-radius: 50%;
   pointer-events: none;
   z-index: 9998;
@@ -1404,10 +1390,33 @@ a:hover {
    ============================================ */
 .footer {
   text-align: center;
-  padding: 2rem 24px;
-  font-size: 1rem;
+  padding: 2.5rem 24px;
+  background: var(--surface);
+  border-top: 1px solid var(--border-subtle);
+}
+
+.footer-back-to-top {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  color: var(--primary);
+  text-decoration: none;
+  padding: 8px 20px;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-pill);
+  margin-bottom: 1.25rem;
+  transition: var(--transition);
+}
+
+.footer-back-to-top:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.footer-copy {
+  font-size: 0.9rem;
   color: var(--text-secondary);
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  margin: 0;
 }
 
 /* ============================================
@@ -1495,7 +1504,7 @@ a:hover {
 }
 
 .modal-nav:hover {
-  background: rgba(0, 255, 136, 0.1);
+  background: rgba(63, 185, 80, 0.1);
   border-color: var(--primary);
   color: var(--primary);
 }
@@ -1525,7 +1534,6 @@ a:hover {
 
 .modal-dot.active {
   background: var(--primary);
-  box-shadow: 0 0 8px var(--primary);
 }
 
 .modal-counter {
@@ -1548,4 +1556,4 @@ a:hover {
    ============================================ */
 .text-center { text-align: center; }
 .text-primary-color { color: var(--primary); }
-.text-glow { text-shadow: 0 0 20px var(--glow), 0 0 40px rgba(0, 255, 136, 0.08); }
+.text-glow { color: var(--primary); }

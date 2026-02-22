@@ -3,9 +3,6 @@ import React from 'react';
 const Contact: React.FC = () => {
   return (
     <section id="contact" className="contact-section">
-      {/* Pulsing background glow */}
-      <div className="contact-glow" />
-
       <div className="contact-content">
         <h2 className="contact-heading fade-up">
           Let's Build Something Together

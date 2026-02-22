@@ -204,8 +204,8 @@ export function initDotGrid(canvas: HTMLCanvasElement): () => void {
   let rafId: number;
   const dotSpacing = 30;
   const dotBaseSize = 1.5;
-  const dotBaseAlpha = 0.12;
-  const interactRadius = 120;
+  const dotBaseAlpha = 0.18;
+  const interactRadius = 140;
 
   function resize() {
     const rect = canvas.parentElement?.getBoundingClientRect();
@@ -230,7 +230,7 @@ export function initDotGrid(canvas: HTMLCanvasElement): () => void {
 
         ctx.beginPath();
         ctx.arc(x, y, size, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(0, 255, 136, ${alpha})`;
+        ctx.fillStyle = `rgba(63, 185, 80, ${alpha})`;
         ctx.fill();
       }
     }
@@ -305,11 +305,10 @@ export function initTimelineNodes(): void {
    ============================================ */
 export function printConsoleEasterEgg(): void {
   const styles = [
-    'color: #00FF88',
+    'color: #3FB950',
     'font-size: 14px',
     'font-family: monospace',
     'font-weight: bold',
-    'text-shadow: 0 0 10px rgba(0, 255, 136, 0.5)',
   ].join(';');
 
   const art = `
@@ -322,7 +321,7 @@ export function printConsoleEasterEgg(): void {
                                             |__/
 
   Thanks for inspecting! 👋
-  GitHub: https://github.com/freudmarin
+  GitHub: https://github.com/duljamarin
   Email: duljamarin@gmail.com
 
   Built with React + TypeScript + pure CSS animations
