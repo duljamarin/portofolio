@@ -1,34 +1,56 @@
 import React, { useEffect } from 'react';
-import TopNavbar from './components/TopNavbar';
+import Navbar from './components/Navbar';
+import Hero from './components/Hero';
+import About from './components/About';
+import Projects from './components/Projects';
+import Experience from './components/Experience';
+import Skills from './components/Skills';
+import TestimonialsSection from './components/TestimonialsSection';
+import EducationSection from './components/EducationSection';
+import Contact from './components/Contact';
 import Footer from './components/Footer';
-import Home from './pages/Home';
-import AboutMe from './components/AboutMe';
-import Education from './components/Education';
-import SocialCards from './components/SocialCards';
-import SoftSkills from './components/SoftSkills';
-import ExperienceShort from './components/ExperienceShort';
-import HardSkills from './components/HardSkills';
-import Testimonials from './components/Testimonials';
-import Certifications from './components/Certifications';
-import Services from './components/Services';
+import {
+  initScrollAnimations,
+  initCounters,
+  initCustomCursor,
+  initTimelineNodes,
+  printConsoleEasterEgg,
+} from './animations';
 
 const App: React.FC = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
+
+    // Initialize all animations after DOM is ready
+    const timer = setTimeout(() => {
+      initScrollAnimations();
+      initCounters();
+      initTimelineNodes();
+    }, 100);
+
+    const cursorCleanup = initCustomCursor();
+    printConsoleEasterEgg();
+
+    return () => {
+      clearTimeout(timer);
+      cursorCleanup?.();
+    };
   }, []);
+
   return (
     <div>
-      <TopNavbar />
-      <AboutMe />
-      <Services />
-      <Home />
-      <ExperienceShort />
-      <Testimonials /> 
-      <HardSkills />
-      <Certifications />
-      <SoftSkills />
-      <Education />
-      <SocialCards />
+      {/* Loading bar */}
+      <div className="loading-bar" />
+
+      <Navbar />
+      <Hero />
+      <About />
+      <Projects />
+      <Experience />
+      <Skills />
+      <TestimonialsSection />
+      <EducationSection />
+      <Contact />
       <Footer />
     </div>
   );

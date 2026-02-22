@@ -1,81 +1,37 @@
-/* Import Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Montserrat:wght@700;800;900&display=swap');
+/* Fonts loaded via <link> in index.html for fast rendering */
+
+/* Boost root font-size so all rem units scale up */
+html {
+  font-size: 18px;
+}
 
 /* Base text */
 body {
-  font-family: 'Inter', Arial, Helvetica, sans-serif;
-  font-size: 1.1rem;
-  line-height: 1.8;
-  color: #e8ecf3;
-  background: #0b0f16;
+  font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 1.15rem;
+  line-height: 1.7;
+  color: var(--text-primary);
+  background: var(--bg);
   margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* General headings */
+/* Headings */
 h1, h2, h3, h4, h5, h6 {
-  font-family: 'Montserrat', 'Inter', sans-serif;
-  font-weight: 800;
-  letter-spacing: 0.02em;
-  color: #e8ecf3;
+  font-family: 'Sora', 'Outfit', sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
   margin-top: 0;
-  margin-bottom: 0.75em;
-  text-shadow: 0 0 12px rgba(79,248,210,0.20);
+  margin-bottom: 0.5em;
 }
 
-/* Section title style */
-h1 {
-  font-size: 3.2rem;
-  margin-bottom: 1.2rem;
-}
-h2 {
-  font-size: 2.6rem;
-  margin-bottom: 1rem;
-}
-h3 {
-  font-size: 2rem;
-}
+h1 { font-size: clamp(3.2rem, 6vw, 5rem); }
+h2 { font-size: clamp(2.4rem, 5vw, 3.5rem); }
+h3 { font-size: clamp(1.5rem, 3vw, 2.2rem); }
 
-/* Fancy hero title (gradient neon) */
-.fancy {
-  font-family: 'Montserrat', 'Inter', sans-serif;
-  font-weight: 900;
-  font-size: 3rem;
-  background: linear-gradient(90deg, #4ff8d2, #73f7ff);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  text-shadow: 0 0 16px rgba(79,248,210,0.3);
-  letter-spacing: 0.04em;
-  margin-bottom: 1rem;
-}
-
-/* Hero subtitle */
-.large {
-  font-family: 'Inter', sans-serif;
-  font-size: 1.55rem;
-  font-weight: 600;
-  color: #b8c3d6;
-  letter-spacing: 0.02em;
-  margin-bottom: 1.5rem;
-}
-
-/* Responsive adjustments */
-@media (max-width: 600px) {
-  h1 {
-    font-size: 2.2rem;
-  }
-  h2 {
-    font-size: 1.8rem;
-  }
-  h3 {
-    font-size: 1.5rem;
-  }
-
-  .fancy {
-    font-size: 2.2rem;
-  }
-
-  .large {
-    font-size: 1.25rem;
-  }
+/* Monospace accent class */
+.mono {
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
 }

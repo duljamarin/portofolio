@@ -33,7 +33,7 @@ export const projects: Project[] = [
     gallery: ['/personal-finances-1.png', '/personal-finances-2.png', '/personal-finances-3.png', '/personal-finances-4.png'],
     links: [
       { label: 'Live Site', url: 'https://personal-finances.app/' },
-      { label: 'GitHub', url: 'https://github.com/freudmarin/personal-finance-tracker' }
+      { label: 'GitHub', url: 'https://github.com/duljamarin/personal-finance-tracker' }
     ],
     tags: ['React', 'Tailwind', 'Supabase', 'Full-Stack'],
     type: 'fullstack',
@@ -50,7 +50,7 @@ export const projects: Project[] = [
     gallery: ['/the-literary-haven-1.png', '/the-literary-haven-2.png'],
     links: [
       { label: 'Live Site', url: 'https://the-literary-heaven.netlify.app/' },
-      { label: 'GitHub', url: 'https://github.com/freudmarin/bookshop-ecommerce' }
+      { label: 'GitHub', url: 'https://github.com/duljamarin/bookshop-ecommerce' }
     ],
     tags: ['React', 'Tailwind', 'Supabase', 'Full-Stack'],
     type: 'fullstack',
@@ -62,7 +62,7 @@ export const projects: Project[] = [
     gallery: ['/clearsight-1.png', '/clearsight-2.png', '/clearsight-3.png', '/clearsight-4.png'],
     links: [
       { label: 'Live Site', url: 'https://clearsight-clinic.netlify.app' },
-      { label: 'GitHub', url: 'https://github.com/freudmarin/eye-clinic-app' }
+      { label: 'GitHub', url: 'https://github.com/duljamarin/eye-clinic-app' }
     ],
     tags: ['React', 'CSS', 'Supabase'],
     type: 'fullstack',
@@ -82,7 +82,7 @@ export const projects: Project[] = [
     title: 'Therapism',
     description: 'Mental health platform, built with Java, Spring Boot, PostgreSQL, and Spring AI.',
     links: [
-      { label: 'GitHub', url: 'https://github.com/freudmarin/Therapism' }
+      { label: 'GitHub', url: 'https://github.com/duljamarin/Therapism' }
     ],
     tags: ['Personal Project', 'Java', 'Spring Boot', 'PostgreSQL', 'Spring AI', 'Backend'],
     type: 'main',
@@ -100,7 +100,7 @@ export const projects: Project[] = [
     title: 'Quotes Social Network',
     description: 'Quote sharing platform with authentication, posting, commenting, and liking features.',
     links: [
-      { label: 'GitHub', url: 'https://github.com/freudmarin/QuotesSocialNetworkBE' }
+      { label: 'GitHub', url: 'https://github.com/duljamarin/QuotesSocialNetworkBE' }
     ],
     tags: ['Personal Project', 'Social Network', 'Backend', 'Java', 'API integration', 'Spring Boot', 'Hibernate', 'JPA'],
     type: 'main',

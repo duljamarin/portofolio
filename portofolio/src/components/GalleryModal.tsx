@@ -1,156 +1,107 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { createPortal } from 'react-dom';
-import { motion, AnimatePresence } from 'framer-motion';
 
-type GalleryModalProps = {
+interface GalleryModalProps {
   images: string[];
   title: string;
   isOpen: boolean;
   onClose: () => void;
-};
-
-const overlayVariants = {
-  hidden: { opacity: 0 },
-  visible: { opacity: 1 },
-  exit: { opacity: 0 },
-};
-
-const modalVariants = {
-  hidden: { opacity: 0, scale: 0.95 },
-  visible: { opacity: 1, scale: 1 },
-  exit: { opacity: 0, scale: 0.95 },
-};
+}
 
 const GalleryModal: React.FC<GalleryModalProps> = ({ images, title, isOpen, onClose }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [closing, setClosing] = useState(false);
 
-  // Keyboard navigation
+  const handleClose = useCallback(() => {
+    setClosing(true);
+    setTimeout(() => {
+      setClosing(false);
+      onClose();
+    }, 200);
+  }, [onClose]);
+
+  const goNext = useCallback(() => {
+    setCurrentIndex((prev) => (prev + 1) % images.length);
+  }, [images.length]);
+
+  const goPrev = useCallback(() => {
+    setCurrentIndex((prev) => (prev - 1 + images.length) % images.length);
+  }, [images.length]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    setCurrentIndex(0);
+  }, [isOpen]);
+
   useEffect(() => {
     if (!isOpen) return;
 
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        onClose();
-      } else if (e.key === 'ArrowLeft') {
-        goToPrevious();
-      } else if (e.key === 'ArrowRight') {
-        goToNext();
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen, currentIndex, images.length, onClose]);
-
-  const goToNext = () => {
-    setCurrentIndex((prev) => (prev + 1) % images.length);
-  };
-
-  const goToPrevious = () => {
-    setCurrentIndex((prev) => (prev - 1 + images.length) % images.length);
-  };
-
-  const handleOverlayClick = (e: React.MouseEvent) => {
-    // Close only if clicking directly on overlay, not on modal content
-    if (e.currentTarget === e.target) {
-      onClose();
+    function onKeyDown(e: KeyboardEvent) {
+      if (e.key === 'Escape') handleClose();
+      if (e.key === 'ArrowRight') goNext();
+      if (e.key === 'ArrowLeft') goPrev();
     }
-  };
 
-  if (typeof window === 'undefined') return null;
+    document.addEventListener('keydown', onKeyDown);
+    document.body.style.overflow = 'hidden';
 
-  const modalContent = (
-    <AnimatePresence mode="wait">
-      {isOpen && (
-        <motion.div
-          key="gallery-modal"
-          className="gallery-modal-overlay"
-          variants={overlayVariants}
-          initial="hidden"
-          animate="visible"
-          exit="exit"
-          transition={{ duration: 0.2 }}
-          onClick={handleOverlayClick}
-          role="dialog"
-          aria-modal="true"
-          aria-label={`Gallery for ${title}`}
-        >
-          <motion.div
-            className="gallery-modal-content"
-            variants={modalVariants}
-            initial="hidden"
-            animate="visible"
-            exit="exit"
-            transition={{ duration: 0.3, ease: 'easeOut' }}
-          >
-            {/* Close Button */}
-            <button
-              className="modal-close"
-              onClick={onClose}
-              aria-label="Close gallery"
-              title="Close (ESC)"
-            >
-              ✕
-            </button>
+    return () => {
+      document.removeEventListener('keydown', onKeyDown);
+      document.body.style.overflow = '';
+    };
+  }, [isOpen, handleClose, goNext, goPrev]);
 
-            {/* Image Container */}
-            <div className="modal-image-container">
-              <img
-                src={images[currentIndex]}
-                alt={`${title} - Screenshot ${currentIndex + 1}`}
-                loading="lazy"
+  if (!isOpen) return null;
+
+  return createPortal(
+    <div
+      className={`gallery-modal-overlay${closing ? ' closing' : ''}`}
+      onClick={handleClose}
+    >
+      <div className="gallery-modal-content" onClick={(e) => e.stopPropagation()}>
+        <button className="modal-close" onClick={handleClose} aria-label="Close gallery">
+          &#x2715;
+        </button>
+
+        {images.length > 1 && (
+          <button className="modal-nav modal-nav-prev" onClick={goPrev} aria-label="Previous image">
+            &#8249;
+          </button>
+        )}
+
+        <img
+          src={images[currentIndex]}
+          alt={`${title} — image ${currentIndex + 1}`}
+        />
+
+        {images.length > 1 && (
+          <button className="modal-nav modal-nav-next" onClick={goNext} aria-label="Next image">
+            &#8250;
+          </button>
+        )}
+
+        {images.length > 1 && (
+          <div className="modal-dots">
+            {images.map((_, i) => (
+              <button
+                key={i}
+                className={`modal-dot${i === currentIndex ? ' active' : ''}`}
+                onClick={() => setCurrentIndex(i)}
+                aria-label={`Go to image ${i + 1}`}
               />
-            </div>
+            ))}
+          </div>
+        )}
 
-            {/* Navigation Controls */}
-            {images.length > 1 && (
-              <>
-                {/* Left Arrow */}
-                <button
-                  className="modal-nav modal-nav-prev"
-                  onClick={goToPrevious}
-                  aria-label="Previous screenshot (← arrow key)"
-                  title="Previous (← arrow)"
-                >
-                  ‹
-                </button>
-
-                {/* Right Arrow */}
-                <button
-                  className="modal-nav modal-nav-next"
-                  onClick={goToNext}
-                  aria-label="Next screenshot (→ arrow key)"
-                  title="Next (→ arrow)"
-                >
-                  ›
-                </button>
-
-                {/* Dot Indicators */}
-                <div className="modal-dots">
-                  {images.map((_, idx) => (
-                    <button
-                      key={idx}
-                      className={`modal-dot ${idx === currentIndex ? 'active' : ''}`}
-                      onClick={() => setCurrentIndex(idx)}
-                      aria-label={`Go to screenshot ${idx + 1}`}
-                      aria-current={idx === currentIndex ? 'page' : undefined}
-                    />
-                  ))}
-                </div>
-
-                {/* Counter */}
-                <div className="modal-counter">
-                  {currentIndex + 1} / {images.length}
-                </div>
-              </>
-            )}
-          </motion.div>
-        </motion.div>
-      )}
-    </AnimatePresence>
+        {images.length > 1 && (
+          <span className="modal-counter">
+            {currentIndex + 1} / {images.length}
+          </span>
+        )}
+      </div>
+    </div>,
+    document.body
   );
-
-  return createPortal(modalContent, document.body);
 };
 
 export default GalleryModal;
