@@ -110,12 +110,12 @@ const Projects: React.FC = () => {
 
       <div className="text-center fade-up">
         <a
-          href="https://github.com/freudmarin"
+          href="https://github.com/duljamarin?tab=repositories"
           target="_blank"
           rel="noopener noreferrer"
           className="view-all-btn"
         >
-          View All Projects
+          View All Personal Projects
           <ExternalIcon />
         </a>
       </div>
