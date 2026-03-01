@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { projects } from '../data/projects';
 import GalleryModal from './GalleryModal';
+import VideoModal from './VideoModal';
 
 const FolderIcon = () => (
   <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
@@ -24,6 +25,7 @@ const ExternalIcon = () => (
 
 const Projects: React.FC = () => {
   const [galleryOpen, setGalleryOpen] = useState<number | null>(null);
+  const [videoOpen, setVideoOpen] = useState<number | null>(null);
 
   return (
     <section id="projects" className="projects-section">
@@ -56,8 +58,30 @@ const Projects: React.FC = () => {
               </div>
             )}
 
+            {/* Video preview */}
+            {project.video && (
+              <div
+                className="project-gallery-preview project-video-preview"
+                onClick={() => setVideoOpen(idx)}
+              >
+                <video
+                  src={project.video}
+                  className="video-thumbnail"
+                  muted
+                  preload="metadata"
+                />
+                <span className="video-play-btn" aria-label="Play video">
+                  <svg width="38" height="38" viewBox="0 0 24 24" fill="white">
+                    <circle cx="12" cy="12" r="12" fill="rgba(0,0,0,0.55)" />
+                    <polygon points="10,8 18,12 10,16" fill="white" />
+                  </svg>
+                </span>
+                <span className="gallery-count">Watch Demo</span>
+              </div>
+            )}
+
             {/* Gallery preview */}
-            {project.gallery && project.gallery.length > 0 && (
+            {!project.video && project.gallery && project.gallery.length > 0 && (
               <div
                 className="project-gallery-preview"
                 onClick={() => setGalleryOpen(idx)}
@@ -129,6 +153,19 @@ const Projects: React.FC = () => {
             title={project.title}
             isOpen={galleryOpen === idx}
             onClose={() => setGalleryOpen(null)}
+          />
+        ) : null
+      )}
+
+      {/* Video modals */}
+      {projects.map((project, idx) =>
+        project.video ? (
+          <VideoModal
+            key={`video-${project.title}`}
+            src={project.video}
+            title={project.title}
+            isOpen={videoOpen === idx}
+            onClose={() => setVideoOpen(null)}
           />
         ) : null
       )}
