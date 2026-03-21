@@ -31,7 +31,6 @@ export const projects: Project[] = [
     title: 'Personal Finance Tracker (Fullstack)',
     description:
       'A real-world personal finance web application with end-to-end income, expense, and balance tracking. Features recurring transactions, spending insights, financial scoring, and goal management. Migrated from Java/Spring Boot to Supabase for streamlined authentication and data persistence. Built with React.js and Tailwind CSS for a responsive, low-friction user experience optimized for daily use.',
-    video: '/Personal Finance Tracker.mp4',
     links: [
       { label: 'Live Site', url: 'https://personal-finances.app/' },
       { label: 'GitHub', url: 'https://github.com/duljamarin/personal-finance-tracker' }
