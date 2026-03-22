@@ -37,12 +37,7 @@ export const projects: Project[] = [
       { label: 'GitHub', url: 'https://github.com/duljamarin/personal-finance-tracker' }
     ],
     tags: ['React', 'Tailwind', 'Supabase', 'Full-Stack'],
-    type: 'fullstack',
-    badge: {
-      text: 'Featured on fip.al • Website with 3000+ Daily Views',
-      url: 'https://www.fip.al/pages/mjete-financiare.html',
-      color: 'green',
-    },
+    type: 'fullstack'
   },
   {
     title: 'The Literary Haven',
