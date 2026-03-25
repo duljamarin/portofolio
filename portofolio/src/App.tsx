@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import About from './components/About';
@@ -10,53 +10,46 @@ import EducationSection from './components/EducationSection';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
 import {
-  initScrollAnimations,
   initCounters,
   initCustomCursor,
-  initTimelineNodes,
+  initScrollProgress,
   printConsoleEasterEgg,
 } from './animations';
 
 const App: React.FC = () => {
+  const scrollBarRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     window.scrollTo(0, 0);
 
-    // Initialize all animations after DOM is ready
     const timer = setTimeout(() => {
-      initScrollAnimations();
       initCounters();
-      initTimelineNodes();
     }, 100);
 
     const cursorCleanup = initCustomCursor();
+    const scrollCleanup = scrollBarRef.current
+      ? initScrollProgress(scrollBarRef.current)
+      : undefined;
     printConsoleEasterEgg();
 
     return () => {
       clearTimeout(timer);
       cursorCleanup?.();
+      scrollCleanup?.();
     };
   }, []);
 
   return (
     <div>
-      {/* Loading bar */}
-      <div className="loading-bar" />
-
+      <div className="scroll-progress" ref={scrollBarRef} />
       <Navbar />
       <Hero />
-      <div className="section-divider" />
-      <About />
-      <div className="section-divider" />
       <Projects />
-      <div className="section-divider" />
       <Experience />
-      <div className="section-divider" />
+      <About />
       <Skills />
-      <div className="section-divider" />
       <TestimonialsSection />
-      <div className="section-divider" />
       <EducationSection />
-      <div className="section-divider" />
       <Contact />
       <Footer />
     </div>

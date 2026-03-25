@@ -1,90 +1,117 @@
 import React, { useState } from 'react';
+import { motion } from 'framer-motion';
 import { projects } from '../data/projects';
 import GalleryModal from './GalleryModal';
 import VideoModal from './VideoModal';
 
-const FolderIcon = () => (
-  <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z" />
-  </svg>
-);
-
 const GitHubIcon = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+  <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
     <path d="M12 2C6.477 2 2 6.484 2 12.021c0 4.428 2.865 8.184 6.839 9.525.5.092.682-.217.682-.483 0-.237-.009-.868-.014-1.703-2.782.605-3.369-1.342-3.369-1.342-.454-1.155-1.11-1.463-1.11-1.463-.908-.62.069-.608.069-.608 1.004.07 1.532 1.032 1.532 1.032.892 1.53 2.341 1.088 2.91.832.091-.647.35-1.088.636-1.339-2.221-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.254-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.025A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.295 2.747-1.025 2.747-1.025.546 1.378.202 2.396.1 2.65.64.7 1.028 1.595 1.028 2.688 0 3.847-2.337 4.695-4.566 4.944.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.579.688.481C19.138 20.2 22 16.447 22 12.021 22 6.484 17.523 2 12 2z" />
   </svg>
 );
 
 const ExternalIcon = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6" />
     <polyline points="15 3 21 3 21 9" />
     <line x1="10" y1="14" x2="21" y2="3" />
   </svg>
 );
 
+const fadeUp = {
+  hidden: { opacity: 0, y: 30 },
+  visible: { opacity: 1, y: 0 },
+};
+
 const Projects: React.FC = () => {
   const [galleryOpen, setGalleryOpen] = useState<number | null>(null);
   const [videoOpen, setVideoOpen] = useState<number | null>(null);
 
+  const featured = projects[0];
+  const remaining = projects.slice(1);
+
   return (
     <section id="projects" className="projects-section">
-      <div className="section-header fade-up">
-        <h2 className="section-title">
-          <span className="section-number">02.</span>
-          Projects
-        </h2>
-      </div>
+      <motion.div
+        className="section-header"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: '-50px' }}
+        variants={fadeUp}
+        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+      >
+        <span className="section-number">01</span>
+        <h2 className="section-title">Projects</h2>
+        <p className="section-subtitle">
+          A selection of work — from enterprise backends processing millions of
+          transactions to full-stack apps shipped from scratch.
+        </p>
+      </motion.div>
 
-      <div className="project-grid stagger-children">
-        {projects.map((project, idx) => (
-          <div className="project-card fade-up" key={project.title}>
-            {/* Folder icon + badge */}
-            <div className="project-card-icon">
-              <FolderIcon />
-            </div>
-
-            {project.badge && (
-              <div className="project-card-badges">
-                <a
-                  href={project.badge.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="project-badge featured"
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  {project.badge.text}
-                </a>
-              </div>
-            )}
-
-            {/* Video preview */}
-            {project.video && (
-              <div
-                className="project-gallery-preview project-video-preview"
-                onClick={() => setVideoOpen(idx)}
+      {/* Featured project */}
+      <motion.div
+        className="project-featured"
+        initial={{ opacity: 0, y: 40 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: '-50px' }}
+        transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+      >
+        <div
+          className="project-featured-media"
+          onClick={() => featured.gallery ? setGalleryOpen(0) : undefined}
+        >
+          {featured.gallery && featured.gallery[0] && (
+            <img
+              src={featured.gallery[0]}
+              alt={`${featured.title} preview`}
+              loading="lazy"
+            />
+          )}
+        </div>
+        <div>
+          <span className="project-featured-badge">Featured · Contractor</span>
+          <h3 className="project-featured-title">{featured.title}</h3>
+          <p className="project-featured-desc">{featured.description}</p>
+          <div className="project-card-tags">
+            {featured.tags.map((tag) => (
+              <span className="project-tag" key={tag}>{tag}</span>
+            ))}
+          </div>
+          <div className="project-card-links">
+            {featured.links.map((link) => (
+              <a
+                href={link.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="project-link"
+                key={link.url}
               >
-                <video
-                  src={project.video}
-                  className="video-thumbnail"
-                  muted
-                  preload="metadata"
-                />
-                <span className="video-play-btn" aria-label="Play video">
-                  <svg width="38" height="38" viewBox="0 0 24 24" fill="white">
-                    <circle cx="12" cy="12" r="12" fill="rgba(0,0,0,0.55)" />
-                    <polygon points="10,8 18,12 10,16" fill="white" />
-                  </svg>
-                </span>
-                <span className="gallery-count">Watch Demo</span>
-              </div>
-            )}
+                {link.label.toLowerCase().includes('github') ? <GitHubIcon /> : <ExternalIcon />}
+                {link.label}
+              </a>
+            ))}
+          </div>
+        </div>
+      </motion.div>
 
+      {/* Remaining project grid */}
+      <div className="project-grid">
+        {remaining.map((project, idx) => (
+          <motion.div
+            className="project-card"
+            data-type={project.type}
+            key={project.title}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: '-30px' }}
+            variants={fadeUp}
+            transition={{ duration: 0.5, delay: idx * 0.08, ease: [0.16, 1, 0.3, 1] }}
+          >
             {/* Gallery preview */}
-            {!project.video && project.gallery && project.gallery.length > 0 && (
+            {project.gallery && project.gallery.length > 0 && (
               <div
                 className="project-gallery-preview"
-                onClick={() => setGalleryOpen(idx)}
+                onClick={() => setGalleryOpen(idx + 1)}
               >
                 <img
                   src={project.gallery[0]}
@@ -100,7 +127,6 @@ const Projects: React.FC = () => {
             )}
 
             <h3 className="project-card-title">{project.title}</h3>
-
             <p className="project-card-desc">{project.description}</p>
 
             <div className="project-card-tags">
@@ -119,30 +145,33 @@ const Projects: React.FC = () => {
                   key={link.url}
                   onClick={(e) => e.stopPropagation()}
                 >
-                  {link.label.toLowerCase().includes('github') ? (
-                    <GitHubIcon />
-                  ) : (
-                    <ExternalIcon />
-                  )}
+                  {link.label.toLowerCase().includes('github') ? <GitHubIcon /> : <ExternalIcon />}
                   {link.label}
                 </a>
               ))}
             </div>
-          </div>
+          </motion.div>
         ))}
       </div>
 
-      <div className="text-center fade-up">
+      <motion.div
+        className="text-center"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
+        variants={fadeUp}
+        transition={{ duration: 0.5 }}
+      >
         <a
           href="https://github.com/duljamarin?tab=repositories"
           target="_blank"
           rel="noopener noreferrer"
           className="view-all-btn"
         >
-          View All Personal Projects
+          View All Projects
           <ExternalIcon />
         </a>
-      </div>
+      </motion.div>
 
       {/* Gallery modals */}
       {projects.map((project, idx) =>

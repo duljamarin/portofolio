@@ -1,7 +1,8 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 
 type SkillCategory = {
-  icon: string;
+  label: string;
   title: string;
   skills: string[];
   className?: string;
@@ -9,91 +10,86 @@ type SkillCategory = {
 
 const skillCategories: SkillCategory[] = [
   {
-    icon: '⚡',
+    label: 'Core',
     title: 'Primary Stack',
     skills: [
-      'Java', 'Spring Boot', 'React.js', 'TypeScript', 'PostgreSQL',
-      'Spring Cloud', 'Spring Security', 'Hibernate', 'REST & GraphQL',
+      'Java', 'Kotlin', 'Spring Boot', 'React.js', 'TypeScript', 'PostgreSQL',
+      'Spring Cloud', 'Spring Security', 'Hibernate', 'REST', 'GraphQL',
     ],
     className: 'anchor',
   },
   {
-    icon: '🖥️',
+    label: 'Frontend',
     title: 'Frontend',
-    skills: ['React.js', 'HTML5', 'CSS3', 'Tailwind CSS', 'JavaScript (ES6+)'],
-    className: '',
+    skills: ['React.js', 'TypeScript', 'HTML5', 'CSS3', 'Tailwind CSS', 'JavaScript (ES6+)'],
   },
   {
-    icon: '⚙️',
+    label: 'Architecture',
     title: 'Backend & Architecture',
-    skills: ['Microservices', 'Event-Driven', 'Distributed Systems', 'API Design'],
-    className: '',
+    skills: ['Microservices', 'Event-Driven', 'Distributed Systems', 'API Design', 'Spring Data JPA'],
   },
   {
-    icon: '🗄️',
-    title: 'Databases',
-    skills: ['PostgreSQL', 'MongoDB', 'SQL Server', 'Query Optimization'],
-    className: '',
+    label: 'Data',
+    title: 'Databases & Messaging',
+    skills: ['PostgreSQL', 'MongoDB', 'SQL Server', 'RabbitMQ', 'Kafka', 'WebSocket/STOMP'],
+    className: 'span-2',
   },
   {
-    icon: '☁️',
+    label: 'Cloud',
     title: 'Cloud & DevOps',
-    skills: ['Azure', 'Docker', 'Kubernetes', 'Git', 'Docker Compose'],
-    className: 'span-2',
+    skills: ['Azure', 'Docker', 'Git', 'Docker Compose'],
   },
   {
-    icon: '📨',
-    title: 'Messaging',
-    skills: ['RabbitMQ', 'Kafka', 'WebSocket/STOMP'],
-    className: '',
-  },
-  {
-    icon: '🧪',
-    title: 'Testing',
-    skills: ['JUnit', 'Mockito', 'Integration Testing'],
-    className: '',
-  },
-  {
-    icon: '🔧',
-    title: 'Tools',
-    skills: ['IntelliJ IDEA', 'Postman', 'Swagger/OpenAPI', 'Jira', 'Maven'],
-    className: 'span-2',
-  },
-  {
-    icon: '🔐',
-    title: 'Frameworks & Libraries',
+    label: 'Tooling',
+    title: 'Tools & Libraries',
     skills: [
-      'Spring Data JPA', 'Lombok', 'MapStruct', 'Feign Client',
-      'OAuth 2.0', 'JWT', 'Stripe SDK', 'OneSignal API',
+      'IntelliJ IDEA', 'Postman', 'Swagger/OpenAPI', 'Jira', 'Maven',
+      'Lombok', 'MapStruct', 'Feign Client', 'JUnit', 'Mockito',
+      'OAuth 2.0', 'JWT', 'Stripe SDK',
     ],
     className: 'span-2',
   },
 ];
 
+const fadeUp = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0 },
+};
+
 const Skills: React.FC = () => {
   return (
     <section id="skills" className="skills-section">
-      <div className="section-header fade-up">
-        <h2 className="section-title">
-          <span className="section-number">04.</span>
-          Skills
-        </h2>
-      </div>
+      <motion.div
+        className="section-header"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: '-50px' }}
+        variants={fadeUp}
+        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+      >
+        <span className="section-number">04</span>
+        <h2 className="section-title">Skills</h2>
+      </motion.div>
 
-      <div className="bento-grid stagger-children">
-        {skillCategories.map((cat) => (
-          <div
-            className={`bento-card fade-up${cat.className ? ` ${cat.className}` : ''}`}
+      <div className="bento-grid">
+        {skillCategories.map((cat, idx) => (
+          <motion.div
+            className={`bento-card${cat.className ? ` ${cat.className}` : ''}`}
             key={cat.title}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: '-30px' }}
+            variants={fadeUp}
+            transition={{ duration: 0.5, delay: idx * 0.06, ease: [0.16, 1, 0.3, 1] }}
           >
-            <div className="bento-card-icon">{cat.icon}</div>
+            <span className="bento-card-label">{cat.label}</span>
             <div className="bento-card-title">{cat.title}</div>
             <div className="bento-card-skills">
               {cat.skills.map((skill) => (
                 <span className="bento-skill" key={skill}>{skill}</span>
               ))}
             </div>
-          </div>
+          </motion.div>
         ))}
       </div>
     </section>

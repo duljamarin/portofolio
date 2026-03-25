@@ -1,25 +1,9 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { createTypewriter, initDotGrid } from '../animations';
-
-const roles = [
-  'Full-Stack Developer',
-  'Java & Spring Boot Engineer',
-  'React & Javascript',
-  'Freelance Problem Solver',
-];
+import React, { useEffect, useRef } from 'react';
+import { motion } from 'framer-motion';
+import { initDotGrid } from '../animations';
 
 const Hero: React.FC = () => {
-  const [typewriterText, setTypewriterText] = useState('');
   const canvasRef = useRef<HTMLCanvasElement>(null);
-
-  useEffect(() => {
-    const cleanup = createTypewriter(roles, setTypewriterText, {
-      typeSpeed: 80,
-      deleteSpeed: 40,
-      pauseTime: 2000,
-    });
-    return cleanup;
-  }, []);
 
   useEffect(() => {
     if (canvasRef.current) {
@@ -30,33 +14,52 @@ const Hero: React.FC = () => {
 
   return (
     <section id="hero" className="hero">
-      {/* Dot grid background */}
       <canvas ref={canvasRef} className="hero-canvas" />
 
-      {/* Animated scan line */}
-      <div className="scan-line" />
-
       <div className="hero-content">
-        <h1 className="hero-name fade-up">Marin Dulja</h1>
+        <motion.h1
+            className="hero-name"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+          >
+            Marin Dulja
+          </motion.h1>
 
-        <div className="typewriter-wrapper fade-up">
-          <span className="typewriter-text">{typewriterText}</span>
-          <span className="typewriter-cursor" />
-        </div>
+        <motion.p
+          className="hero-headline"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+        >
+          I build systems that{' '}
+          <span className="text-gradient">scale</span>
+        </motion.p>
 
-        <p className="hero-bio fade-up">
-          Building scalable, reliable, and modern web applications with Java,
-          Spring Boot, and React.js — turning ideas into fast, maintainable solutions.
-        </p>
+        <motion.p
+          className="hero-bio"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+        >
+          Full-stack engineer - Java, Spring Boot, React. From banking platforms
+          with 240+ microservices to AI-powered trading systems.
+        </motion.p>
 
-        <div className="hero-ctas fade-up">
+        <motion.div
+          className="hero-ctas"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.45, ease: [0.16, 1, 0.3, 1] }}
+        >
           <a href="#projects" className="btn-primary">
-            View My Work
+            See My Work
           </a>
           <a href="#contact" className="btn-ghost">
             Get In Touch
           </a>
-        </div>
+        </motion.div>
+
       </div>
     </section>
   );

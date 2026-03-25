@@ -1,17 +1,43 @@
 import React from 'react';
+import { motion } from 'framer-motion';
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0 },
+};
 
 const Contact: React.FC = () => {
   return (
     <section id="contact" className="contact-section">
       <div className="contact-content">
-        <h2 className="contact-heading fade-up">
+        <motion.h2
+          className="contact-heading"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: '-50px' }}
+          variants={fadeUp}
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+        >
           Let's Build Something Together
-        </h2>
-        <p className="contact-subtext fade-up">
-          Available for freelance projects and full-time opportunities.
-        </p>
+        </motion.h2>
+        <motion.p
+          className="contact-subtext"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          variants={fadeUp}
+          transition={{ duration: 0.5, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
+        >
+          Whether you need a reliable backend engineer or a full-stack partner, I'm ready. Let's talk.
+        </motion.p>
 
-        <div className="fade-up">
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          variants={fadeUp}
+          transition={{ duration: 0.5, delay: 0.14, ease: [0.16, 1, 0.3, 1] }}
+        >
           <a
             href="mailto:duljamarin@gmail.com"
             className="contact-email-btn"
@@ -22,9 +48,16 @@ const Contact: React.FC = () => {
             </svg>
             Get In Touch
           </a>
-        </div>
+        </motion.div>
 
-        <div className="contact-secondary-btns fade-up">
+        <motion.div
+          className="contact-secondary-btns"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          variants={fadeUp}
+          transition={{ duration: 0.5, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+        >
           <a
             href="https://wa.me/+355684448934"
             target="_blank"
@@ -48,10 +81,17 @@ const Contact: React.FC = () => {
             </svg>
             Download CV
           </a>
-        </div>
+        </motion.div>
 
         {/* Social links */}
-        <div className="contact-socials fade-up">
+        <motion.div
+          className="contact-socials"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          variants={fadeUp}
+          transition={{ duration: 0.5, delay: 0.26, ease: [0.16, 1, 0.3, 1] }}
+        >
           <a
             href="https://www.linkedin.com/in/marin-dulja/"
             target="_blank"
@@ -74,7 +114,7 @@ const Contact: React.FC = () => {
               <path d="M12 2C6.477 2 2 6.484 2 12.021c0 4.428 2.865 8.184 6.839 9.525.5.092.682-.217.682-.483 0-.237-.009-.868-.014-1.703-2.782.605-3.369-1.342-3.369-1.342-.454-1.155-1.11-1.463-1.11-1.463-.908-.62.069-.608.069-.608 1.004.07 1.532 1.032 1.532 1.032.892 1.53 2.341 1.088 2.91.832.091-.647.35-1.088.636-1.339-2.221-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.254-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.025A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.295 2.747-1.025 2.747-1.025.546 1.378.202 2.396.1 2.65.64.7 1.028 1.595 1.028 2.688 0 3.847-2.337 4.695-4.566 4.944.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.579.688.481C19.138 20.2 22 16.447 22 12.021 22 6.484 17.523 2 12 2z" />
             </svg>
           </a>
-        </div>
+        </motion.div>
       </div>
     </section>
   );

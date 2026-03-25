@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 
 const testimonials = [
   {
@@ -23,27 +24,48 @@ What stood out most was Marin's positive attitude and professionalism. He was al
   },
 ];
 
+const fadeUp = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0 },
+};
+
 const TestimonialsSection: React.FC = () => {
   return (
     <section id="testimonials" className="testimonials-section">
-      <div className="section-header fade-up">
-        <h2 className="section-title">
-          <span className="section-number">05.</span>
-          Testimonials
-        </h2>
-      </div>
+      <motion.div
+        className="section-header"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: '-50px' }}
+        variants={fadeUp}
+        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+      >
+        <span className="section-number">05</span>
+        <h2 className="section-title">Testimonials</h2>
+      </motion.div>
 
-      <div className="testimonials-grid stagger-children">
+      <div className="testimonials-wall">
         {testimonials.map((t, idx) => (
-          <div className="testimonial-card fade-up" key={idx}>
-            <div className="testimonial-quote-icon">"</div>
-            <div className="testimonial-text">{t.text}</div>
+          <motion.div
+            className="testimonial-item"
+            key={idx}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: '-50px' }}
+            variants={fadeUp}
+            transition={{ duration: 0.6, delay: idx * 0.15, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <div className="testimonial-text">
+              {t.text.split('\n\n').map((paragraph, pIdx) => (
+                <p key={pIdx}>{paragraph}</p>
+              ))}
+            </div>
             <div className="testimonial-author">
               <span className="testimonial-name">{t.name}</span>
               <span className="testimonial-role">{t.role}</span>
               <span className="testimonial-date">{t.date}</span>
             </div>
-          </div>
+          </motion.div>
         ))}
       </div>
     </section>

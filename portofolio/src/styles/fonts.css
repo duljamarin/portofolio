@@ -1,37 +1,34 @@
 /* Fonts loaded via <link> in index.html for fast rendering */
 
-/* Boost root font-size so all rem units scale up */
 html {
-  font-size: 18px;
+  font-size: 17px;
 }
 
-/* Base text */
 body {
   font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  font-size: 1.15rem;
-  line-height: 1.7;
+  font-size: 1rem;
+  line-height: 1.8;
   color: var(--text-primary);
   background: var(--bg);
   margin: 0;
+  font-weight: 300;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Headings */
 h1, h2, h3, h4, h5, h6 {
   font-family: 'Sora', 'Outfit', sans-serif;
   font-weight: 700;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.03em;
   color: var(--text-primary);
   margin-top: 0;
   margin-bottom: 0.5em;
 }
 
-h1 { font-size: clamp(3.2rem, 6vw, 5rem); }
-h2 { font-size: clamp(2.4rem, 5vw, 3.5rem); }
-h3 { font-size: clamp(1.5rem, 3vw, 2.2rem); }
+h1 { font-size: clamp(3.8rem, 7vw, 6rem); }
+h2 { font-size: clamp(1.8rem, 3.5vw, 2.6rem); }
+h3 { font-size: clamp(1.2rem, 2vw, 1.6rem); }
 
-/* Monospace accent class */
 .mono {
   font-family: 'JetBrains Mono', 'Fira Code', monospace;
 }
