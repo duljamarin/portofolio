@@ -40,7 +40,7 @@ export const projects: Project[] = [
     type: 'fullstack'
   },
   {
-    title: 'The Literary Haven',
+    title: 'The Literary Heaven',
     description:
       'A fullstack bookstore e-commerce platform featuring complete online shopping functionality with product browsing, cart management, and checkout flow. Built with React and Tailwind CSS for a modern, responsive interface, powered by Supabase for authentication and data management.',
     gallery: ['/the-literary-haven-1.png', '/the-literary-haven-2.png'],
