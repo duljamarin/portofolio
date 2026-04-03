@@ -49,9 +49,8 @@ const About: React.FC = () => {
             variants={fadeUp}
             transition={{ duration: 0.6, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
           >
-            I started writing Java in college and never stopped. With more than four years of work experience, I've shipped banking platforms, built AI trading systems
-            I've shipped banking platforms serving millions, built AI trading systems
-            from scratch, and still get excited about a clean API design.
+            I started writing Java in college and never stopped. With more than four years of work experience, I've shipped banking platforms, built AI trading systems,
+            improved a web crawler, developed microservices and still get excited about a clean API design.
           </motion.p>
           <motion.p
             initial="hidden"
