@@ -43,7 +43,7 @@ export const projects: Project[] = [
     title: 'The Literary Heaven',
     description:
       'A fullstack bookstore e-commerce platform featuring complete online shopping functionality with product browsing, cart management, and checkout flow. Built with React and Tailwind CSS for a modern, responsive interface, powered by Supabase for authentication and data management.',
-    gallery: ['/the-literary-haven-1.png', '/the-literary-haven-2.png'],
+    gallery: ['/the-literary-heaven-1.png', '/the-literary-heaven-2.png'],
     links: [
       { label: 'Live Site', url: 'https://the-literary-heaven.netlify.app/' },
       { label: 'GitHub', url: 'https://github.com/duljamarin/bookshop-ecommerce' }
