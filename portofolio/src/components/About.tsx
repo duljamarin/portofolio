@@ -49,9 +49,8 @@ const About: React.FC = () => {
             variants={fadeUp}
             transition={{ duration: 0.6, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
           >
-            I started writing Java in college and never stopped. With more than four years of work experience, I've shipped banking platforms, built AI trading systems
-            I've shipped banking platforms serving millions, built AI trading systems
-            from scratch, and still get excited about a clean API design.
+            I started writing Java in college and never stopped. With more than four years of work experience, I've shipped banking platforms, built AI trading systems,
+            improved a web crawler, developed microservices and still get excited about a clean API design.
           </motion.p>
           <motion.p
             initial="hidden"
@@ -90,28 +89,6 @@ const About: React.FC = () => {
             </div>
           </motion.div>
 
-          {/* Tech clusters */}
-          <motion.div
-            className="tech-clusters"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={fadeUp}
-            transition={{ duration: 0.6, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
-          >
-            <div className="tech-cluster">
-              <span className="tech-cluster-label">Backend</span>
-              <span className="tech-cluster-items">Java · Kotlin · Spring Boot · Hibernate · REST · GraphQL</span>
-            </div>
-            <div className="tech-cluster">
-              <span className="tech-cluster-label">Frontend</span>
-              <span className="tech-cluster-items">React · TypeScript · Tailwind CSS · HTML5</span>
-            </div>
-            <div className="tech-cluster">
-              <span className="tech-cluster-label">Infra</span>
-              <span className="tech-cluster-items">Docker · Kubernetes · Azure · PostgreSQL · MongoDB</span>
-            </div>
-          </motion.div>
         </div>
       </div>
     </section>
