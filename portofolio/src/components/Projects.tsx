@@ -30,6 +30,12 @@ const Projects: React.FC = () => {
   const featured = projects[0];
   const remaining = projects.slice(1);
 
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    e.currentTarget.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
+    e.currentTarget.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
+  };
+
   return (
     <section id="projects" className="projects-section">
       <motion.div
@@ -41,9 +47,9 @@ const Projects: React.FC = () => {
         transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
       >
         <span className="section-number">01</span>
-        <h2 className="section-title">Projects</h2>
+        <h2 className="section-title">Selected <span className="accent">Projects</span></h2>
         <p className="section-subtitle">
-          A selection of work — from enterprise backends processing millions of
+          A selection of work - from enterprise backends processing millions of
           transactions to full-stack apps shipped from scratch.
         </p>
       </motion.div>
@@ -106,6 +112,7 @@ const Projects: React.FC = () => {
             viewport={{ once: true, margin: '-30px' }}
             variants={fadeUp}
             transition={{ duration: 0.5, delay: idx * 0.08, ease: [0.16, 1, 0.3, 1] }}
+            onMouseMove={handleMouseMove}
           >
             {/* Gallery preview */}
             {project.gallery && project.gallery.length > 0 && (

@@ -17,7 +17,7 @@ const EducationSection: React.FC = () => (
       transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
     >
       <span className="section-number">06</span>
-      <h2 className="section-title">Education & Certifications</h2>
+      <h2 className="section-title">Education & <span className="accent">Certifications</span></h2>
     </motion.div>
 
     {/* Certification */}

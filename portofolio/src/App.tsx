@@ -8,6 +8,7 @@ import Skills from './components/Skills';
 import TestimonialsSection from './components/TestimonialsSection';
 import EducationSection from './components/EducationSection';
 import Contact from './components/Contact';
+import ContactModal from './components/ContactModal';
 import Footer from './components/Footer';
 import {
   initCounters,
@@ -52,6 +53,7 @@ const App: React.FC = () => {
       <EducationSection />
       <Contact />
       <Footer />
+      <ContactModal />
     </div>
   );
 };

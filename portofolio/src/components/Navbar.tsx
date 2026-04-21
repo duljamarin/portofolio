@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 const sections = [
   { label: 'Projects', href: '#projects' },
@@ -13,7 +13,6 @@ const Navbar: React.FC = () => {
   const [activeIdx, setActiveIdx] = useState(-1);
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const observerRef = useRef<IntersectionObserver | null>(null);
 
   useEffect(() => {
     // Track scroll state for navbar background
@@ -26,38 +25,53 @@ const Navbar: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    // IntersectionObserver for active section tracking
+    // Active section tracking via scroll position — robust for tall sections
     const sectionEls = sections
       .map((s) => document.querySelector(s.href) as HTMLElement)
       .filter((el): el is HTMLElement => !!el);
 
     if (!sectionEls.length) return;
 
-    const visibilityMap = new Map<Element, boolean>();
-
-    observerRef.current = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          visibilityMap.set(entry.target, entry.isIntersecting);
-        });
-        // Find first visible section
-        for (let i = 0; i < sectionEls.length; i++) {
-          if (visibilityMap.get(sectionEls[i])) {
-            setActiveIdx(i);
-            break;
-          }
+    let ticking = false;
+    const updateActive = () => {
+      // Anchor line sits ~120px below the top of the viewport (just under navbar)
+      const anchor = window.scrollY + 140;
+      let current = -1;
+      for (let i = 0; i < sectionEls.length; i++) {
+        const el = sectionEls[i];
+        const top = el.offsetTop;
+        const bottom = top + el.offsetHeight;
+        if (anchor >= top && anchor < bottom) {
+          current = i;
+          break;
         }
-      },
-      { threshold: 0.2, rootMargin: '-80px 0px -40% 0px' }
-    );
+      }
+      setActiveIdx(current);
+      ticking = false;
+    };
 
-    sectionEls.forEach((el) => observerRef.current!.observe(el));
+    const onScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(updateActive);
+        ticking = true;
+      }
+    };
 
-    return () => observerRef.current?.disconnect();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    updateActive();
+    return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
   const handleMobileClick = () => {
     setMobileOpen(false);
+  };
+
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string, isMobile = false) => {
+    if (href === '#contact') {
+      e.preventDefault();
+      window.dispatchEvent(new Event('contact:open'));
+    }
+    if (isMobile) handleMobileClick();
   };
 
   return (
@@ -69,6 +83,7 @@ const Navbar: React.FC = () => {
               key={s.href}
               href={s.href}
               className={`nav-link${i === activeIdx ? ' active' : ''}`}
+              onClick={(e) => handleNavClick(e, s.href)}
             >
               {s.label}
             </a>
@@ -93,7 +108,7 @@ const Navbar: React.FC = () => {
             key={s.href}
             href={s.href}
             className={`mobile-nav-link${i === activeIdx ? ' active' : ''}`}
-            onClick={handleMobileClick}
+            onClick={(e) => handleNavClick(e, s.href, true)}
           >
             {s.label}
           </a>

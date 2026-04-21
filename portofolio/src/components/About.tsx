@@ -6,28 +6,29 @@ const fadeUp = {
   visible: { opacity: 1, y: 0 },
 };
 
+const principles = [
+  {
+    title: 'Ship then refine',
+    desc: 'Working code in production beats perfect code on a branch.',
+  },
+  {
+    title: 'Boring tech wins',
+    desc: 'I reach for proven tools first. Novelty is a tax worth paying only when it earns its place.',
+  },
+  {
+    title: 'Write it for the next dev',
+    desc: 'Code is read more than it\'s written. Clarity outlives cleverness.',
+  },
+  {
+    title: 'Measure before you optimize',
+    desc: 'I profile first, guess never. Real numbers pick the right fight.',
+  },
+];
+
 const About: React.FC = () => {
   return (
     <section id="about" className="about-section">
       <div className="about-container">
-        {/* Photo */}
-        <motion.div
-          initial={{ opacity: 0, x: -30 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true, margin: '-50px' }}
-          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-        >
-          <div className="about-photo-container">
-            <div className="about-photo-inner">
-              <img
-                src="/photo_portofolio.jpg"
-                alt="Marin Dulja"
-                loading="lazy"
-              />
-            </div>
-          </div>
-        </motion.div>
-
         {/* Text content */}
         <div className="about-text-content">
           <motion.div
@@ -39,7 +40,7 @@ const About: React.FC = () => {
             transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
           >
             <span className="section-number">03</span>
-            <h2 className="section-title">About Me</h2>
+            <h2 className="section-title">About <span className="accent">Me</span></h2>
           </motion.div>
 
           <motion.p
@@ -57,9 +58,9 @@ const About: React.FC = () => {
             whileInView="visible"
             viewport={{ once: true }}
             variants={fadeUp}
-            transition={{ duration: 0.6, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.6, delay: 0.18, ease: [0.16, 1, 0.3, 1] }}
           >
-            My core stack is Java and Spring Boot on the backend, React and TypeScript
+            My core stack is Java and Spring Boot on the backend, React and JavaScript
             on the frontend - but I'm comfortable across the entire stack. I thrive
             in environments where I can solve real problems with clean, maintainable code.
           </motion.p>
@@ -71,7 +72,7 @@ const About: React.FC = () => {
             whileInView="visible"
             viewport={{ once: true }}
             variants={fadeUp}
-            transition={{ duration: 0.6, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.6, delay: 0.26, ease: [0.16, 1, 0.3, 1] }}
           >
             <div className="stat-item">
               <span className="stat-number" data-count="4" data-suffix="+">4+</span>
@@ -88,8 +89,37 @@ const About: React.FC = () => {
               <span className="stat-label">Technologies</span>
             </div>
           </motion.div>
-
         </div>
+
+        {/* Engineering principles card */}
+        <motion.aside
+          className="principles-card"
+          initial={{ opacity: 0, x: 20 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true, margin: '-50px' }}
+          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+        >
+          <span className="principles-card-label">How I work</span>
+          <h3 className="principles-card-title">Engineering principles</h3>
+          <div className="principles-list">
+            {principles.map((p, idx) => (
+              <motion.div
+                className="principles-list-item"
+                key={p.title}
+                initial={{ opacity: 0, y: 10 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: 0.15 + idx * 0.08, ease: [0.16, 1, 0.3, 1] }}
+              >
+                <span className="principles-list-num">0{idx + 1}</span>
+                <div>
+                  <h4>{p.title}</h4>
+                  <p>{p.desc}</p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </motion.aside>
       </div>
     </section>
   );
