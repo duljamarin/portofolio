@@ -2,8 +2,8 @@ import React from 'react';
 import { motion } from 'framer-motion';
 
 const fadeUp = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0 },
+  hidden: { opacity: 0, y: 28, filter: 'blur(8px)' },
+  visible: { opacity: 1, y: 0, filter: 'blur(0px)' },
 };
 
 const principles = [
@@ -94,10 +94,10 @@ const About: React.FC = () => {
         {/* Engineering principles card */}
         <motion.aside
           className="principles-card"
-          initial={{ opacity: 0, x: 20 }}
-          whileInView={{ opacity: 1, x: 0 }}
+          initial={{ opacity: 0, x: 40, rotate: 1.5, filter: 'blur(10px)' }}
+          whileInView={{ opacity: 1, x: 0, rotate: 0, filter: 'blur(0px)' }}
           viewport={{ once: true, margin: '-50px' }}
-          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
         >
           <span className="principles-card-label">How I work</span>
           <h3 className="principles-card-title">Engineering principles</h3>
@@ -106,10 +106,10 @@ const About: React.FC = () => {
               <motion.div
                 className="principles-list-item"
                 key={p.title}
-                initial={{ opacity: 0, y: 10 }}
-                whileInView={{ opacity: 1, y: 0 }}
+                initial={{ opacity: 0, x: -12, filter: 'blur(6px)' }}
+                whileInView={{ opacity: 1, x: 0, filter: 'blur(0px)' }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: 0.15 + idx * 0.08, ease: [0.16, 1, 0.3, 1] }}
+                transition={{ duration: 0.55, delay: 0.2 + idx * 0.1, ease: [0.16, 1, 0.3, 1] }}
               >
                 <span className="principles-list-num">0{idx + 1}</span>
                 <div>

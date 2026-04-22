@@ -9,8 +9,8 @@ const ArrowIcon = () => (
 );
 
 const fadeUp = {
-  hidden: { opacity: 0, y: 24 },
-  visible: { opacity: 1, y: 0 },
+  hidden: { opacity: 0, y: 40, scale: 0.95, filter: 'blur(10px)' },
+  visible: { opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' },
 };
 
 const Contact: React.FC = () => {

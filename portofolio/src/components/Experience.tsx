@@ -60,8 +60,13 @@ const BuildingIcon = () => (
 );
 
 const fadeUp = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0 },
+  hidden: { opacity: 0, y: 24, filter: 'blur(8px)' },
+  visible: { opacity: 1, y: 0, filter: 'blur(0px)' },
+};
+
+const timelineCard = {
+  hidden: { opacity: 0, x: -30, filter: 'blur(8px)' },
+  visible: { opacity: 1, x: 0, filter: 'blur(0px)' },
 };
 
 const Experience: React.FC = () => {
@@ -91,8 +96,8 @@ const Experience: React.FC = () => {
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true, margin: '-30px' }}
-              variants={fadeUp}
-              transition={{ duration: 0.5, delay: idx * 0.08, ease: [0.16, 1, 0.3, 1] }}
+              variants={timelineCard}
+              transition={{ duration: 0.65, delay: idx * 0.12, ease: [0.16, 1, 0.3, 1] }}
             >
               <div className="experience-node-marker">
                 <span className="experience-node-dot" />

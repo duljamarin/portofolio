@@ -2,8 +2,8 @@ import React from 'react';
 import { motion } from 'framer-motion';
 
 const fadeUp = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0 },
+  hidden: { opacity: 0, y: 28, scale: 0.96, filter: 'blur(8px)' },
+  visible: { opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' },
 };
 
 const EducationSection: React.FC = () => (

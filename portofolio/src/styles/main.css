@@ -688,14 +688,264 @@ a:hover {
   .hero-portrait-frame,
   .hero-status-chip::before,
   .hero-status-chip::after,
-  .hero-frame-bracket {
-    animation: none;
+  .hero-frame-bracket,
+  .cam-reticle,
+  .cam-shutter-top,
+  .cam-shutter-bottom,
+  .cam-flash,
+  .cam-scan,
+  .cam-grid,
+  .hud-rec-dot {
+    animation: none !important;
   }
   .hero-portrait .hero-portrait-frame,
   .btn-primary,
   .btn-ghost {
     transition: none;
   }
+}
+
+/* ============================================
+   CAMERA HUD — live viewfinder readouts
+   ============================================ */
+.hero-cam-hud {
+  position: absolute;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(16, 185, 129, 0.75);
+  z-index: 4;
+  pointer-events: none;
+  opacity: 0;
+  animation: hudFadeIn 1s ease 0.8s forwards;
+}
+
+@keyframes hudFadeIn {
+  to { opacity: 1; }
+}
+
+.hero-cam-hud.hud-tl { top: 116px; left: 72px; }
+.hero-cam-hud.hud-tr { top: 116px; right: 72px; }
+.hero-cam-hud.hud-bl { bottom: 44px; left: 72px; }
+
+.hud-rec {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 8px;
+  border: 1px solid rgba(239, 68, 68, 0.45);
+  border-radius: 4px;
+  color: #fca5a5;
+  background: rgba(239, 68, 68, 0.06);
+  font-weight: 600;
+}
+
+.hud-rec-dot {
+  width: 7px;
+  height: 7px;
+  background: #ef4444;
+  border-radius: 50%;
+  display: inline-block;
+  box-shadow: 0 0 8px #ef4444;
+  animation: recBlink 1.2s ease-in-out infinite;
+}
+
+@keyframes recBlink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.25; }
+}
+
+.hud-chip {
+  padding: 3px 8px;
+  border: 1px solid rgba(16, 185, 129, 0.25);
+  border-radius: 4px;
+  background: rgba(16, 185, 129, 0.05);
+  backdrop-filter: blur(3px);
+}
+
+.hud-mono {
+  color: rgba(240, 246, 252, 0.7);
+  border-color: rgba(255, 255, 255, 0.12);
+  background: rgba(0, 0, 0, 0.25);
+}
+
+.hud-battery {
+  display: inline-flex;
+  gap: 2px;
+  padding: 4px 5px;
+  border: 1px solid rgba(16, 185, 129, 0.35);
+  border-radius: 3px;
+  align-items: center;
+}
+.hud-battery i {
+  display: inline-block;
+  width: 4px;
+  height: 8px;
+  background: var(--primary);
+  opacity: 0.9;
+}
+.hud-battery i:last-child {
+  background: rgba(16, 185, 129, 0.2);
+}
+
+@media (max-width: 900px) {
+  .hero-cam-hud { font-size: 0.6rem; gap: 6px; }
+  .hero-cam-hud.hud-tl { left: 28px; top: 104px; }
+  .hero-cam-hud.hud-tr { right: 28px; top: 104px; }
+  .hero-cam-hud.hud-bl { left: 28px; bottom: 30px; }
+}
+
+@media (max-width: 600px) {
+  .hero-cam-hud.hud-tr { display: none; }
+  .hero-cam-hud.hud-bl .hud-chip { display: none; }
+}
+
+/* ============================================
+   CAMERA VIEWFINDER — inside portrait frame
+   ============================================ */
+.hero-portrait-frame {
+  isolation: isolate;
+}
+
+/* Rule-of-thirds grid */
+.cam-grid {
+  position: absolute;
+  inset: 12px;
+  pointer-events: none;
+  z-index: 3;
+  opacity: 0;
+  background:
+    linear-gradient(to right,  transparent 33.33%, rgba(255,255,255,0.18) 33.33%, rgba(255,255,255,0.18) 33.47%, transparent 33.47%, transparent 66.66%, rgba(255,255,255,0.18) 66.66%, rgba(255,255,255,0.18) 66.8%, transparent 66.8%),
+    linear-gradient(to bottom, transparent 33.33%, rgba(255,255,255,0.18) 33.33%, rgba(255,255,255,0.18) 33.47%, transparent 33.47%, transparent 66.66%, rgba(255,255,255,0.18) 66.66%, rgba(255,255,255,0.18) 66.8%, transparent 66.8%);
+  animation: gridPulse 7s ease-in-out infinite;
+}
+
+@keyframes gridPulse {
+  0%, 82%, 100% { opacity: 0; }
+  6%, 18%       { opacity: 0.5; }
+  26%           { opacity: 0; }
+}
+
+/* Focus reticle */
+.cam-reticle {
+  position: absolute;
+  top: 36%;
+  left: 50%;
+  width: 46%;
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%) scale(1.35);
+  pointer-events: none;
+  z-index: 4;
+  opacity: 0;
+  animation: reticleLock 7s ease-in-out infinite;
+}
+
+.cam-reticle-corner {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border: 2px solid var(--primary);
+  box-shadow: 0 0 8px rgba(16, 185, 129, 0.6);
+  border-radius: 2px;
+}
+.cam-reticle-corner.tl { top: 0; left: 0; border-right: 0; border-bottom: 0; }
+.cam-reticle-corner.tr { top: 0; right: 0; border-left: 0; border-bottom: 0; }
+.cam-reticle-corner.bl { bottom: 0; left: 0; border-right: 0; border-top: 0; }
+.cam-reticle-corner.br { bottom: 0; right: 0; border-left: 0; border-top: 0; }
+
+@keyframes reticleLock {
+  0%, 82%, 100% { opacity: 0; transform: translate(-50%, -50%) scale(1.45); }
+  4%            { opacity: 0.9; transform: translate(-50%, -50%) scale(1.45); }
+  14%           { opacity: 0.95; transform: translate(-50%, -50%) scale(1); }
+  26%           { opacity: 0; transform: translate(-50%, -50%) scale(1); }
+}
+
+/* Inner viewfinder corner marks */
+.cam-vf {
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  border: 1.5px solid rgba(240, 246, 252, 0.55);
+  pointer-events: none;
+  z-index: 3;
+  filter: drop-shadow(0 0 4px rgba(0, 0, 0, 0.5));
+}
+.cam-vf.tl { top: 14px; left: 14px; border-right: 0; border-bottom: 0; }
+.cam-vf.tr { top: 14px; right: 14px; border-left: 0; border-bottom: 0; }
+.cam-vf.bl { bottom: 14px; left: 14px; border-right: 0; border-top: 0; }
+.cam-vf.br { bottom: 14px; right: 14px; border-left: 0; border-top: 0; }
+
+/* Shutter curtain */
+.cam-shutter {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  border-radius: inherit;
+  z-index: 5;
+}
+.cam-shutter-top,
+.cam-shutter-bottom {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 52%;
+  background: #050709;
+  transform: translateY(-105%);
+}
+.cam-shutter-top { top: 0; animation: shutterTop 7s ease-in-out infinite; }
+.cam-shutter-bottom { bottom: 0; transform: translateY(105%); animation: shutterBottom 7s ease-in-out infinite; }
+
+@keyframes shutterTop {
+  0%, 23%, 32%, 100% { transform: translateY(-105%); }
+  26%, 28%           { transform: translateY(0); }
+}
+@keyframes shutterBottom {
+  0%, 23%, 32%, 100% { transform: translateY(105%); }
+  26%, 28%           { transform: translateY(0); }
+}
+
+/* Flash burst */
+.cam-flash {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 6;
+  background: radial-gradient(circle at 50% 45%, #ffffff 0%, rgba(255,255,255,0.6) 40%, transparent 75%);
+  opacity: 0;
+  mix-blend-mode: screen;
+  animation: flashBurst 7s ease-out infinite;
+}
+@keyframes flashBurst {
+  0%, 24%, 30%, 100% { opacity: 0; }
+  26%                { opacity: 0.95; }
+  28%                { opacity: 0.4; }
+}
+
+/* Scanline sweep — live-view */
+.cam-scan {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2px;
+  top: -5%;
+  background: linear-gradient(to right, transparent, rgba(16, 185, 129, 0.55), transparent);
+  box-shadow: 0 0 14px rgba(16, 185, 129, 0.5);
+  pointer-events: none;
+  z-index: 2;
+  animation: scanSweep 4.5s linear infinite;
+  opacity: 0.8;
+}
+@keyframes scanSweep {
+  0%   { top: -5%; opacity: 0; }
+  10%  { opacity: 0.8; }
+  90%  { opacity: 0.8; }
+  100% { top: 105%; opacity: 0; }
 }
 
 @media (max-width: 900px) {
@@ -747,6 +997,36 @@ a:hover {
    ============================================ */
 .about-section {
   padding: clamp(80px, 10vw, 140px) 24px;
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+/* Large background photo — developer/coding theme */
+.about-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url('https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=2400&q=80');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  filter: grayscale(0.4) contrast(1.05);
+  opacity: 0.22;
+  z-index: -2;
+}
+
+/* Color wash — keeps brand feel and legibility */
+.about-section::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 20% 30%, rgba(16, 185, 129, 0.15), transparent 55%),
+    radial-gradient(ellipse at 80% 80%, rgba(16, 185, 129, 0.08), transparent 55%),
+    linear-gradient(180deg, rgba(8, 12, 16, 0.82) 0%, rgba(8, 12, 16, 0.92) 100%);
+  z-index: -1;
+  pointer-events: none;
 }
 
 .about-container {
@@ -756,6 +1036,8 @@ a:hover {
   grid-template-columns: 1fr 360px;
   gap: 4.5rem;
   align-items: start;
+  position: relative;
+  z-index: 1;
 }
 
 .about-text-content {
@@ -929,6 +1211,14 @@ a:hover {
   .principles-card {
     position: static;
     order: 2;
+  }
+}
+
+/* Disable fixed background-attachment on touch/small — avoids jank on mobile */
+@media (max-width: 900px), (hover: none) {
+  .about-section::before,
+  .skills-section::before {
+    background-attachment: scroll;
   }
 }
 
@@ -1513,8 +1803,42 @@ a:hover {
    ============================================ */
 .skills-section {
   padding: clamp(80px, 10vw, 140px) 24px;
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+/* Large background photo — code/circuitry theme */
+.skills-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url('https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=2400&q=80');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  filter: grayscale(0.35) contrast(1.08);
+  opacity: 0.2;
+  z-index: -2;
+}
+
+.skills-section::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 85% 20%, rgba(16, 185, 129, 0.14), transparent 55%),
+    radial-gradient(ellipse at 15% 90%, rgba(16, 185, 129, 0.08), transparent 55%),
+    linear-gradient(180deg, rgba(8, 12, 16, 0.85) 0%, rgba(8, 12, 16, 0.93) 100%);
+  z-index: -1;
+  pointer-events: none;
+}
+
+.skills-section > * {
+  position: relative;
   max-width: 1200px;
-  margin: 0 auto;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .bento-grid {

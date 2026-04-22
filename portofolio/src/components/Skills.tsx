@@ -113,8 +113,8 @@ const skillCategories: SkillCategory[] = [
 ];
 
 const fadeUp = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0 },
+  hidden: { opacity: 0, y: 28, scale: 0.94, filter: 'blur(8px)' },
+  visible: { opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' },
 };
 
 const Skills: React.FC = () => {
@@ -149,7 +149,7 @@ const Skills: React.FC = () => {
             whileInView="visible"
             viewport={{ once: true, margin: '-30px' }}
             variants={fadeUp}
-            transition={{ duration: 0.5, delay: idx * 0.06, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.65, delay: idx * 0.1, ease: [0.16, 1, 0.3, 1] }}
             onMouseMove={handleCardMove}
           >
             <div className="bento-card-header">

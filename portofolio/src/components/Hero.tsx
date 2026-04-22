@@ -91,6 +91,25 @@ const Hero: React.FC = () => {
       <span className="hero-frame-bracket br-bl" aria-hidden="true" />
       <span className="hero-frame-bracket br-br" aria-hidden="true" />
 
+      {/* Camera HUD readout — top-left */}
+      <div className="hero-cam-hud hud-tl" aria-hidden="true">
+        <span className="hud-rec"><i className="hud-rec-dot" />REC</span>
+        <span className="hud-chip">ISO 400</span>
+        <span className="hud-chip">f/1.8</span>
+      </div>
+
+      {/* Camera HUD readout — top-right */}
+      <div className="hero-cam-hud hud-tr" aria-hidden="true">
+        <span className="hud-chip">1/250s</span>
+        <span className="hud-chip hud-mono">35mm</span>
+      </div>
+
+      {/* Camera HUD readout — bottom-left */}
+      <div className="hero-cam-hud hud-bl" aria-hidden="true">
+        <span className="hud-chip hud-mono">MODE · MANUAL</span>
+        <span className="hud-battery"><i /><i /><i /><i /></span>
+      </div>
+
       <div className="hero-content">
         <div className="hero-text">
           <motion.h1
@@ -159,9 +178,9 @@ const Hero: React.FC = () => {
           <motion.div
             className="hero-portrait"
             ref={portraitRef}
-            initial={{ opacity: 0, scale: 0.92 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.9, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+            initial={{ opacity: 0, scale: 0.88, filter: 'blur(14px)' }}
+            animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
+            transition={{ duration: 1.1, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
           >
             <div className="hero-portrait-frame">
               <img
@@ -169,6 +188,35 @@ const Hero: React.FC = () => {
                 alt="Marin Dulja"
                 loading="eager"
               />
+
+              {/* Rule-of-thirds grid */}
+              <span className="cam-grid" aria-hidden="true" />
+
+              {/* Focus reticle — pulses onto the subject */}
+              <span className="cam-reticle" aria-hidden="true">
+                <i className="cam-reticle-corner tl" />
+                <i className="cam-reticle-corner tr" />
+                <i className="cam-reticle-corner bl" />
+                <i className="cam-reticle-corner br" />
+              </span>
+
+              {/* Corner viewfinder marks inside the frame */}
+              <span className="cam-vf tl" aria-hidden="true" />
+              <span className="cam-vf tr" aria-hidden="true" />
+              <span className="cam-vf bl" aria-hidden="true" />
+              <span className="cam-vf br" aria-hidden="true" />
+
+              {/* Shutter curtain — fires periodically */}
+              <span className="cam-shutter" aria-hidden="true">
+                <i className="cam-shutter-top" />
+                <i className="cam-shutter-bottom" />
+              </span>
+
+              {/* Flash burst */}
+              <span className="cam-flash" aria-hidden="true" />
+
+              {/* Scanline sweep for live-view feel */}
+              <span className="cam-scan" aria-hidden="true" />
             </div>
           </motion.div>
 

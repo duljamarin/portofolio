@@ -37,8 +37,13 @@ const QuoteIcon = () => (
 );
 
 const fadeUp = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0 },
+  hidden: { opacity: 0, y: 28, filter: 'blur(8px)' },
+  visible: { opacity: 1, y: 0, filter: 'blur(0px)' },
+};
+
+const testimonialReveal = {
+  hidden: { opacity: 0, y: 40, scale: 0.95, filter: 'blur(10px)' },
+  visible: { opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' },
 };
 
 const TestimonialsSection: React.FC = () => {
@@ -65,8 +70,8 @@ const TestimonialsSection: React.FC = () => {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: '-50px' }}
-            variants={fadeUp}
-            transition={{ duration: 0.6, delay: idx * 0.12, ease: [0.16, 1, 0.3, 1] }}
+            variants={testimonialReveal}
+            transition={{ duration: 0.75, delay: idx * 0.15, ease: [0.16, 1, 0.3, 1] }}
           >
             <div className="testimonial-card-top">
               <div className="testimonial-stars" aria-label="5 out of 5 stars">
