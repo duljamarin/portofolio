@@ -795,7 +795,7 @@ a:hover {
 @media (max-width: 900px) {
   .hero-cam-hud { font-size: 0.6rem; gap: 6px; }
   .hero-cam-hud.hud-tl { left: 28px; top: 104px; }
-  .hero-cam-hud.hud-tr { right: 28px; top: 104px; }
+  .hero-cam-hud.hud-tr { right: 28px; bottom: 30px; top: auto; }
   .hero-cam-hud.hud-bl { left: 28px; bottom: 30px; }
 }
 
