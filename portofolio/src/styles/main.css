@@ -800,8 +800,7 @@ a:hover {
 }
 
 @media (max-width: 600px) {
-  .hero-cam-hud.hud-tr { display: none; }
-  .hero-cam-hud.hud-bl .hud-chip { display: none; }
+  .hero-cam-hud { display: none; }
 }
 
 /* ============================================
