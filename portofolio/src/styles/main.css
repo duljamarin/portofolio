@@ -729,8 +729,8 @@ a:hover {
 }
 
 .hero-cam-hud.hud-tl { top: 116px; left: 72px; }
+.hero-cam-hud.hud-tr { top: 116px; right: 72px; }
 .hero-cam-hud.hud-bl { bottom: 44px; left: 72px; }
-.hero-cam-hud.hud-br { bottom: 44px; right: 72px; }
 
 .hud-rec {
   display: inline-flex;
@@ -795,12 +795,12 @@ a:hover {
 @media (max-width: 900px) {
   .hero-cam-hud { font-size: 0.6rem; gap: 6px; }
   .hero-cam-hud.hud-tl { left: 28px; top: 104px; }
+  .hero-cam-hud.hud-tr { right: 28px; bottom: 30px; top: auto; }
   .hero-cam-hud.hud-bl { left: 28px; bottom: 30px; }
-  .hero-cam-hud.hud-br { right: 28px; bottom: 30px; }
 }
 
 @media (max-width: 600px) {
-  .hero-cam-hud.hud-br { display: none; }
+  .hero-cam-hud.hud-tr { display: none; }
   .hero-cam-hud.hud-bl .hud-chip { display: none; }
 }
 

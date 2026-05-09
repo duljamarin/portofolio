@@ -98,8 +98,8 @@ const Hero: React.FC = () => {
         <span className="hud-chip">f/1.8</span>
       </div>
 
-      {/* Camera HUD readout — bottom-right */}
-      <div className="hero-cam-hud hud-br" aria-hidden="true">
+      {/* Camera HUD readout — top-right */}
+      <div className="hero-cam-hud hud-tr" aria-hidden="true">
         <span className="hud-chip">1/250s</span>
         <span className="hud-chip hud-mono">35mm</span>
       </div>
