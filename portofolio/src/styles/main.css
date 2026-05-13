@@ -795,13 +795,12 @@ a:hover {
 @media (max-width: 900px) {
   .hero-cam-hud { font-size: 0.6rem; gap: 6px; }
   .hero-cam-hud.hud-tl { left: 28px; top: 104px; }
-  .hero-cam-hud.hud-tr { right: 28px; top: 104px; }
+  .hero-cam-hud.hud-tr { right: 28px; bottom: 30px; top: auto; }
   .hero-cam-hud.hud-bl { left: 28px; bottom: 30px; }
 }
 
 @media (max-width: 600px) {
-  .hero-cam-hud.hud-tr { display: none; }
-  .hero-cam-hud.hud-bl .hud-chip { display: none; }
+  .hero-cam-hud { display: none; }
 }
 
 /* ============================================
@@ -953,16 +952,43 @@ a:hover {
     grid-template-columns: 1fr;
     gap: 2.75rem;
     text-align: left;
+    justify-items: center;
   }
   .hero-portrait-col {
-    max-width: 320px;
+    max-width: 340px;
+    width: 100%;
     order: -1;
-    margin: 0;
-    justify-self: start;
-    align-items: flex-start;
+    margin: 0 auto;
+    justify-self: center;
+    align-items: center;
+  }
+  .hero-text {
+    width: 100%;
   }
   .hero-ctas {
     flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 600px) {
+  .hero {
+    padding: 100px 20px 64px;
+  }
+  .hero-content {
+    gap: 2rem;
+    text-align: center;
+  }
+  .hero-text {
+    align-items: center;
+  }
+  .hero-bio {
+    max-width: 100%;
+  }
+  .hero-ctas {
+    justify-content: center;
+  }
+  .hero-portrait-col {
+    max-width: min(300px, 82vw);
   }
 }
 
