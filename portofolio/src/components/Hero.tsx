@@ -162,6 +162,14 @@ const Hero: React.FC = () => {
             >
               Get In Touch
             </a>
+            <a
+              href="/Marin_Dulja_CV.pdf"
+              className="btn-ghost"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              View CV
+            </a>
           </motion.div>
         </div>
 

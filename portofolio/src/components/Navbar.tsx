@@ -88,6 +88,14 @@ const Navbar: React.FC = () => {
               {s.label}
             </a>
           ))}
+          <a
+            href="/Marin_Dulja_CV.pdf"
+            className="nav-link nav-link-cv"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            CV
+          </a>
         </div>
 
         <button
@@ -113,6 +121,15 @@ const Navbar: React.FC = () => {
             {s.label}
           </a>
         ))}
+        <a
+          href="/Marin_Dulja_CV.pdf"
+          className="mobile-nav-link"
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={handleMobileClick}
+        >
+          CV
+        </a>
       </div>
     </>
   );
