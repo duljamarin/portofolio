@@ -70,6 +70,8 @@ const Projects: React.FC = () => {
             <img
               src={featured.gallery[0]}
               alt={`${featured.title} preview`}
+              width={960}
+              height={600}
               loading="lazy"
               decoding="async"
             />
@@ -124,6 +126,8 @@ const Projects: React.FC = () => {
                 <img
                   src={project.gallery[0]}
                   alt={`${project.title} screenshot`}
+                  width={600}
+                  height={180}
                   loading="lazy"
                   decoding="async"
                 />

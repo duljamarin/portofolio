@@ -120,7 +120,7 @@ const Hero: React.FC = () => {
         <div className="hero-text">
           <motion.h1
             className="hero-name"
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 1, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.75, ease: [0.16, 1, 0.3, 1] }}
           >
@@ -130,7 +130,7 @@ const Hero: React.FC = () => {
 
           <motion.p
             className="hero-headline"
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 1, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
           >
@@ -140,7 +140,7 @@ const Hero: React.FC = () => {
 
           <motion.p
             className="hero-bio"
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 1, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
           >
@@ -202,8 +202,8 @@ const Hero: React.FC = () => {
                 <img
                   src="/photo_portofolio-opt.jpg"
                   alt="Marin Dulja"
-                  width={760}
-                  height={760}
+                  width={680}
+                  height={680}
                   loading="eager"
                   fetchPriority="high"
                   decoding="async"

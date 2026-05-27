@@ -12,16 +12,16 @@ const PUBLIC_DIR = path.resolve(__dirname, '../public');
 // Per-image config: max width and WebP quality. Project screenshots render
 // at most ~1280px wide (modal); the hero portrait frame is small.
 const config = {
-  'photo_portofolio.jpg': { maxWidth: 760, quality: 72, fallback: 'jpeg' },
-  'xbrat-ai.png': { maxWidth: 1280, quality: 78 },
-  'personal-finances-1.png': { maxWidth: 1280, quality: 78 },
-  'personal-finances-2.png': { maxWidth: 1280, quality: 78 },
-  'personal-finances-3.png': { maxWidth: 1280, quality: 78 },
-  'the-literary-heaven-1.png': { maxWidth: 1280, quality: 78 },
-  'the-literary-heaven-2.png': { maxWidth: 1280, quality: 78 },
-  'clearsight-1.png': { maxWidth: 1280, quality: 78 },
-  'clearsight-2.png': { maxWidth: 1280, quality: 78 },
-  'clearsight-3.png': { maxWidth: 1280, quality: 78 },
+  'photo_portofolio.jpg': { maxWidth: 680, quality: 66, fallback: 'jpeg' },
+  'xbrat-ai.png': { maxWidth: 960, quality: 76 },
+  'personal-finances-1.png': { maxWidth: 960, quality: 76 },
+  'personal-finances-2.png': { maxWidth: 960, quality: 76 },
+  'personal-finances-3.png': { maxWidth: 960, quality: 76 },
+  'the-literary-heaven-1.png': { maxWidth: 960, quality: 76 },
+  'the-literary-heaven-2.png': { maxWidth: 960, quality: 76 },
+  'clearsight-1.png': { maxWidth: 960, quality: 76 },
+  'clearsight-2.png': { maxWidth: 960, quality: 76 },
+  'clearsight-3.png': { maxWidth: 960, quality: 76 },
   'azure-certification.png': { maxWidth: 800, quality: 80 },
 };
 
