@@ -20,7 +20,7 @@ export const projects: Project[] = [
   {
     title: 'Trading Intelligence Platform at Adus Technologies',
     description: 'Backend for crypto & forex signals, with RabbitMQ, WebSockets, push notifications, Coinbase API integration, and community chat.',
-    gallery: ['/xbrat-ai.png'],
+    gallery: ['/xbrat-ai.webp'],
     links: [
       { label: 'Live Site', url: 'https://xbratai.com/' }
     ],
@@ -31,7 +31,7 @@ export const projects: Project[] = [
     title: 'Personal Finance Tracker (Fullstack)',
     description:
       'A real-world personal finance web application with end-to-end income, expense, and balance tracking. Features recurring transactions, spending insights, financial scoring, and goal management. Migrated from Java/Spring Boot to Supabase for streamlined authentication and data persistence. Built with React.js and Tailwind CSS for a responsive, low-friction user experience optimized for daily use.',
-    gallery: ['/personal-finances-1.png', '/personal-finances-2.png', '/personal-finances-3.png'],
+    gallery: ['/personal-finances-1.webp', '/personal-finances-2.webp', '/personal-finances-3.webp'],
     links: [
       { label: 'Live Site', url: 'https://personal-finances.app/' },
       { label: 'GitHub', url: 'https://github.com/duljamarin/personal-finance-tracker' }
@@ -43,7 +43,7 @@ export const projects: Project[] = [
     title: 'The Literary Heaven',
     description:
       'A fullstack bookstore e-commerce platform featuring complete online shopping functionality with product browsing, cart management, and checkout flow. Built with React and Tailwind CSS for a modern, responsive interface, powered by Supabase for authentication and data management.',
-    gallery: ['/the-literary-heaven-1.png', '/the-literary-heaven-2.png'],
+    gallery: ['/the-literary-heaven-1.webp', '/the-literary-heaven-2.webp'],
     links: [
       { label: 'Live Site', url: 'https://the-literary-heaven.netlify.app/' },
       { label: 'GitHub', url: 'https://github.com/duljamarin/bookshop-ecommerce' }
@@ -55,7 +55,7 @@ export const projects: Project[] = [
     title: 'ClearSight Clinic Website',
     description:
       'A responsive, production-ready single-page application showcasing modern frontend architecture and UX clarity. Features client-style multi-section layout with proper React Router configuration and Supabase backend integration.',
-    gallery: ['/clearsight-1.png', '/clearsight-2.png', '/clearsight-3.png'],
+    gallery: ['/clearsight-1.webp', '/clearsight-2.webp', '/clearsight-3.webp'],
     links: [
       { label: 'Live Site', url: 'https://clearsight-clinic.netlify.app' },
       { label: 'GitHub', url: 'https://github.com/duljamarin/eye-clinic-app' }

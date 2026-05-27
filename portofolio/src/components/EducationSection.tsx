@@ -31,9 +31,10 @@ const EducationSection: React.FC = () => (
     >
       <div className="certification-card">
         <img
-          src="/azure-certification.png"
+          src="/azure-certification.webp"
           alt="Microsoft Certified: Azure Developer Associate"
           loading="lazy"
+          decoding="async"
         />
         <div className="cert-info">
           <h3 className="cert-title">Microsoft Certified: Azure Developer Associate</h3>

@@ -32,16 +32,24 @@ const Navbar: React.FC = () => {
 
     if (!sectionEls.length) return;
 
+    // Cache section bounds so the scroll handler never reads layout (offsetTop/
+    // offsetHeight) per frame — that read-after-scroll is what triggers forced
+    // reflow. Recompute only when layout can actually change (resize/load).
+    let bounds: Array<{ top: number; bottom: number }> = [];
+    const measure = () => {
+      bounds = sectionEls.map((el) => ({
+        top: el.offsetTop,
+        bottom: el.offsetTop + el.offsetHeight,
+      }));
+    };
+
     let ticking = false;
     const updateActive = () => {
-      // Anchor line sits ~120px below the top of the viewport (just under navbar)
+      // Anchor line sits ~140px below the top of the viewport (just under navbar)
       const anchor = window.scrollY + 140;
       let current = -1;
-      for (let i = 0; i < sectionEls.length; i++) {
-        const el = sectionEls[i];
-        const top = el.offsetTop;
-        const bottom = top + el.offsetHeight;
-        if (anchor >= top && anchor < bottom) {
+      for (let i = 0; i < bounds.length; i++) {
+        if (anchor >= bounds[i].top && anchor < bounds[i].bottom) {
           current = i;
           break;
         }
@@ -57,9 +65,16 @@ const Navbar: React.FC = () => {
       }
     };
 
-    window.addEventListener('scroll', onScroll, { passive: true });
+    measure();
     updateActive();
-    return () => window.removeEventListener('scroll', onScroll);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', measure);
+    window.addEventListener('load', measure);
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', measure);
+      window.removeEventListener('load', measure);
+    };
   }, []);
 
   const handleMobileClick = () => {

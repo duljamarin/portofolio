@@ -71,6 +71,7 @@ const Projects: React.FC = () => {
               src={featured.gallery[0]}
               alt={`${featured.title} preview`}
               loading="lazy"
+              decoding="async"
             />
           )}
         </div>
@@ -124,6 +125,7 @@ const Projects: React.FC = () => {
                   src={project.gallery[0]}
                   alt={`${project.title} screenshot`}
                   loading="lazy"
+                  decoding="async"
                 />
                 {project.gallery.length > 1 && (
                   <span className="gallery-count">

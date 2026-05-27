@@ -59,11 +59,17 @@ const Hero: React.FC = () => {
     const handlers: Array<{ el: HTMLAnchorElement; move: (e: MouseEvent) => void; leave: () => void }> = [];
 
     buttons.forEach((btn) => {
+      let rafId = 0;
       const move = (e: MouseEvent) => {
-        const rect = btn.getBoundingClientRect();
-        const dx = (e.clientX - (rect.left + rect.width / 2)) * 0.18;
-        const dy = (e.clientY - (rect.top + rect.height / 2)) * 0.28;
-        btn.style.transform = `translate(${dx}px, ${dy}px)`;
+        const { clientX, clientY } = e;
+        if (rafId) return;
+        rafId = requestAnimationFrame(() => {
+          rafId = 0;
+          const rect = btn.getBoundingClientRect();
+          const dx = (clientX - (rect.left + rect.width / 2)) * 0.18;
+          const dy = (clientY - (rect.top + rect.height / 2)) * 0.28;
+          btn.style.transform = `translate(${dx}px, ${dy}px)`;
+        });
       };
       const leave = () => {
         btn.style.transform = '';
@@ -191,11 +197,18 @@ const Hero: React.FC = () => {
             transition={{ duration: 1.1, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
           >
             <div className="hero-portrait-frame">
-              <img
-                src="/photo_portofolio.jpg"
-                alt="Marin Dulja"
-                loading="eager"
-              />
+              <picture>
+                <source srcSet="/photo_portofolio.webp" type="image/webp" />
+                <img
+                  src="/photo_portofolio-opt.jpg"
+                  alt="Marin Dulja"
+                  width={760}
+                  height={760}
+                  loading="eager"
+                  fetchPriority="high"
+                  decoding="async"
+                />
+              </picture>
 
               {/* Rule-of-thirds grid */}
               <span className="cam-grid" aria-hidden="true" />
