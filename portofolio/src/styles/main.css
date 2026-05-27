@@ -225,6 +225,16 @@ a:hover {
   background: var(--primary-muted);
 }
 
+.nav-link-cv {
+  color: var(--primary);
+  border: 1px solid var(--primary-muted);
+}
+
+.nav-link-cv:hover {
+  color: var(--text-primary);
+  background: var(--primary-muted);
+}
+
 /* Mobile hamburger */
 .nav-hamburger {
   display: none;
