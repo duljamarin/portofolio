@@ -93,7 +93,6 @@ const ContactModal: React.FC = () => {
             </button>
 
             <span className="contact-modal-eyebrow">
-              <span className="contact-modal-eyebrow-dot" />
               Available for new projects
             </span>
 

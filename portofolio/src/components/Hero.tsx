@@ -1,6 +1,5 @@
 import React, { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { initDotGrid } from '../animations';
 
 const ArrowRightIcon = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -10,16 +9,8 @@ const ArrowRightIcon = () => (
 );
 
 const Hero: React.FC = () => {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
   const portraitRef = useRef<HTMLDivElement>(null);
   const ctasRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (canvasRef.current) {
-      const cleanup = initDotGrid(canvasRef.current);
-      return cleanup;
-    }
-  }, []);
 
   useEffect(() => {
     const portrait = portraitRef.current;
@@ -89,33 +80,6 @@ const Hero: React.FC = () => {
 
   return (
     <section id="hero" className="hero">
-      <canvas ref={canvasRef} className="hero-canvas" />
-
-      {/* Camera framing brackets — corner marks around the entire hero */}
-      <span className="hero-frame-bracket br-tl" aria-hidden="true" />
-      <span className="hero-frame-bracket br-tr" aria-hidden="true" />
-      <span className="hero-frame-bracket br-bl" aria-hidden="true" />
-      <span className="hero-frame-bracket br-br" aria-hidden="true" />
-
-      {/* Camera HUD readout — top-left */}
-      <div className="hero-cam-hud hud-tl" aria-hidden="true">
-        <span className="hud-rec"><i className="hud-rec-dot" />REC</span>
-        <span className="hud-chip">ISO 400</span>
-        <span className="hud-chip">f/1.8</span>
-      </div>
-
-      {/* Camera HUD readout — top-right */}
-      <div className="hero-cam-hud hud-tr" aria-hidden="true">
-        <span className="hud-chip">1/250s</span>
-        <span className="hud-chip hud-mono">35mm</span>
-      </div>
-
-      {/* Camera HUD readout — bottom-left */}
-      <div className="hero-cam-hud hud-bl" aria-hidden="true">
-        <span className="hud-chip hud-mono">MODE · MANUAL</span>
-        <span className="hud-battery"><i /><i /><i /><i /></span>
-      </div>
-
       <div className="hero-content">
         <div className="hero-text">
           <motion.h1
@@ -209,35 +173,6 @@ const Hero: React.FC = () => {
                   decoding="async"
                 />
               </picture>
-
-              {/* Rule-of-thirds grid */}
-              <span className="cam-grid" aria-hidden="true" />
-
-              {/* Focus reticle — pulses onto the subject */}
-              <span className="cam-reticle" aria-hidden="true">
-                <i className="cam-reticle-corner tl" />
-                <i className="cam-reticle-corner tr" />
-                <i className="cam-reticle-corner bl" />
-                <i className="cam-reticle-corner br" />
-              </span>
-
-              {/* Corner viewfinder marks inside the frame */}
-              <span className="cam-vf tl" aria-hidden="true" />
-              <span className="cam-vf tr" aria-hidden="true" />
-              <span className="cam-vf bl" aria-hidden="true" />
-              <span className="cam-vf br" aria-hidden="true" />
-
-              {/* Shutter curtain — fires periodically */}
-              <span className="cam-shutter" aria-hidden="true">
-                <i className="cam-shutter-top" />
-                <i className="cam-shutter-bottom" />
-              </span>
-
-              {/* Flash burst */}
-              <span className="cam-flash" aria-hidden="true" />
-
-              {/* Scanline sweep for live-view feel */}
-              <span className="cam-scan" aria-hidden="true" />
             </div>
           </motion.div>
 

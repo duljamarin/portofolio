@@ -29,7 +29,6 @@ const Contact: React.FC = () => {
         transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
       >
         <span className="contact-card-eyebrow">
-          <span className="contact-card-eyebrow-dot" />
           Let's connect
         </span>
 
