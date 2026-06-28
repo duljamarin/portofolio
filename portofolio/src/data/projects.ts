@@ -33,8 +33,7 @@ export const projects: Project[] = [
       'A real-world personal finance web application with end-to-end income, expense, and balance tracking. Features recurring transactions, spending insights, financial scoring, and goal management. Migrated from Java/Spring Boot to Supabase for streamlined authentication and data persistence. Built with React.js and Tailwind CSS for a responsive, low-friction user experience optimized for daily use.',
     gallery: ['/personal-finances-1.webp', '/personal-finances-2.webp', '/personal-finances-3.webp'],
     links: [
-      { label: 'Live Site', url: 'https://personal-finances.app/' },
-      { label: 'GitHub', url: 'https://github.com/duljamarin/personal-finance-tracker' }
+      { label: 'Live Site', url: 'https://personal-finances.app/' }
     ],
     tags: ['React', 'Tailwind', 'Supabase', 'Full-Stack'],
     type: 'fullstack'
