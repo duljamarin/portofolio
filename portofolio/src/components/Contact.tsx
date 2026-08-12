@@ -1,5 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { contact } from '../data/contact';
+import { fadeIn, DUR } from '../animations';
 
 const ArrowIcon = () => (
   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -8,64 +10,34 @@ const ArrowIcon = () => (
   </svg>
 );
 
-const fadeUp = {
-  hidden: { opacity: 0, y: 40, scale: 0.95, filter: 'blur(10px)' },
-  visible: { opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' },
-};
-
 const Contact: React.FC = () => {
-  const openModal = () => {
-    window.dispatchEvent(new Event('contact:open'));
-  };
+  if (!contact.statement) {
+    // TODO: contact.statement is empty — fill src/data/contact.ts before shipping this section.
+    return null;
+  }
 
   return (
     <section id="contact" className="contact-section">
       <motion.div
-        className="contact-card"
+        className="ledger-band"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, margin: '-50px' }}
-        variants={fadeUp}
-        transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+        variants={fadeIn}
+        transition={{ duration: DUR * 2, ease: [0.2, 0.6, 0.2, 1] }}
       >
-        <span className="contact-card-eyebrow">
-          Let's connect
-        </span>
+        <h2 className="ledger-band-heading">{contact.heading}</h2>
+        <p className="ledger-band-statement">{contact.statement}</p>
 
-        <motion.h2
-          className="contact-card-heading"
-          initial={{ opacity: 0, y: 14 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+        <a
+          href="https://www.linkedin.com/in/marin-dulja/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="ledger-band-cta"
         >
-          Got a project in mind?
-          <br />
-          <span className="accent">Let's talk.</span>
-        </motion.h2>
-
-        <motion.p
-          className="contact-card-subtitle"
-          initial={{ opacity: 0, y: 14 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-        >
-          Open to freelance work, full-time roles, and interesting collaborations.
-        </motion.p>
-
-        <motion.button
-          type="button"
-          className="contact-card-cta"
-          onClick={openModal}
-          initial={{ opacity: 0, y: 14 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-        >
-          Get in touch
+          {contact.ctaLabel}
           <ArrowIcon />
-        </motion.button>
+        </a>
       </motion.div>
     </section>
   );

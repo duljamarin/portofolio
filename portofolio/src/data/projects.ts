@@ -9,6 +9,7 @@ export type Project = {
   links: { label: string; url: string }[];
   tags: string[];
   type: 'main' | 'fullstack' | 'contractor';
+  weight?: 1 | 2;
   badge?: {
     text: string;
     url?: string;
@@ -18,26 +19,48 @@ export type Project = {
 
 export const projects: Project[] = [
   {
-    title: 'Trading Intelligence Platform at Adus Technologies',
-    description: 'Backend for crypto & forex signals, with RabbitMQ, WebSockets, push notifications, Coinbase API integration, and community chat.',
+    title: 'xBratAI: AI-Driven Alerts Platform at Adus Technologies',
+    description: 'Real-time signal-detection and alerting pipeline (RabbitMQ, WebSockets, PostgreSQL, MongoDB) identifying multi-indicator confluences and delivering sub-second alerts to 10,000+ day traders across crypto, forex, and futures. Shipped Stripe subscription billing, community chat, and OneSignal push notifications; delivered 70+ end-to-end tasks in 7 months while cutting post-deployment regressions by 40% through targeted integration test coverage.',
     gallery: ['/xbrat-ai.webp'],
     links: [
       { label: 'Live Site', url: 'https://xbratai.com/' }
     ],
-    tags: ['Backend', 'Java', 'Spring Boot', 'MongoDB', 'PostgreSQL', 'RabbitMQ', 'WebSockets', 'API Integration', 'Contractor'],
+    tags: ['Backend', 'Java', 'Spring Boot', 'MongoDB', 'PostgreSQL', 'RabbitMQ', 'WebSockets', 'Stripe', 'Contractor'],
     type: 'contractor',
   },
   {
-    title: 'Personal Finance Tracker (Fullstack)',
+    title: 'Personal Finance Tracker: Solo-Built SaaS',
     description:
-      'A real-world personal finance web application with end-to-end income, expense, and balance tracking. Features recurring transactions, spending insights, financial scoring, and goal management. Migrated from Java/Spring Boot to Supabase for streamlined authentication and data persistence. Built with React.js and Tailwind CSS for a responsive, low-friction user experience optimized for daily use.',
+      'A production subscription SaaS for personal finance, architected and shipped solo: React 19 + Vite + Tailwind frontend on a Supabase backend (PostgreSQL, Auth, Edge Functions), with a 15-table schema across 52 versioned migrations. Per-user data isolation via 28 Row-Level Security policies, with plan limits, default-data provisioning, and denormalised totals enforced by 16 Postgres triggers. Full billing lifecycle on Paddle across 5+ Supabase Edge Functions (webhook verification, entitlement checks, customer-portal provisioning, failed-payment recovery, GDPR deletion), plus a Recharts analytics surface, English/Albanian i18n, and an SEO prerender pipeline.',
     gallery: ['/personal-finances-1.webp', '/personal-finances-2.webp', '/personal-finances-3.webp'],
     links: [
       { label: 'Live Site', url: 'https://personal-finances.app/' },
       { label: 'GitHub', url: 'https://github.com/duljamarin/personal-finance-tracker' }
     ],
-    tags: ['React', 'Tailwind', 'Supabase', 'Full-Stack'],
-    type: 'fullstack'
+    tags: ['SaaS', 'React', 'Vite', 'Tailwind', 'Supabase', 'PostgreSQL', 'Paddle Billing', 'Row-Level Security'],
+    type: 'fullstack',
+    weight: 2,
+  },
+  {
+    title: 'Tiger Project at Candidatis',
+    description: 'Web Crawler developed for Candidatis.net, automating job ads data extraction and processing',
+    gallery: ['/tiger-candidatis.webp'],
+    links: [
+      { label: 'Candidatis Crawler Website', url: 'https://www.candidatis.net/crawler.html' }
+    ],
+    tags: ['Backend', 'Web Crawler', 'Java', 'Spring Boot', 'Contractor'],
+    type: 'contractor',
+  },
+  {
+    title: 'Wikloud',
+    description: 'Microservice architecture backend for Sabanet Albania, using Spring Cloud and Spring Boot. Alarm management system for MyPumaSecurity, enabling monitoring and control of alarm systems.',
+    gallery: ['/wikloud-pumasecurity.webp'],
+    links: [
+      { label: 'PumaSecurity', url: 'https://www.pumasecurity.it/wellmakers/' },
+      { label: 'Company', url: 'https://www.sabanet.it/' }
+    ],
+    tags: ['Full Time Job', 'Spring Cloud', 'Spring Boot', 'Microservices', 'Alarm Management'],
+    type: 'main',
   },
   {
     title: 'The Literary Heaven',
@@ -65,30 +88,12 @@ export const projects: Project[] = [
   // ...existing main projects from your portfolio...
 
   {
-    title: 'Tiger Project at Candidatis',
-    description: 'Web Crawler developed for Candidatis.net, automating job ads data extraction and processing',
-    links: [
-      { label: 'Candidatis Crawler Website', url: 'https://www.candidatis.net/crawler.html' }
-    ],
-    tags: ['Backend', 'Web Crawler', 'Java', 'Spring Boot', 'Contractor'],
-    type: 'contractor',
-  },
-  {
     title: 'Therapism',
     description: 'Mental health platform, built with Java, Spring Boot, PostgreSQL, and Spring AI.',
     links: [
       { label: 'GitHub', url: 'https://github.com/duljamarin/Therapism' }
     ],
     tags: ['Personal Project', 'Java', 'Spring Boot', 'PostgreSQL', 'Spring AI', 'Backend'],
-    type: 'main',
-  },
-  {
-    title: 'Wikloud',
-    description: 'Microservice architecture backend for Sabanet Albania, using Spring Cloud and Spring Boot. Alarm management system for MyPumaSecurity, enabling monitoring and control of alarm systems.',
-    links: [
-      { label: 'Company', url: 'https://www.sabanet.it/' }
-    ],
-    tags: ['Full Time Job', 'Spring Cloud', 'Spring Boot', 'Microservices', 'Alarm Management'],
     type: 'main',
   },
   {

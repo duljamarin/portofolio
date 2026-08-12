@@ -1,6 +1,12 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 
+const StarIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+  </svg>
+);
+
 const testimonials = [
   {
     name: 'Jonas Figu',
@@ -24,26 +30,14 @@ What stood out most was Marin's positive attitude and professionalism. He was al
   },
 ];
 
-const StarIcon = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-  </svg>
-);
-
-const QuoteIcon = () => (
-  <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-    <path d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V20c0 1 0 1 1 1zm12 0c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 .989 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V20c0 1 0 1 1 1z" />
-  </svg>
-);
-
 const fadeUp = {
-  hidden: { opacity: 0, y: 28, filter: 'blur(8px)' },
-  visible: { opacity: 1, y: 0, filter: 'blur(0px)' },
+  hidden: { opacity: 0, y: 28 },
+  visible: { opacity: 1, y: 0 },
 };
 
 const testimonialReveal = {
-  hidden: { opacity: 0, y: 40, scale: 0.95, filter: 'blur(10px)' },
-  visible: { opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' },
+  hidden: { opacity: 0, y: 28 },
+  visible: { opacity: 1, y: 0 },
 };
 
 const TestimonialsSection: React.FC = () => {
@@ -57,7 +51,6 @@ const TestimonialsSection: React.FC = () => {
         variants={fadeUp}
         transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
       >
-        <span className="section-number">05</span>
         <h2 className="section-title">Words of <span className="accent">Appreciation</span></h2>
         <p className="section-subtitle">Reflections from peers and mentors I've worked with.</p>
       </motion.div>
@@ -73,13 +66,10 @@ const TestimonialsSection: React.FC = () => {
             variants={testimonialReveal}
             transition={{ duration: 0.75, delay: idx * 0.15, ease: [0.16, 1, 0.3, 1] }}
           >
-            <div className="testimonial-card-top">
-              <div className="testimonial-stars" aria-label="5 out of 5 stars">
-                {Array.from({ length: 5 }).map((_, i) => (
-                  <StarIcon key={i} />
-                ))}
-              </div>
-              <span className="testimonial-quote-mark"><QuoteIcon /></span>
+            <div className="testimonial-stars" aria-label="5 out of 5 stars">
+              {Array.from({ length: 5 }).map((_, i) => (
+                <StarIcon key={i} />
+              ))}
             </div>
 
             <div className="testimonial-text">

@@ -3,12 +3,11 @@ import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import About from './components/About';
 import Projects from './components/Projects';
-import Experience from './components/Experience';
+import Offer from './components/Offer';
 import Skills from './components/Skills';
 import TestimonialsSection from './components/TestimonialsSection';
 import EducationSection from './components/EducationSection';
 import Contact from './components/Contact';
-import ContactModal from './components/ContactModal';
 import Footer from './components/Footer';
 import {
   initCounters,
@@ -46,14 +45,13 @@ const App: React.FC = () => {
       <Navbar />
       <Hero />
       <Projects />
-      <Experience />
+      <Offer />
       <About />
       <Skills />
       <TestimonialsSection />
       <EducationSection />
       <Contact />
       <Footer />
-      <ContactModal />
     </div>
   );
 };

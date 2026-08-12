@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
-import { projects } from '../data/projects';
+import { projects, type Project } from '../data/projects';
 import GalleryModal from './GalleryModal';
-import VideoModal from './VideoModal';
+import { fadeIn, DUR, STAGGER } from '../animations';
+
+const COLS = 6;
 
 const GitHubIcon = () => (
   <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
@@ -18,23 +20,39 @@ const ExternalIcon = () => (
   </svg>
 );
 
-const fadeUp = {
-  hidden: { opacity: 0, y: 40, scale: 0.95, filter: 'blur(8px)' },
-  visible: { opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' },
+const TYPE_LABEL: Record<Project['type'], string> = {
+  main: 'Main',
+  fullstack: 'Fullstack',
+  contractor: 'Contractor',
 };
+
+const featured = projects[0];
+const remaining = projects.slice(1);
+
+const filterCounts = remaining.reduce<Record<string, number>>((acc, p) => {
+  acc[p.type] = (acc[p.type] ?? 0) + 1;
+  return acc;
+}, {});
+
+const filterOptions: { key: string; label: string; count: number }[] = [
+  { key: 'all', label: 'All', count: remaining.length },
+  ...Object.entries(filterCounts).map(([type, count]) => ({
+    key: type,
+    label: TYPE_LABEL[type as Project['type']] ?? type,
+    count,
+  })),
+];
+
+const featuredBadge = featured.badge?.text ?? TYPE_LABEL[featured.type];
 
 const Projects: React.FC = () => {
   const [galleryOpen, setGalleryOpen] = useState<number | null>(null);
-  const [videoOpen, setVideoOpen] = useState<number | null>(null);
+  const [filter, setFilter] = useState('all');
 
-  const featured = projects[0];
-  const remaining = projects.slice(1);
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    e.currentTarget.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
-    e.currentTarget.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
-  };
+  const filtered = useMemo(
+    () => (filter === 'all' ? remaining : remaining.filter((p) => p.type === filter)),
+    [filter]
+  );
 
   return (
     <section id="projects" className="projects-section">
@@ -43,10 +61,9 @@ const Projects: React.FC = () => {
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, margin: '-50px' }}
-        variants={fadeUp}
-        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+        variants={fadeIn}
+        transition={{ duration: DUR * 2, ease: [0.2, 0.6, 0.2, 1] }}
       >
-        <span className="section-number">01</span>
         <h2 className="section-title">Selected <span className="accent">Projects</span></h2>
         <p className="section-subtitle">
           A selection of work - from enterprise backends processing millions of
@@ -57,14 +74,15 @@ const Projects: React.FC = () => {
       {/* Featured project */}
       <motion.div
         className="project-featured"
-        initial={{ opacity: 0, y: 50, scale: 0.96, filter: 'blur(10px)' }}
-        whileInView={{ opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' }}
+        initial="hidden"
+        whileInView="visible"
         viewport={{ once: true, margin: '-50px' }}
-        transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
+        variants={fadeIn}
+        transition={{ duration: DUR * 2, ease: [0.2, 0.6, 0.2, 1] }}
       >
         <div
           className="project-featured-media"
-          onClick={() => featured.gallery ? setGalleryOpen(0) : undefined}
+          onClick={() => (featured.gallery ? setGalleryOpen(0) : undefined)}
         >
           {featured.gallery && featured.gallery[0] && (
             <img
@@ -78,14 +96,14 @@ const Projects: React.FC = () => {
           )}
         </div>
         <div>
-          <span className="project-featured-badge">Featured · Contractor</span>
+          <span className="project-featured-badge">{featuredBadge}</span>
           <h3 className="project-featured-title">{featured.title}</h3>
           <p className="project-featured-desc">{featured.description}</p>
-          <div className="project-card-tags">
+          <ul className="project-card-tags">
             {featured.tags.map((tag) => (
-              <span className="project-tag" key={tag}>{tag}</span>
+              <li className="project-tag" key={tag}>{tag}</li>
             ))}
-          </div>
+          </ul>
           <div className="project-card-links">
             {featured.links.map((link) => (
               <a
@@ -103,77 +121,97 @@ const Projects: React.FC = () => {
         </div>
       </motion.div>
 
-      {/* Remaining project grid */}
-      <div className="project-grid">
-        {remaining.map((project, idx) => (
-          <motion.div
-            className="project-card"
-            data-type={project.type}
-            key={project.title}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: '-30px' }}
-            variants={fadeUp}
-            transition={{ duration: 0.65, delay: idx * 0.12, ease: [0.16, 1, 0.3, 1] }}
-            onMouseMove={handleMouseMove}
+      {/* Filter */}
+      <div className="project-filter" role="tablist" aria-label="Filter projects by type">
+        {filterOptions.map((opt) => (
+          <button
+            key={opt.key}
+            type="button"
+            role="tab"
+            aria-selected={filter === opt.key}
+            className="project-filter-btn"
+            data-active={filter === opt.key || undefined}
+            onClick={() => setFilter(opt.key)}
           >
-            {/* Gallery preview */}
-            {project.gallery && project.gallery.length > 0 && (
-              <div
-                className="project-gallery-preview"
-                onClick={() => setGalleryOpen(idx + 1)}
-              >
-                <img
-                  src={project.gallery[0]}
-                  alt={`${project.title} screenshot`}
-                  width={600}
-                  height={180}
-                  loading="lazy"
-                  decoding="async"
-                />
-                {project.gallery.length > 1 && (
-                  <span className="gallery-count">
-                    {project.gallery.length} images
-                  </span>
-                )}
-              </div>
-            )}
-
-            <h3 className="project-card-title">{project.title}</h3>
-            <p className="project-card-desc">{project.description}</p>
-
-            <div className="project-card-tags">
-              {project.tags.map((tag) => (
-                <span className="project-tag" key={tag}>{tag}</span>
-              ))}
-            </div>
-
-            <div className="project-card-links">
-              {project.links.map((link) => (
-                <a
-                  href={link.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="project-link"
-                  key={link.url}
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  {link.label.toLowerCase().includes('github') ? <GitHubIcon /> : <ExternalIcon />}
-                  {link.label}
-                </a>
-              ))}
-            </div>
-          </motion.div>
+            {opt.label} <span className="project-filter-count">{opt.count}</span>
+          </button>
         ))}
       </div>
+
+      {/* Remaining project grid */}
+      <motion.div className="project-grid" layout>
+        {filtered.map((project, idx) => {
+          const span = Math.round((project.weight ?? 1) * (COLS / 2));
+          return (
+            <motion.div
+              className="project-card"
+              data-type={project.type}
+              key={project.title}
+              layout
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: '-30px' }}
+              variants={fadeIn}
+              transition={{ duration: DUR * 2, delay: Math.min(idx * STAGGER, DUR * 4), ease: [0.2, 0.6, 0.2, 1] }}
+              style={{ gridColumn: `span ${span}` }}
+            >
+              {project.gallery && project.gallery.length > 0 && (
+                <div
+                  className="project-gallery-preview"
+                  onClick={() => setGalleryOpen(remaining.indexOf(project) + 1)}
+                >
+                  <img
+                    src={project.gallery[0]}
+                    alt={`${project.title} screenshot`}
+                    width={600}
+                    height={180}
+                    loading="lazy"
+                    decoding="async"
+                  />
+                  {project.gallery.length > 1 && (
+                    <span className="gallery-count">
+                      {project.gallery.length} images
+                    </span>
+                  )}
+                </div>
+              )}
+
+              <h3 className="project-card-title">{project.title}</h3>
+              <p className="project-card-desc">{project.description}</p>
+
+              <ul className="project-card-tags">
+                {project.tags.map((tag) => (
+                  <li className="project-tag" key={tag}>{tag}</li>
+                ))}
+              </ul>
+
+              <div className="project-card-links">
+                {project.links.map((link) => (
+                  <a
+                    href={link.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="project-link"
+                    key={link.url}
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    {link.label.toLowerCase().includes('github') ? <GitHubIcon /> : <ExternalIcon />}
+                    {link.label}
+                  </a>
+                ))}
+              </div>
+            </motion.div>
+          );
+        })}
+      </motion.div>
 
       <motion.div
         className="text-center"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true }}
-        variants={fadeUp}
-        transition={{ duration: 0.5 }}
+        variants={fadeIn}
+        transition={{ duration: DUR * 2, ease: [0.2, 0.6, 0.2, 1] }}
       >
         <a
           href="https://github.com/duljamarin?tab=repositories"
@@ -195,19 +233,6 @@ const Projects: React.FC = () => {
             title={project.title}
             isOpen={galleryOpen === idx}
             onClose={() => setGalleryOpen(null)}
-          />
-        ) : null
-      )}
-
-      {/* Video modals */}
-      {projects.map((project, idx) =>
-        project.video ? (
-          <VideoModal
-            key={`video-${project.title}`}
-            src={project.video}
-            title={project.title}
-            isOpen={videoOpen === idx}
-            onClose={() => setVideoOpen(null)}
           />
         ) : null
       )}

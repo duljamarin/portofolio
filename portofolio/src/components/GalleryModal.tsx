@@ -71,7 +71,7 @@ const GalleryModal: React.FC<GalleryModalProps> = ({ images, title, isOpen, onCl
 
         <img
           src={images[currentIndex]}
-          alt={`${title} — image ${currentIndex + 1}`}
+          alt={`${title}, image ${currentIndex + 1}`}
         />
 
         {images.length > 1 && (

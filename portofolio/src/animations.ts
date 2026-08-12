@@ -4,6 +4,18 @@
  * Kept lightweight — Framer Motion handles component-level animations.
  */
 
+// Source of truth for motion, mirroring --dur and --space in main.css.
+export const DUR = 0.18;            // seconds; must equal the ms value of --dur / 1000
+export const STAGGER = DUR / 3;
+export const SHIFT = 16;            // px; must equal 2 * the px value of --space
+
+// Shared entrance variant for the redesigned sections (Experience, Contact, Projects).
+// Permitted properties only: opacity, y.
+export const fadeIn = {
+  hidden: { opacity: 0, y: SHIFT },
+  visible: { opacity: 1, y: 0 },
+};
+
 /* ============================================
    ANIMATED COUNTER
    ============================================ */
@@ -93,7 +105,7 @@ export function initCustomCursor(): (() => void) | null {
   function onMouseOver(e: MouseEvent) {
     const target = e.target as HTMLElement;
     if (
-      target.closest('a, button, [role="button"], .project-card, .bento-card, .project-featured, .experience-card')
+      target.closest('a, button, [role="button"], .project-card, .bento-skill-tile, .project-featured')
     ) {
       dot.classList.add('hovering');
       ring.classList.add('hovering');
@@ -103,7 +115,7 @@ export function initCustomCursor(): (() => void) | null {
   function onMouseOut(e: MouseEvent) {
     const target = e.target as HTMLElement;
     if (
-      target.closest('a, button, [role="button"], .project-card, .bento-card, .project-featured, .experience-card')
+      target.closest('a, button, [role="button"], .project-card, .bento-skill-tile, .project-featured')
     ) {
       dot.classList.remove('hovering');
       ring.classList.remove('hovering');
@@ -161,7 +173,7 @@ export function initDotGrid(canvas: HTMLCanvasElement): () => void {
 
         ctx.beginPath();
         ctx.arc(x, y, size, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(16, 185, 129, ${alpha})`;
+        ctx.fillStyle = `rgba(216, 162, 42, ${alpha})`;
         ctx.fill();
       }
     }
@@ -231,7 +243,7 @@ export function initScrollProgress(el: HTMLElement): () => void {
    ============================================ */
 export function printConsoleEasterEgg(): void {
   const styles = [
-    'color: #10B981',
+    'color: #D8A22A',
     'font-size: 14px',
     'font-family: monospace',
     'font-weight: bold',

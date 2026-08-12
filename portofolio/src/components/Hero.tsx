@@ -98,8 +98,7 @@ const Hero: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
           >
-            I build systems that{' '}
-            <span className="text-gradient">scale</span>
+            I build systems that <span className="accent">scale</span>
           </motion.p>
 
           <motion.p
@@ -122,14 +121,7 @@ const Hero: React.FC = () => {
             <a href="#projects" className="btn-primary">
               See My Work <ArrowRightIcon />
             </a>
-            <a
-              href="#contact"
-              className="btn-ghost"
-              onClick={(e) => {
-                e.preventDefault();
-                window.dispatchEvent(new Event('contact:open'));
-              }}
-            >
+            <a href="#contact" className="btn-ghost">
               Get In Touch
             </a>
             <a
@@ -144,21 +136,12 @@ const Hero: React.FC = () => {
         </div>
 
         <div className="hero-portrait-col">
-          <motion.span
-            className="hero-status-chip"
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-          >
-            Open to Opportunities
-          </motion.span>
-
           <motion.div
             className="hero-portrait"
             ref={portraitRef}
-            initial={{ opacity: 0, scale: 0.88, filter: 'blur(14px)' }}
-            animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
-            transition={{ duration: 1.1, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+            initial={{ opacity: 0, scale: 0.96 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.7, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
           >
             <div className="hero-portrait-frame">
               <picture>
@@ -175,19 +158,6 @@ const Hero: React.FC = () => {
               </picture>
             </div>
           </motion.div>
-
-          <motion.span
-            className="hero-role-chip"
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
-          >
-            <span className="hero-role-chip-accent" aria-hidden="true" />
-            <span className="hero-role-chip-content">
-              <strong>Full-Stack Engineer</strong>
-              <em>Java · Spring Boot · React</em>
-            </span>
-          </motion.span>
         </div>
       </div>
     </section>

@@ -1,9 +1,14 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { roles } from '../data/experience';
+
+const previously = roles
+  .map((r) => r.company.split(' · ')[0])
+  .filter((company) => company !== 'Independent');
 
 const fadeUp = {
-  hidden: { opacity: 0, y: 28, filter: 'blur(8px)' },
-  visible: { opacity: 1, y: 0, filter: 'blur(0px)' },
+  hidden: { opacity: 0, y: 28 },
+  visible: { opacity: 1, y: 0 },
 };
 
 const principles = [
@@ -39,7 +44,6 @@ const About: React.FC = () => {
             variants={fadeUp}
             transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
           >
-            <span className="section-number">03</span>
             <h2 className="section-title">About <span className="accent">Me</span></h2>
           </motion.div>
 
@@ -51,7 +55,7 @@ const About: React.FC = () => {
             transition={{ duration: 0.6, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
           >
             I started writing Java in college and never stopped. With more than four years of work experience, I've shipped banking platforms, built AI trading systems,
-            improved a web crawler, developed microservices and still get excited about a clean API design.
+            improved a web crawler, developed microservices, and designed, built, and operated a subscription SaaS solo, from system design through billing integration and production deployment.
           </motion.p>
           <motion.p
             initial="hidden"
@@ -60,8 +64,8 @@ const About: React.FC = () => {
             variants={fadeUp}
             transition={{ duration: 0.6, delay: 0.18, ease: [0.16, 1, 0.3, 1] }}
           >
-            My core stack is Java and Spring Boot on the backend, React and JavaScript
-            on the frontend - but I'm comfortable across the entire stack. I thrive
+            My core stack is Java, Kotlin, and Spring Boot on the backend, React and Supabase
+            on the frontend and data layer - but I'm comfortable across the entire stack. I thrive
             in environments where I can solve real problems with clean, maintainable code.
           </motion.p>
 
@@ -89,15 +93,26 @@ const About: React.FC = () => {
               <span className="stat-label">Technologies</span>
             </div>
           </motion.div>
+
+          <motion.p
+            className="about-previously"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={fadeUp}
+            transition={{ duration: 0.6, delay: 0.32, ease: [0.16, 1, 0.3, 1] }}
+          >
+            Previously: {previously.join(' · ')}
+          </motion.p>
         </div>
 
-        {/* Engineering principles card */}
+        {/* Engineering principles */}
         <motion.aside
           className="principles-card"
-          initial={{ opacity: 0, x: 40, rotate: 1.5, filter: 'blur(10px)' }}
-          whileInView={{ opacity: 1, x: 0, rotate: 0, filter: 'blur(0px)' }}
+          initial={{ opacity: 0, x: 24 }}
+          whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true, margin: '-50px' }}
-          transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
         >
           <span className="principles-card-label">How I work</span>
           <h3 className="principles-card-title">Engineering principles</h3>
@@ -106,12 +121,11 @@ const About: React.FC = () => {
               <motion.div
                 className="principles-list-item"
                 key={p.title}
-                initial={{ opacity: 0, x: -12, filter: 'blur(6px)' }}
-                whileInView={{ opacity: 1, x: 0, filter: 'blur(0px)' }}
+                initial={{ opacity: 0, x: -12 }}
+                whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.55, delay: 0.2 + idx * 0.1, ease: [0.16, 1, 0.3, 1] }}
+                transition={{ duration: 0.5, delay: 0.15 + idx * 0.08, ease: [0.16, 1, 0.3, 1] }}
               >
-                <span className="principles-list-num">0{idx + 1}</span>
                 <div>
                   <h4>{p.title}</h4>
                   <p>{p.desc}</p>

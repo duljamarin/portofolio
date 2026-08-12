@@ -2,8 +2,8 @@ import React from 'react';
 import { motion } from 'framer-motion';
 
 const fadeUp = {
-  hidden: { opacity: 0, y: 28, scale: 0.96, filter: 'blur(8px)' },
-  visible: { opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' },
+  hidden: { opacity: 0, y: 28 },
+  visible: { opacity: 1, y: 0 },
 };
 
 const EducationSection: React.FC = () => (
@@ -16,7 +16,6 @@ const EducationSection: React.FC = () => (
       variants={fadeUp}
       transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
     >
-      <span className="section-number">06</span>
       <h2 className="section-title">Education & <span className="accent">Certifications</span></h2>
     </motion.div>
 
@@ -69,7 +68,7 @@ const EducationSection: React.FC = () => (
         transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
       >
         <h3>Bachelor of Computer Science</h3>
-        <span className="school">University of Tirana</span>
+        <span className="school">University of Tirana &middot; 8.18/10</span>
         <span className="period">2015 – 2018</span>
       </motion.a>
       <motion.a
@@ -84,7 +83,7 @@ const EducationSection: React.FC = () => (
         transition={{ duration: 0.5, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
       >
         <h3>MSc. of Computer Science</h3>
-        <span className="school">University of Tirana</span>
+        <span className="school">University of Tirana &middot; 8.1/10</span>
         <span className="period">2018 – 2020</span>
       </motion.a>
     </div>

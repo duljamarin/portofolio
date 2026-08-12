@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 
 const sections = [
   { label: 'Projects', href: '#projects' },
-  { label: 'Experience', href: '#experience' },
+  { label: 'Offer', href: '#offer' },
   { label: 'About', href: '#about' },
   { label: 'Skills', href: '#skills' },
   { label: 'Testimonials', href: '#testimonials' },
@@ -81,11 +81,7 @@ const Navbar: React.FC = () => {
     setMobileOpen(false);
   };
 
-  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string, isMobile = false) => {
-    if (href === '#contact') {
-      e.preventDefault();
-      window.dispatchEvent(new Event('contact:open'));
-    }
+  const handleNavClick = (_e: React.MouseEvent<HTMLAnchorElement>, _href: string, isMobile = false) => {
     if (isMobile) handleMobileClick();
   };
 
