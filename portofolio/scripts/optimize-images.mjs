@@ -23,6 +23,7 @@ const config = {
   'clearsight-2.png': { maxWidth: 960, quality: 76 },
   'clearsight-3.png': { maxWidth: 960, quality: 76 },
   'azure-certification.png': { maxWidth: 800, quality: 80 },
+  'testgorilla-spring.png': { maxWidth: 800, quality: 80 },
 };
 
 const fmtKB = (n) => `${(n / 1024).toFixed(0)} KB`;

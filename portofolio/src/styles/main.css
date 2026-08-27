@@ -1523,6 +1523,15 @@ a:hover {
   letter-spacing: -0.02em;
 }
 
+.cert-meta {
+  font-family: var(--font-mono);
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: var(--signal);
+  opacity: 0.85;
+  letter-spacing: 0.01em;
+}
+
 .cert-verify-btn {
   display: inline-flex;
   align-items: center;

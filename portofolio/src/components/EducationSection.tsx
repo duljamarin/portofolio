@@ -19,7 +19,7 @@ const EducationSection: React.FC = () => (
       <h2 className="section-title">Education & <span className="accent">Certifications</span></h2>
     </motion.div>
 
-    {/* Certification */}
+    {/* Certifications */}
     <motion.div
       className="certification-compact"
       initial="hidden"
@@ -50,6 +50,19 @@ const EducationSection: React.FC = () => (
             </svg>
             Verify Online
           </a>
+        </div>
+      </div>
+
+      <div className="certification-card">
+        <img
+          src="/testgorilla-spring.webp"
+          alt="TestGorilla Spring assessment — verified result, 98th percentile"
+          loading="lazy"
+          decoding="async"
+        />
+        <div className="cert-info">
+          <h3 className="cert-title">TestGorilla: Spring - 98th Percentile</h3>
+          <span className="cert-meta">Verified result &middot; valid through August 2028</span>
         </div>
       </div>
     </motion.div>
