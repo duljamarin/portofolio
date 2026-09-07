@@ -69,7 +69,12 @@ const CopyEmailButton: React.FC<Props> = ({ className }) => {
       aria-label={`Copy email address ${contact.email}`}
     >
       {copied ? <CheckIcon /> : <CopyIcon />}
-      <span>{copied ? 'Copied' : contact.email}</span>
+      {/* The address reserves the width so the "Copied" swap doesn't resize
+          the button and shift the row beside it. */}
+      <span className="copy-email-label">
+        <span aria-hidden="true">{contact.email}</span>
+        <span className="copy-email-label-text">{copied ? 'Copied' : contact.email}</span>
+      </span>
     </button>
   );
 };
