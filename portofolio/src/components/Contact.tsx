@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { contact, emailHref } from '../data/contact';
 import { fadeIn, DUR } from '../animations';
+import CopyEmailButton from './CopyEmailButton';
 
 const ArrowIcon = () => (
   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -29,15 +30,18 @@ const Contact: React.FC = () => {
         <h2 className="ledger-band-heading">{contact.heading}</h2>
         <p className="ledger-band-statement">{contact.statement}</p>
 
-        <a
-          href={emailHref}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="ledger-band-cta"
-        >
-          {contact.ctaLabel}
-          <ArrowIcon />
-        </a>
+        <div className="ledger-band-actions">
+          <a
+            href={emailHref}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="ledger-band-cta"
+          >
+            {contact.ctaLabel}
+            <ArrowIcon />
+          </a>
+          <CopyEmailButton className="ledger-band-copy" />
+        </div>
       </motion.div>
     </section>
   );

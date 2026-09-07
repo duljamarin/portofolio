@@ -1630,6 +1630,45 @@ a:hover {
   transform: translateX(var(--space-1));
 }
 
+.ledger-band-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.ledger-band-copy {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: inherit;
+  font-size: var(--step--1);
+  font-weight: 500;
+  color: var(--paper);
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: var(--radius-pill);
+  padding: var(--space-2) var(--space-4);
+  cursor: pointer;
+  transition: border-color var(--dur-1) var(--ease), color var(--dur-1) var(--ease);
+}
+
+.ledger-band-copy:hover {
+  color: var(--signal);
+  border-color: var(--signal);
+}
+
+.ledger-band-copy:focus-visible {
+  outline: 2px solid var(--signal);
+  outline-offset: 3px;
+}
+
+.ledger-band-copy svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
 /* ============================================
    CONTACT MODAL
    ============================================ */
@@ -1852,6 +1891,38 @@ a:hover {
 
 .footer-social:hover {
   color: var(--signal);
+}
+
+.footer-copy-email {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--paper);
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius-pill);
+  padding: 11px 24px;
+  cursor: pointer;
+  transition: var(--transition-slow);
+}
+
+.footer-copy-email:hover {
+  color: var(--signal);
+  border-color: var(--signal);
+}
+
+.footer-copy-email:focus-visible {
+  outline: 2px solid var(--signal);
+  outline-offset: 3px;
+}
+
+.footer-copy-email svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
 }
 
 .footer-back-to-top {

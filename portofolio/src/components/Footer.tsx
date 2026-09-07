@@ -1,5 +1,6 @@
 import React from 'react';
 import { emailHref } from '../data/contact';
+import CopyEmailButton from './CopyEmailButton';
 
 const ArrowUpIcon = () => (
   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -59,6 +60,8 @@ const Footer: React.FC = () => (
         </a>
       ))}
     </div>
+
+    <CopyEmailButton className="footer-copy-email" />
 
     <a href="#hero" className="footer-back-to-top">
       <ArrowUpIcon />
