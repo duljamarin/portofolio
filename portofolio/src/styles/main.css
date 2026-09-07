@@ -1085,7 +1085,6 @@ a:hover {
   gap: var(--space-3);
   margin-top: auto;
   padding-top: var(--space-2);
-  border-top: var(--rule) solid var(--line);
 }
 
 .project-link {
@@ -1568,7 +1567,6 @@ a:hover {
   max-width: 640px;
   margin: 0 auto;
   border-top: var(--rule) solid var(--line);
-  border-bottom: var(--rule) solid var(--line);
   padding: var(--space-6) 0;
   display: flex;
   flex-direction: column;
