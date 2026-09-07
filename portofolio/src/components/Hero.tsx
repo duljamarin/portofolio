@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
+import { emailHref } from '../data/contact';
 
 const ArrowRightIcon = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -121,7 +122,12 @@ const Hero: React.FC = () => {
             <a href="#projects" className="btn-primary">
               See My Work <ArrowRightIcon />
             </a>
-            <a href="#contact" className="btn-ghost">
+            <a
+              href={emailHref}
+              className="btn-ghost"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               Get In Touch
             </a>
             <a

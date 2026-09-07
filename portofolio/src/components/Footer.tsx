@@ -1,4 +1,5 @@
 import React from 'react';
+import { emailHref } from '../data/contact';
 
 const ArrowUpIcon = () => (
   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -35,7 +36,7 @@ const InstagramIcon = () => (
 );
 
 const socials = [
-  { label: 'Email', href: 'mailto:duljamarin@gmail.com', icon: MailIcon },
+  { label: 'Email', href: emailHref, icon: MailIcon },
   { label: 'LinkedIn', href: 'https://www.linkedin.com/in/marin-dulja/', icon: LinkedInIcon },
   { label: 'GitHub', href: 'https://github.com/duljamarin', icon: GitHubIcon },
   { label: 'Instagram', href: 'https://www.instagram.com/marindulja/', icon: InstagramIcon },
@@ -48,8 +49,8 @@ const Footer: React.FC = () => (
         <a
           key={label}
           href={href}
-          target={href.startsWith('mailto:') ? undefined : '_blank'}
-          rel={href.startsWith('mailto:') ? undefined : 'noopener noreferrer'}
+          target="_blank"
+          rel="noopener noreferrer"
           className="footer-social"
           aria-label={label}
         >

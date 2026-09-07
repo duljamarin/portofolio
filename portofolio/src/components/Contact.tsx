@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { contact } from '../data/contact';
+import { contact, emailHref } from '../data/contact';
 import { fadeIn, DUR } from '../animations';
 
 const ArrowIcon = () => (
@@ -30,7 +30,7 @@ const Contact: React.FC = () => {
         <p className="ledger-band-statement">{contact.statement}</p>
 
         <a
-          href="https://www.linkedin.com/in/marin-dulja/"
+          href={emailHref}
           target="_blank"
           rel="noopener noreferrer"
           className="ledger-band-cta"
