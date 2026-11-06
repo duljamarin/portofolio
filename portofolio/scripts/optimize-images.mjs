@@ -13,6 +13,7 @@ const PUBLIC_DIR = path.resolve(__dirname, '../public');
 // at most ~1280px wide (modal); the hero portrait frame is small.
 const config = {
   'photo_portofolio.jpg': { maxWidth: 680, quality: 66, fallback: 'jpeg' },
+  'hero-portrait.png': { maxWidth: 680, quality: 72, fallback: 'jpeg' },
   'xbrat-ai.png': { maxWidth: 960, quality: 76 },
   'personal-finances-1.png': { maxWidth: 960, quality: 76 },
   'personal-finances-2.png': { maxWidth: 960, quality: 76 },

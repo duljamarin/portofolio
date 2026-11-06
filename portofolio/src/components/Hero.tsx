@@ -151,9 +151,9 @@ const Hero: React.FC = () => {
           >
             <div className="hero-portrait-frame">
               <picture>
-                <source srcSet="/photo_portofolio.webp" type="image/webp" />
+                <source srcSet="/hero-portrait.webp" type="image/webp" />
                 <img
-                  src="/photo_portofolio-opt.jpg"
+                  src="/hero-portrait-opt.jpg"
                   alt="Marin Dulja"
                   width={680}
                   height={680}
