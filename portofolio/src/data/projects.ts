@@ -1,5 +1,6 @@
-// Portfolio projects data for the app
-// Each project includes title, description, links, tags, and type
+// Portfolio projects data for the app.
+// Each project includes title, description, links, tags and type.
+// One screenshot per project (gallery[0]); the deck and the gallery modal both read it.
 
 export type Project = {
   title: string;
@@ -9,12 +10,10 @@ export type Project = {
   links: { label: string; url: string }[];
   tags: string[];
   type: 'main' | 'fullstack' | 'contractor';
-  weight?: 1 | 2;
-  badge?: {
-    text: string;
-    url?: string;
-    color?: 'blue' | 'green' | 'purple' | 'orange' | 'red';
-  };
+  /** Card label shown above the title; falls back to the type label. */
+  label?: string;
+  /** Headline numbers. The row is not rendered when empty. */
+  metrics?: { value: string; label: string }[];
 };
 
 export const projects: Project[] = [
@@ -27,19 +26,29 @@ export const projects: Project[] = [
     ],
     tags: ['Backend', 'Java', 'Spring Boot', 'MongoDB', 'PostgreSQL', 'RabbitMQ', 'WebSockets', 'Stripe', 'Contractor'],
     type: 'contractor',
+    label: 'Contractor · ADUS Technologies',
+    metrics: [
+      { value: '10,000+', label: 'day traders' },
+      { value: '-40%', label: 'regressions' },
+    ],
   },
   {
     title: 'Personal Finance Tracker: Solo-Built SaaS',
     description:
       'A production subscription SaaS for personal finance, architected and shipped solo: React 19 + Vite + Tailwind frontend on a Supabase backend (PostgreSQL, Auth, Edge Functions), with a 15-table schema across 52 versioned migrations. Per-user data isolation via 28 Row-Level Security policies, with plan limits, default-data provisioning, and denormalised totals enforced by 16 Postgres triggers. Full billing lifecycle on Paddle across 5+ Supabase Edge Functions (webhook verification, entitlement checks, customer-portal provisioning, failed-payment recovery, GDPR deletion), plus a Recharts analytics surface, English/Albanian i18n, and an SEO prerender pipeline.',
-    gallery: ['/personal-finances-1.webp', '/personal-finances-2.webp', '/personal-finances-3.webp'],
+    gallery: ['/personal-finances-1.webp'],
     links: [
       { label: 'Live Site', url: 'https://personal-finances.app/' },
       { label: 'GitHub', url: 'https://github.com/duljamarin/personal-finance-tracker' }
     ],
     tags: ['SaaS', 'React', 'Vite', 'Tailwind', 'Supabase', 'PostgreSQL', 'Paddle Billing', 'Row-Level Security'],
     type: 'fullstack',
-    weight: 2,
+    label: 'Fullstack · Solo SaaS',
+    metrics: [
+      { value: '52', label: 'versioned migrations' },
+      { value: '28', label: 'RLS policies' },
+      { value: '5+', label: 'edge functions' },
+    ],
   },
   {
     title: 'Tiger Project at Candidatis',
@@ -66,7 +75,7 @@ export const projects: Project[] = [
     title: 'The Literary Heaven',
     description:
       'A fullstack bookstore e-commerce platform featuring complete online shopping functionality with product browsing, cart management, and checkout flow. Built with React and Tailwind CSS for a modern, responsive interface, powered by Supabase for authentication and data management.',
-    gallery: ['/the-literary-heaven-1.webp', '/the-literary-heaven-2.webp'],
+    gallery: ['/the-literary-heaven-1.webp'],
     links: [
       { label: 'Live Site', url: 'https://the-literary-heaven.netlify.app/' },
       { label: 'GitHub', url: 'https://github.com/duljamarin/bookshop-ecommerce' }
@@ -78,15 +87,13 @@ export const projects: Project[] = [
     title: 'ClearSight Clinic Website',
     description:
       'A responsive, production-ready single-page application showcasing modern frontend architecture and UX clarity. Features client-style multi-section layout with proper React Router configuration and Supabase backend integration.',
-    gallery: ['/clearsight-1.webp', '/clearsight-2.webp', '/clearsight-3.webp'],
+    gallery: ['/clearsight-1.webp'],
     links: [
       { label: 'GitHub', url: 'https://github.com/duljamarin/eye-clinic-app' }
     ],
     tags: ['React', 'CSS', 'Supabase'],
     type: 'fullstack',
   },
-  // ...existing main projects from your portfolio...
-
   {
     title: 'Therapism',
     description: 'Mental health platform, built with Java, Spring Boot, PostgreSQL, and Spring AI.',

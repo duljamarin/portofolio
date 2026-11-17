@@ -25,8 +25,9 @@ const App: React.FC = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
 
+    let countersCleanup: (() => void) | undefined;
     const timer = setTimeout(() => {
-      initCounters();
+      countersCleanup = initCounters();
     }, 100);
 
     const smoothScrollCleanup = initSmoothScroll();
@@ -38,6 +39,7 @@ const App: React.FC = () => {
 
     return () => {
       clearTimeout(timer);
+      countersCleanup?.();
       smoothScrollCleanup();
       cursorCleanup?.();
       scrollCleanup?.();

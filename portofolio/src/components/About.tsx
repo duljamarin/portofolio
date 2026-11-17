@@ -79,17 +79,17 @@ const About: React.FC = () => {
             transition={{ duration: 0.6, delay: 0.26, ease: [0.16, 1, 0.3, 1] }}
           >
             <div className="stat-item">
-              <span className="stat-number" data-count="4" data-suffix="+">4+</span>
+              <span className="stat-number" data-count="4+">4+</span>
               <span className="stat-label">Years Experience</span>
             </div>
             <div className="stat-divider" />
             <div className="stat-item">
-              <span className="stat-number" data-count="15" data-suffix="+">15+</span>
+              <span className="stat-number" data-count="15+">15+</span>
               <span className="stat-label">Projects</span>
             </div>
             <div className="stat-divider" />
             <div className="stat-item">
-              <span className="stat-number" data-count="15" data-suffix="+">15+</span>
+              <span className="stat-number" data-count="15+">15+</span>
               <span className="stat-label">Technologies</span>
             </div>
           </motion.div>

@@ -33,48 +33,89 @@ export const fadeIn = {
 /* ============================================
    ANIMATED COUNTER
    ============================================ */
-export function initCounters(): void {
+/** A display value split around its number: "10,000+" -> "" | 10000 | "+". */
+export type CountParts = {
+  prefix: string;
+  value: number;
+  decimals: number;
+  grouped: boolean;
+  suffix: string;
+};
+
+export function parseCount(raw: string): CountParts | null {
+  const match = raw.match(/^(\D*?)(\d[\d,]*(?:\.\d+)?)(.*)$/);
+  if (!match) return null;
+  const [, prefix, number, suffix] = match;
+  return {
+    prefix,
+    value: parseFloat(number.replace(/,/g, '')),
+    decimals: (number.split('.')[1] ?? '').length,
+    grouped: number.includes(','),
+    suffix,
+  };
+}
+
+export function formatCount(parts: CountParts, value: number): string {
+  const number = value.toLocaleString('en-US', {
+    minimumFractionDigits: parts.decimals,
+    maximumFractionDigits: parts.decimals,
+    useGrouping: parts.grouped,
+  });
+  return `${parts.prefix}${number}${parts.suffix}`;
+}
+
+/**
+ * Counts el's text from 0 up to `raw` (ease-out cubic), keeping prefix,
+ * suffix, decimals and thousands separators. Returns a cancel function.
+ * Under reduced motion the final value is written at once.
+ */
+export function animateCountText(el: HTMLElement, raw: string, durationMs: number): () => void {
+  const parts = parseCount(raw);
+  if (!parts || prefersReducedMotion()) {
+    el.textContent = raw;
+    return () => {};
+  }
+  const start = performance.now();
+  let rafId = 0;
+  const step = (now: number) => {
+    const t = Math.min((now - start) / durationMs, 1);
+    const eased = 1 - Math.pow(1 - t, 3);
+    el.textContent = t < 1 ? formatCount(parts, parts.value * eased) : raw;
+    if (t < 1) rafId = requestAnimationFrame(step);
+  };
+  el.textContent = formatCount(parts, 0);
+  rafId = requestAnimationFrame(step);
+  return () => cancelAnimationFrame(rafId);
+}
+
+/**
+ * Elements with data-count="4.5+" count up once when they enter the viewport.
+ * data-duration (ms) overrides the default.
+ */
+const COUNTER_DURATION = 1400;
+
+export function initCounters(): () => void {
   const counters = document.querySelectorAll<HTMLElement>('[data-count]');
+  const cancels: Array<() => void> = [];
 
   const observer = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          const el = entry.target as HTMLElement;
-          const target = parseInt(el.dataset.count || '0', 10);
-          const suffix = el.dataset.suffix || '';
-          const prefix = el.dataset.prefix || '';
-          animateCount(el, target, prefix, suffix);
-          observer.unobserve(el);
-        }
+        if (!entry.isIntersecting) return;
+        const el = entry.target as HTMLElement;
+        const raw = el.dataset.count ?? el.textContent ?? '';
+        cancels.push(animateCountText(el, raw, Number(el.dataset.duration) || COUNTER_DURATION));
+        observer.unobserve(el);
       });
     },
     { threshold: 0.3 }
   );
 
   counters.forEach((el) => observer.observe(el));
-}
-
-function animateCount(
-  el: HTMLElement,
-  target: number,
-  prefix: string,
-  suffix: string
-): void {
-  const duration = 1500;
-  const start = performance.now();
-
-  function step(now: number) {
-    const elapsed = now - start;
-    const progress = Math.min(elapsed / duration, 1);
-    const eased = 1 - Math.pow(1 - progress, 3);
-    const current = Math.round(eased * target);
-    el.textContent = `${prefix}${current}${suffix}`;
-    if (progress < 1) {
-      requestAnimationFrame(step);
-    }
-  }
-  requestAnimationFrame(step);
+  return () => {
+    observer.disconnect();
+    cancels.forEach((cancel) => cancel());
+  };
 }
 
 /* ============================================
