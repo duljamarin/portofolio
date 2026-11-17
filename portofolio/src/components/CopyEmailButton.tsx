@@ -37,7 +37,7 @@ interface Props {
 
 /**
  * Copy-the-address fallback for visitors who can't use the Gmail compose link
- * (no Google account) — they still leave with the address in hand.
+ * (no Google account): they still leave with the address in hand.
  */
 const CopyEmailButton: React.FC<Props> = ({ className }) => {
   const [copied, setCopied] = useState(false);
@@ -56,7 +56,7 @@ const CopyEmailButton: React.FC<Props> = ({ className }) => {
       window.clearTimeout(timer.current);
       timer.current = window.setTimeout(() => setCopied(false), 2000);
     } catch {
-      // Clipboard blocked by permissions — the address stays visible in the
+      // Clipboard blocked by permissions: the address stays visible in the
       // label, so it can still be selected by hand.
     }
   };

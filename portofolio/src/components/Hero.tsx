@@ -1,6 +1,7 @@
-import React, { useEffect, useRef } from 'react';
-import { motion } from 'framer-motion';
-import { emailHref } from '../data/contact';
+import React, { useEffect, useRef, useState } from 'react';
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
+import { DUR_REVEAL, EASE_OUT } from '../animations';
+import { useInViewAttr } from '../hooks/useInViewAttr';
 
 const ArrowRightIcon = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -9,25 +10,70 @@ const ArrowRightIcon = () => (
   </svg>
 );
 
+/* Rotating line. The word list is data: add, remove or reorder freely. */
+const ROTATING_PREFIX = 'I build';
+const ROTATING_WORDS = ['systems that scale.', 'trading systems', 'SaaS products'];
+const ROTATING_LABEL = 'I build systems that scale, trading systems and SaaS products';
+const WORD_HOLD = 2.6;      // s each word stays still
+const WORD_TRANSITION = 0.4; // s slide up, blurred at mid-transition
+const WORD_BLUR = 'blur(3px)';
+
+const PREVIOUSLY = 'Previously at ADUS Technologies · Noema Consulting · Candidatis · Sabanet · Comdata Group';
+
+const TILT_MAX = 6;    // deg
+const TILT_GAIN = 14;  // deg per portrait-width of pointer offset
+
+const RotatingWord: React.FC = () => {
+  const reduceMotion = useReducedMotion();
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    if (reduceMotion) return;
+    const id = window.setInterval(
+      () => setIndex((i) => (i + 1) % ROTATING_WORDS.length),
+      (WORD_HOLD + WORD_TRANSITION) * 1000
+    );
+    return () => window.clearInterval(id);
+  }, [reduceMotion]);
+
+  const word = reduceMotion ? ROTATING_WORDS[0] : ROTATING_WORDS[index];
+
+  return (
+    <span className="hero-rotator">
+      <AnimatePresence initial={false}>
+        <motion.span
+          key={word}
+          className="hero-rotator-word"
+          initial={{ y: '100%', filter: WORD_BLUR }}
+          animate={{ y: '0%', filter: 'blur(0px)' }}
+          exit={{ y: '-100%', filter: WORD_BLUR }}
+          transition={{ duration: WORD_TRANSITION, ease: EASE_OUT }}
+        >
+          {word}
+        </motion.span>
+      </AnimatePresence>
+    </span>
+  );
+};
+
 const Hero: React.FC = () => {
+  const sectionRef = useRef<HTMLElement>(null);
   const portraitRef = useRef<HTMLDivElement>(null);
   const ctasRef = useRef<HTMLDivElement>(null);
+  useInViewAttr(sectionRef);
 
   useEffect(() => {
     const portrait = portraitRef.current;
     if (!portrait) return;
-    if (window.matchMedia('(hover: none)').matches) return;
+    if (window.matchMedia('(hover: none), (prefers-reduced-motion: reduce)').matches) return;
 
+    const clamp = (v: number) => Math.max(-TILT_MAX, Math.min(TILT_MAX, v));
     const onMove = (e: MouseEvent) => {
       const rect = portrait.getBoundingClientRect();
-      const cx = rect.left + rect.width / 2;
-      const cy = rect.top + rect.height / 2;
-      const dx = (e.clientX - cx) / rect.width;
-      const dy = (e.clientY - cy) / rect.height;
-      const rotY = Math.max(-8, Math.min(8, dx * 14));
-      const rotX = Math.max(-8, Math.min(8, -dy * 14));
-      portrait.style.setProperty('--tilt-x', `${rotX}deg`);
-      portrait.style.setProperty('--tilt-y', `${rotY}deg`);
+      const dx = (e.clientX - (rect.left + rect.width / 2)) / rect.width;
+      const dy = (e.clientY - (rect.top + rect.height / 2)) / rect.height;
+      portrait.style.setProperty('--tilt-x', `${clamp(-dy * TILT_GAIN)}deg`);
+      portrait.style.setProperty('--tilt-y', `${clamp(dx * TILT_GAIN)}deg`);
     };
     const onLeave = () => {
       portrait.style.setProperty('--tilt-x', '0deg');
@@ -45,7 +91,7 @@ const Hero: React.FC = () => {
   useEffect(() => {
     const wrap = ctasRef.current;
     if (!wrap) return;
-    if (window.matchMedia('(hover: none)').matches) return;
+    if (window.matchMedia('(hover: none), (prefers-reduced-motion: reduce)').matches) return;
 
     const buttons = Array.from(wrap.querySelectorAll<HTMLAnchorElement>('a'));
     const handlers: Array<{ el: HTMLAnchorElement; move: (e: MouseEvent) => void; leave: () => void }> = [];
@@ -79,37 +125,35 @@ const Hero: React.FC = () => {
     };
   }, []);
 
+  const enter = (order: number) => ({
+    initial: { opacity: 1, y: 14 },
+    animate: { opacity: 1, y: 0 },
+    transition: { duration: DUR_REVEAL, delay: order * 0.12, ease: EASE_OUT },
+  });
+
   return (
-    <section id="hero" className="hero">
+    <section id="hero" className="hero" ref={sectionRef}>
       <div className="hero-content">
         <div className="hero-text">
-          <motion.h1
-            className="hero-name"
-            initial={{ opacity: 1, y: 18 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.75, ease: [0.16, 1, 0.3, 1] }}
-          >
+          <motion.p className="section-label hero-label" {...enter(0)}>
+            Full-stack engineer · Java, Spring Boot, React
+          </motion.p>
+
+          <motion.h1 className="hero-name" {...enter(0)}>
             <span className="first">Marin</span>
             <span className="last">Dulja</span>
           </motion.h1>
 
-          <motion.p
-            className="hero-headline"
-            initial={{ opacity: 1, y: 14 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
-          >
-            I build systems that <span className="accent">scale</span>
+          <motion.p className="hero-headline" {...enter(1)}>
+            <span className="sr-only">{ROTATING_LABEL}</span>
+            <span aria-hidden="true">
+              {ROTATING_PREFIX} <RotatingWord />
+            </span>
           </motion.p>
 
-          <motion.p
-            className="hero-bio"
-            initial={{ opacity: 1, y: 14 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-          >
-            From banking platforms with 240+ microservices to AI-powered trading systems -
-            I ship clean, maintainable backends and full-stack products that solve real problems.
+          <motion.p className="hero-bio" {...enter(2)}>
+            4.5+ years shipping Java and Spring Boot backends for fintech and banking, plus
+            full-stack products in React. Clean, maintainable, built to hold up in production.
           </motion.p>
 
           <motion.div
@@ -117,26 +161,13 @@ const Hero: React.FC = () => {
             ref={ctasRef}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.45, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: DUR_REVEAL, delay: 0.36, ease: EASE_OUT }}
           >
             <a href="#projects" className="btn-primary">
-              See My Work <ArrowRightIcon />
+              See my work <ArrowRightIcon />
             </a>
-            <a
-              href={emailHref}
-              className="btn-ghost"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Get In Touch
-            </a>
-            <a
-              href="/Marin_Dulja_CV.pdf"
-              className="btn-ghost"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              View CV
+            <a href="#contact" className="btn-ghost">
+              Get in touch
             </a>
           </motion.div>
         </div>
@@ -147,24 +178,32 @@ const Hero: React.FC = () => {
             ref={portraitRef}
             initial={{ opacity: 0, scale: 0.96 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.7, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: DUR_REVEAL, delay: 0.2, ease: EASE_OUT }}
           >
+            <div className="hero-portrait-glow" aria-hidden="true" />
             <div className="hero-portrait-frame">
-              <picture>
-                <source srcSet="/hero-portrait.webp" type="image/webp" />
-                <img
-                  src="/hero-portrait-opt.jpg"
-                  alt="Marin Dulja"
-                  width={680}
-                  height={680}
-                  loading="eager"
-                  fetchPriority="high"
-                  decoding="async"
-                />
-              </picture>
+              <img
+                src="/hero-portrait-cutout.webp"
+                alt="Marin Dulja"
+                width={800}
+                height={800}
+                loading="eager"
+                fetchPriority="high"
+                decoding="async"
+              />
             </div>
           </motion.div>
         </div>
+      </div>
+
+      <div className="hero-bottom">
+        <p className="hero-previously">{PREVIOUSLY}</p>
+        <a href="#how" className="hero-scroll-cue">
+          <span className="hero-scroll-mouse" aria-hidden="true">
+            <span className="hero-scroll-wheel" />
+          </span>
+          Scroll to follow a request through my stack
+        </a>
       </div>
     </section>
   );

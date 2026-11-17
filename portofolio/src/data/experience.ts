@@ -1,5 +1,5 @@
 // Work history, newest first. `start`/`end` are 'YYYY-MM'; `end: null` means current.
-// Duration, date labels, and tenure-bar scale are all computed from these two fields —
+// Duration, date labels, and tenure-bar scale are all computed from these two fields:
 // do not add a redundant year/period field here.
 
 export type Role = {

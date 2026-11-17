@@ -1,4 +1,4 @@
-// Contact facts. Null/empty fields render nothing — never fill these with
+// Contact facts. Null/empty fields render nothing: never fill these with
 // invented values (availability, rates, response time, etc).
 
 export const contact = {

@@ -3,9 +3,9 @@ import React, { useEffect, useState } from 'react';
 const sections = [
   { label: 'Projects', href: '#projects' },
   { label: 'Offer', href: '#offer' },
+  { label: 'Mentoring', href: '#mentoring' },
   { label: 'About', href: '#about' },
   { label: 'Skills', href: '#skills' },
-  { label: 'Testimonials', href: '#testimonials' },
   { label: 'Contact', href: '#contact' },
 ];
 
@@ -25,19 +25,22 @@ const Navbar: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    // Active section tracking via scroll position — robust for tall sections
-    const sectionEls = sections
-      .map((s) => document.querySelector(s.href) as HTMLElement)
-      .filter((el): el is HTMLElement => !!el);
+    // Active section tracking via scroll position, robust for tall sections
+    // Keep each element paired with its index in `sections`, so a missing
+    // section never shifts the highlight onto its neighbour.
+    const tracked = sections
+      .map((s, idx) => ({ idx, el: document.querySelector<HTMLElement>(s.href) }))
+      .filter((t): t is { idx: number; el: HTMLElement } => !!t.el);
 
-    if (!sectionEls.length) return;
+    if (!tracked.length) return;
 
     // Cache section bounds so the scroll handler never reads layout (offsetTop/
-    // offsetHeight) per frame — that read-after-scroll is what triggers forced
-    // reflow. Recompute only when layout can actually change (resize/load).
-    let bounds: Array<{ top: number; bottom: number }> = [];
+    // offsetHeight) per frame: that read-after-scroll is what triggers forced
+    // reflow. Recompute only when layout can actually change (page height).
+    let bounds: Array<{ idx: number; top: number; bottom: number }> = [];
     const measure = () => {
-      bounds = sectionEls.map((el) => ({
+      bounds = tracked.map(({ idx, el }) => ({
+        idx,
         top: el.offsetTop,
         bottom: el.offsetTop + el.offsetHeight,
       }));
@@ -50,7 +53,7 @@ const Navbar: React.FC = () => {
       let current = -1;
       for (let i = 0; i < bounds.length; i++) {
         if (anchor >= bounds[i].top && anchor < bounds[i].bottom) {
-          current = i;
+          current = bounds[i].idx;
           break;
         }
       }
@@ -67,13 +70,16 @@ const Navbar: React.FC = () => {
 
     measure();
     updateActive();
+    // Images, pinned sections and filters change the page height after mount.
+    const resizeObserver = new ResizeObserver(() => {
+      measure();
+      onScroll();
+    });
+    resizeObserver.observe(document.body);
     window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', measure);
-    window.addEventListener('load', measure);
     return () => {
+      resizeObserver.disconnect();
       window.removeEventListener('scroll', onScroll);
-      window.removeEventListener('resize', measure);
-      window.removeEventListener('load', measure);
     };
   }, []);
 
@@ -134,7 +140,7 @@ const Navbar: React.FC = () => {
         ))}
         <a
           href="/Marin_Dulja_CV.pdf"
-          className="mobile-nav-link"
+          className="mobile-nav-link mobile-nav-link-cv"
           target="_blank"
           rel="noopener noreferrer"
           onClick={handleMobileClick}

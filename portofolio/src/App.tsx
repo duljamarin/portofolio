@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from 'react';
+import { MotionConfig } from 'framer-motion';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import About from './components/About';
@@ -11,8 +12,9 @@ import Contact from './components/Contact';
 import Footer from './components/Footer';
 import {
   initCounters,
-  initCustomCursor,
+  initCursorSpotlight,
   initScrollProgress,
+  initSmoothScroll,
   printConsoleEasterEgg,
 } from './animations';
 
@@ -26,7 +28,8 @@ const App: React.FC = () => {
       initCounters();
     }, 100);
 
-    const cursorCleanup = initCustomCursor();
+    const smoothScrollCleanup = initSmoothScroll();
+    const cursorCleanup = initCursorSpotlight();
     const scrollCleanup = scrollBarRef.current
       ? initScrollProgress(scrollBarRef.current)
       : undefined;
@@ -34,25 +37,32 @@ const App: React.FC = () => {
 
     return () => {
       clearTimeout(timer);
+      smoothScrollCleanup();
       cursorCleanup?.();
       scrollCleanup?.();
     };
   }, []);
 
   return (
-    <div>
-      <div className="scroll-progress" ref={scrollBarRef} />
-      <Navbar />
-      <Hero />
-      <Projects />
-      <Offer />
-      <About />
-      <Skills />
-      <TestimonialsSection />
-      <EducationSection />
-      <Contact />
-      <Footer />
-    </div>
+    // reducedMotion="user": framer-motion skips transform animations when the
+    // visitor asks the OS for reduced motion.
+    <MotionConfig reducedMotion="user">
+      <div>
+        <div className="scroll-progress" ref={scrollBarRef} />
+        <Navbar />
+        <Hero />
+        {/* HowIBuild (Phase 2) */}
+        <Projects />
+        <Offer />
+        {/* Mentoring (Phase 4) */}
+        <About />
+        <Skills />
+        <TestimonialsSection />
+        <EducationSection />
+        <Contact />
+        <Footer />
+      </div>
+    </MotionConfig>
   );
 };
 

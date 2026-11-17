@@ -13,7 +13,7 @@ const ArrowIcon = () => (
 
 const Contact: React.FC = () => {
   if (!contact.statement) {
-    // TODO: contact.statement is empty — fill src/data/contact.ts before shipping this section.
+    // TODO: contact.statement is empty: fill src/data/contact.ts before shipping this section.
     return null;
   }
 

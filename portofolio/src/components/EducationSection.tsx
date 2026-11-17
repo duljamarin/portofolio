@@ -56,7 +56,7 @@ const EducationSection: React.FC = () => (
       <div className="certification-card">
         <img
           src="/testgorilla-spring.webp"
-          alt="TestGorilla Spring assessment — verified result, 98th percentile"
+          alt="TestGorilla Spring assessment, verified result, 98th percentile"
           loading="lazy"
           decoding="async"
         />

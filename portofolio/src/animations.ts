@@ -1,9 +1,23 @@
 /**
- * animations.ts — Utility functions for dot grid background,
- * counter animations, custom cursor, scroll progress, and console easter egg.
- * Kept lightweight — Framer Motion handles component-level animations.
+ * animations.ts: smooth scroll (Lenis), cursor spotlight, counter animations,
+ * scroll progress, dot grid background and the console easter egg.
+ * Kept lightweight: Framer Motion handles component-level animations.
  */
+import Lenis from 'lenis';
 
+/* ============================================
+   MOTION TOKENS (scroll story redesign)
+   Mirror of --dur-reveal, --ease-out and --stagger in the :root block of
+   src/styles/main.css. Change a value there and here together.
+   ============================================ */
+export const DUR_REVEAL = 0.6;                                        // s, --dur-reveal: 600ms
+export const EASE_OUT: [number, number, number, number] = [0.2, 0.7, 0.2, 1]; // --ease-out
+export const REVEAL_STAGGER = DUR_REVEAL / 7.5;                       // s, --stagger (80ms)
+
+export const prefersReducedMotion = (): boolean =>
+  window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+// Legacy "minimal motion" constants, used only by sections the redesign does not touch.
 // Source of truth for motion, mirroring --dur and --space in main.css.
 export const DUR = 0.18;            // seconds; must equal the ms value of --dur / 1000
 export const STAGGER = DUR / 3;
@@ -64,81 +78,119 @@ function animateCount(
 }
 
 /* ============================================
-   CUSTOM CURSOR
+   SMOOTH SCROLL (Lenis)
+   One instance for the whole app. Components scroll through
+   scrollToTarget() so they work with or without Lenis.
    ============================================ */
-export function initCustomCursor(): (() => void) | null {
-  if (window.matchMedia('(hover: none)').matches) return null;
+const LENIS_LERP = 0.1;
+let lenis: Lenis | null = null;
 
-  const dot = document.createElement('div');
-  dot.className = 'cursor-dot';
-  document.body.appendChild(dot);
-
-  const ring = document.createElement('div');
-  ring.className = 'cursor-ring';
-  document.body.appendChild(ring);
-
-  let mouseX = 0;
-  let mouseY = 0;
-  let dotX = 0;
-  let dotY = 0;
-  let ringX = 0;
-  let ringY = 0;
-  let rafId: number;
-
-  function onMouseMove(e: MouseEvent) {
-    mouseX = e.clientX;
-    mouseY = e.clientY;
+export function scrollToTarget(target: string | HTMLElement | number, offset = 0): void {
+  if (lenis) {
+    lenis.scrollTo(target, { offset });
+    return;
   }
-
-  function animate() {
-    dotX += (mouseX - dotX) * 0.2;
-    dotY += (mouseY - dotY) * 0.2;
-    ringX += (mouseX - ringX) * 0.1;
-    ringY += (mouseY - ringY) * 0.1;
-
-    dot.style.transform = `translate(${dotX}px, ${dotY}px)`;
-    ring.style.transform = `translate(${ringX}px, ${ringY}px)`;
-
-    rafId = requestAnimationFrame(animate);
+  let top: number;
+  if (typeof target === 'number') {
+    top = target;
+  } else {
+    const el = typeof target === 'string' ? document.querySelector<HTMLElement>(target) : target;
+    if (!el) return;
+    top = el.getBoundingClientRect().top + window.scrollY;
   }
+  window.scrollTo({ top: top + offset, behavior: prefersReducedMotion() ? 'auto' : 'smooth' });
+}
 
-  function onMouseOver(e: MouseEvent) {
-    const target = e.target as HTMLElement;
-    if (
-      target.closest('a, button, [role="button"], .project-card, .bento-skill-tile, .project-featured')
-    ) {
-      dot.classList.add('hovering');
-      ring.classList.add('hovering');
-    }
+export function initSmoothScroll(): () => void {
+  // In-page anchors go through scrollToTarget in both modes, so hash links
+  // behave the same with Lenis on (smooth) and off (reduced motion).
+  const onClick = (e: MouseEvent) => {
+    if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey) return;
+    const link = (e.target as HTMLElement).closest<HTMLAnchorElement>('a[href^="#"]');
+    if (!link) return;
+    const hash = link.getAttribute('href');
+    if (!hash || hash === '#') return;
+    const el = document.querySelector<HTMLElement>(hash);
+    if (!el) return;
+    e.preventDefault();
+    scrollToTarget(el);
+    history.replaceState(null, '', hash);
+  };
+  document.addEventListener('click', onClick);
+
+  if (!prefersReducedMotion()) {
+    lenis = new Lenis({
+      lerp: LENIS_LERP,
+      autoRaf: true,
+      // Modals and the mobile menu lock the page; let their events scroll natively.
+      prevent: (node) => !!node.closest('.gallery-modal-overlay, .nav-mobile-overlay'),
+    });
   }
-
-  function onMouseOut(e: MouseEvent) {
-    const target = e.target as HTMLElement;
-    if (
-      target.closest('a, button, [role="button"], .project-card, .bento-skill-tile, .project-featured')
-    ) {
-      dot.classList.remove('hovering');
-      ring.classList.remove('hovering');
-    }
-  }
-
-  document.addEventListener('mousemove', onMouseMove);
-  document.addEventListener('mouseover', onMouseOver);
-  document.addEventListener('mouseout', onMouseOut);
-  rafId = requestAnimationFrame(animate);
 
   return () => {
-    cancelAnimationFrame(rafId);
-    document.removeEventListener('mousemove', onMouseMove);
-    document.removeEventListener('mouseover', onMouseOver);
-    document.removeEventListener('mouseout', onMouseOut);
-    dot.remove();
-    ring.remove();
+    document.removeEventListener('click', onClick);
+    lenis?.destroy();
+    lenis = null;
   };
 }
 
 /* ============================================
-   DOT GRID BACKGROUND (Canvas) — toned down
+   CURSOR SPOTLIGHT
+   A single fixed layer that follows the pointer with inertia.
+   Its size and color live in .cursor-spotlight in main.css.
+   The rAF loop only runs while the layer is catching up to the pointer.
+   ============================================ */
+const SPOTLIGHT_LERP = 0.12;
+const SPOTLIGHT_SETTLE = 0.1; // px; below this distance the loop stops
+
+export function initCursorSpotlight(): (() => void) | null {
+  if (window.matchMedia('(hover: none)').matches || prefersReducedMotion()) return null;
+
+  const layer = document.createElement('div');
+  layer.className = 'cursor-spotlight';
+  layer.setAttribute('aria-hidden', 'true');
+  document.body.appendChild(layer);
+
+  let targetX = window.innerWidth / 2;
+  let targetY = window.innerHeight / 2;
+  let x = targetX;
+  let y = targetY;
+  let rafId = 0;
+
+  const frame = () => {
+    x += (targetX - x) * SPOTLIGHT_LERP;
+    y += (targetY - y) * SPOTLIGHT_LERP;
+    layer.style.transform = `translate3d(${x}px, ${y}px, 0) translate(-50%, -50%)`;
+    if (Math.abs(targetX - x) > SPOTLIGHT_SETTLE || Math.abs(targetY - y) > SPOTLIGHT_SETTLE) {
+      rafId = requestAnimationFrame(frame);
+    } else {
+      rafId = 0;
+    }
+  };
+
+  const onMove = (e: PointerEvent) => {
+    targetX = e.clientX;
+    targetY = e.clientY;
+    layer.dataset.active = 'true';
+    if (!rafId) rafId = requestAnimationFrame(frame);
+  };
+  const onLeave = () => {
+    layer.dataset.active = 'false';
+  };
+
+  document.addEventListener('pointermove', onMove, { passive: true });
+  document.documentElement.addEventListener('pointerleave', onLeave);
+
+  return () => {
+    cancelAnimationFrame(rafId);
+    document.removeEventListener('pointermove', onMove);
+    document.documentElement.removeEventListener('pointerleave', onLeave);
+    layer.remove();
+  };
+}
+
+/* ============================================
+   DOT GRID BACKGROUND (Canvas), toned down
    ============================================ */
 export function initDotGrid(canvas: HTMLCanvasElement): () => void {
   const ctx = canvas.getContext('2d')!;
