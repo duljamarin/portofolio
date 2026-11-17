@@ -133,7 +133,7 @@ a {
 }
 
 a:hover {
-  color: color-mix(in oklab, var(--signal), var(--ink) 15%);
+  color: var(--signal-light);
 }
 
 ::selection {
@@ -1766,6 +1766,7 @@ a:hover {
 .deck-title {
   position: relative;
   margin: 0;
+  padding-right: 100px;
   font-family: var(--font-display);
   font-size: 34px;
   font-weight: 600;
@@ -1992,6 +1993,7 @@ a:hover {
   }
   .deck-title {
     font-size: 26px;
+    padding-right: 0;
   }
 }
 
@@ -2156,6 +2158,8 @@ a:hover {
   max-width: 1200px;
   margin: 0 auto;
   isolation: isolate;
+  /* The glow bleeds past the column; clip it so phones get no sideways scroll. */
+  overflow-x: clip;
 }
 
 .mentoring-glow {
@@ -2752,6 +2756,7 @@ a:hover {
 
 .cert-verify-btn {
   display: inline-flex;
+  min-height: 44px;
   align-items: center;
   gap: 7px;
   font-family: var(--font-body);
@@ -2764,7 +2769,7 @@ a:hover {
 }
 
 .cert-verify-btn:hover {
-  color: color-mix(in oklab, var(--signal), var(--ink) 15%);
+  color: var(--signal-light);
 }
 
 @media (max-width: 600px) {
@@ -3140,6 +3145,7 @@ a:hover {
 }
 
 .footer-social {
+  min-width: 44px;
   display: flex;
   flex-direction: column;
   align-items: center;

@@ -16,6 +16,8 @@ const GalleryModal: React.FC<GalleryModalProps> = ({ images, title, isOpen, onCl
     setClosing(true);
     setTimeout(() => {
       setClosing(false);
+      // Reset on close (not in an effect on open) so the next open starts at image 1.
+      setCurrentIndex(0);
       onClose();
     }, 200);
   }, [onClose]);
@@ -27,11 +29,6 @@ const GalleryModal: React.FC<GalleryModalProps> = ({ images, title, isOpen, onCl
   const goPrev = useCallback(() => {
     setCurrentIndex((prev) => (prev - 1 + images.length) % images.length);
   }, [images.length]);
-
-  useEffect(() => {
-    if (!isOpen) return;
-    setCurrentIndex(0);
-  }, [isOpen]);
 
   useEffect(() => {
     if (!isOpen) return;
