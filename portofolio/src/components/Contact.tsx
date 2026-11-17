@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { FaWhatsapp } from 'react-icons/fa';
 import { contact, emailHref } from '../data/contact';
 import { DUR_REVEAL, EASE_OUT, REVEAL_STAGGER } from '../animations';
 import CopyEmailButton from './CopyEmailButton';
@@ -39,6 +40,15 @@ const Contact: React.FC = () => {
           <a href={emailHref} target="_blank" rel="noopener noreferrer" className="btn-primary contact-cta">
             {contact.ctaLabel}
             <ArrowIcon />
+          </a>
+          <a
+            href={contact.whatsapp.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="contact-copy contact-whatsapp"
+          >
+            <FaWhatsapp aria-hidden="true" />
+            {contact.whatsapp.label}
           </a>
           <CopyEmailButton className="contact-copy" />
         </motion.div>

@@ -8,6 +8,7 @@ export const contact = {
   statement: 'Available for backend-heavy Java and Spring Boot work and full-stack React projects, remote, as a B2B contractor.',
   ctaLabel: 'Get in touch',
   copiedToast: 'Email copied',
+  whatsapp: { label: 'WhatsApp', href: 'https://wa.me/355684448934' },
   email: 'duljamarin@gmail.com',
 };
 

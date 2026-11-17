@@ -12,8 +12,8 @@ const ArrowRightIcon = () => (
 
 /* Rotating line. The word list is data: add, remove or reorder freely. */
 const ROTATING_PREFIX = 'I build';
-const ROTATING_WORDS = ['systems that scale.', 'trading systems', 'SaaS products'];
-const ROTATING_LABEL = 'I build systems that scale, trading systems and SaaS products';
+const ROTATING_WORDS = ['systems that scale.', 'fintech products', 'SaaS products'];
+const ROTATING_LABEL = 'I build systems that scale, fintech products and SaaS products';
 const WORD_HOLD = 2.6;      // s each word stays still
 const WORD_TRANSITION = 0.4; // s slide up, blurred at mid-transition
 const WORD_BLUR = 'blur(3px)';
@@ -180,8 +180,9 @@ const Hero: React.FC = () => {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: DUR_REVEAL, delay: 0.2, ease: EASE_OUT }}
           >
-            <div className="hero-portrait-glow" aria-hidden="true" />
+            {/* Cutout of og-image.jpg on a gold panel: no white background, no ring. */}
             <div className="hero-portrait-frame">
+              <span className="hero-portrait-sheen" aria-hidden="true" />
               <img
                 src="/hero-portrait-cutout.webp"
                 alt="Marin Dulja"
