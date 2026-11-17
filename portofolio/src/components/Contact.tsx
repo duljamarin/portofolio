@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { contact, emailHref } from '../data/contact';
-import { fadeIn, DUR } from '../animations';
+import { DUR_REVEAL, EASE_OUT, REVEAL_STAGGER } from '../animations';
 import CopyEmailButton from './CopyEmailButton';
 
 const ArrowIcon = () => (
@@ -11,6 +11,13 @@ const ArrowIcon = () => (
   </svg>
 );
 
+const reveal = (order: number) => ({
+  initial: { opacity: 0, y: 20 },
+  whileInView: { opacity: 1, y: 0 },
+  viewport: { once: true, margin: '-50px' },
+  transition: { duration: DUR_REVEAL, delay: order * REVEAL_STAGGER, ease: EASE_OUT },
+});
+
 const Contact: React.FC = () => {
   if (!contact.statement) {
     // TODO: contact.statement is empty: fill src/data/contact.ts before shipping this section.
@@ -19,30 +26,23 @@ const Contact: React.FC = () => {
 
   return (
     <section id="contact" className="contact-section">
-      <motion.div
-        className="ledger-band"
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, margin: '-50px' }}
-        variants={fadeIn}
-        transition={{ duration: DUR * 2, ease: [0.2, 0.6, 0.2, 1] }}
-      >
-        <h2 className="ledger-band-heading">{contact.heading}</h2>
-        <p className="ledger-band-statement">{contact.statement}</p>
+      <div className="contact-glow" aria-hidden="true" />
+      <div className="contact-inner">
+        <motion.p className="section-label" {...reveal(0)}>{contact.label}</motion.p>
+        <motion.h2 className="contact-heading" {...reveal(1)}>
+          <span className="contact-heading-line">{contact.heading}</span>
+          <span className="contact-heading-accent">{contact.headingAccent}</span>
+        </motion.h2>
+        <motion.p className="contact-statement" {...reveal(2)}>{contact.statement}</motion.p>
 
-        <div className="ledger-band-actions">
-          <a
-            href={emailHref}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="ledger-band-cta"
-          >
+        <motion.div className="contact-actions" {...reveal(3)}>
+          <a href={emailHref} target="_blank" rel="noopener noreferrer" className="btn-primary contact-cta">
             {contact.ctaLabel}
             <ArrowIcon />
           </a>
-          <CopyEmailButton className="ledger-band-copy" />
-        </div>
-      </motion.div>
+          <CopyEmailButton className="contact-copy" />
+        </motion.div>
+      </div>
     </section>
   );
 };

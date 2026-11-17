@@ -41,11 +41,18 @@ interface Props {
  */
 const CopyEmailButton: React.FC<Props> = ({ className }) => {
   const [copied, setCopied] = useState(false);
+  // Each copy gets a new ripple key so the animation restarts from the click point.
+  const [ripple, setRipple] = useState<{ key: number; x: number; y: number } | null>(null);
   const timer = useRef<number | undefined>(undefined);
 
   useEffect(() => () => window.clearTimeout(timer.current), []);
 
-  const handleCopy = async () => {
+  const handleCopy = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    // Keyboard activation has no pointer position: ripple from the center.
+    const fromPointer = e.clientX !== 0 || e.clientY !== 0;
+    const x = fromPointer ? e.clientX - rect.left : rect.width / 2;
+    const y = fromPointer ? e.clientY - rect.top : rect.height / 2;
     try {
       if (navigator.clipboard?.writeText) {
         await navigator.clipboard.writeText(contact.email);
@@ -53,6 +60,7 @@ const CopyEmailButton: React.FC<Props> = ({ className }) => {
         legacyCopy(contact.email);
       }
       setCopied(true);
+      setRipple((prev) => ({ key: (prev?.key ?? 0) + 1, x, y }));
       window.clearTimeout(timer.current);
       timer.current = window.setTimeout(() => setCopied(false), 2000);
     } catch {
@@ -62,20 +70,29 @@ const CopyEmailButton: React.FC<Props> = ({ className }) => {
   };
 
   return (
-    <button
-      type="button"
-      onClick={handleCopy}
-      className={className}
-      aria-label={`Copy email address ${contact.email}`}
-    >
-      {copied ? <CheckIcon /> : <CopyIcon />}
-      {/* The address reserves the width so the "Copied" swap doesn't resize
-          the button and shift the row beside it. */}
-      <span className="copy-email-label">
-        <span aria-hidden="true">{contact.email}</span>
-        <span className="copy-email-label-text">{copied ? 'Copied' : contact.email}</span>
+    <span className="copy-email-wrap">
+      <button
+        type="button"
+        onClick={handleCopy}
+        className={`copy-email-btn${className ? ` ${className}` : ''}`}
+        aria-label={`Copy email address ${contact.email}`}
+      >
+        {ripple && (
+          <span
+            key={ripple.key}
+            className="copy-ripple"
+            style={{ left: ripple.x, top: ripple.y }}
+            aria-hidden="true"
+          />
+        )}
+        {copied ? <CheckIcon /> : <CopyIcon />}
+        <span className="copy-email-label-text">{contact.email}</span>
+      </button>
+      {/* Live region exists before it is filled so screen readers announce it. */}
+      <span className="copy-toast" role="status" data-show={copied || undefined}>
+        {copied ? contact.copiedToast : ''}
       </span>
-    </button>
+    </span>
   );
 };
 

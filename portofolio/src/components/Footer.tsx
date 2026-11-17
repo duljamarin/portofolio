@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useRef } from 'react';
+import { useInView } from 'framer-motion';
 import { emailHref } from '../data/contact';
 import CopyEmailButton from './CopyEmailButton';
 
@@ -43,37 +44,44 @@ const socials = [
   { label: 'Instagram', href: 'https://www.instagram.com/marindulja/', icon: InstagramIcon },
 ];
 
-const Footer: React.FC = () => (
-  <footer className="footer">
-    <div className="footer-socials">
-      {socials.map(({ label, href, icon: Icon }) => (
-        <a
-          key={label}
-          href={href}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="footer-social"
-          aria-label={label}
-        >
-          <Icon />
-          <span>{label}</span>
-        </a>
-      ))}
-    </div>
+const Footer: React.FC = () => {
+  const ref = useRef<HTMLElement>(null);
+  // The gold top line draws from 0 to full width the first time the footer shows.
+  const drawn = useInView(ref, { once: true, amount: 0.2 });
 
-    <CopyEmailButton className="footer-copy-email" />
+  return (
+    <footer className="footer" ref={ref}>
+      <span className="footer-line" data-drawn={drawn || undefined} aria-hidden="true" />
+      <div className="footer-socials">
+        {socials.map(({ label, href, icon: Icon }) => (
+          <a
+            key={label}
+            href={href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="footer-social"
+            aria-label={label}
+          >
+            <Icon />
+            <span>{label}</span>
+          </a>
+        ))}
+      </div>
 
-    <a href="#hero" className="footer-back-to-top">
-      <ArrowUpIcon />
-      Back to top
-    </a>
-    <p className="footer-copy">
-      <span className="footer-copy-mark">&copy; {new Date().getFullYear()}</span>
-      <span className="footer-copy-name">Marin Dulja</span>
-      <span className="footer-copy-separator">&middot;</span>
-      <span className="footer-copy-built">Built with React &amp; TypeScript</span>
-    </p>
-  </footer>
-);
+      <CopyEmailButton className="footer-copy-email" />
+
+      <a href="#hero" className="footer-back-to-top">
+        <ArrowUpIcon />
+        Back to top
+      </a>
+      <p className="footer-copy">
+        <span className="footer-copy-mark">&copy; {new Date().getFullYear()}</span>
+        <span className="footer-copy-name">Marin Dulja</span>
+        <span className="footer-copy-separator">&middot;</span>
+        <span className="footer-copy-built">Built with React &amp; TypeScript</span>
+      </p>
+    </footer>
+  );
+};
 
 export default Footer;

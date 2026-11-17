@@ -2,9 +2,12 @@
 // invented values (availability, rates, response time, etc).
 
 export const contact = {
-  heading: "Have a project in mind? Let's build it.",
-  statement: "I'm a full-stack engineer available for backend-heavy Java/Spring and React projects.",
+  label: 'Contact',
+  heading: 'Have a system to build?',
+  headingAccent: "Let's make it hold up.",
+  statement: 'Available for backend-heavy Java and Spring Boot work and full-stack React projects, remote, as a B2B contractor.',
   ctaLabel: 'Get in touch',
+  copiedToast: 'Email copied',
   email: 'duljamarin@gmail.com',
 };
 

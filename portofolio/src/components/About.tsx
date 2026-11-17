@@ -1,15 +1,18 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { roles } from '../data/experience';
+import { DUR_REVEAL, EASE_OUT, REVEAL_STAGGER } from '../animations';
 
 const previously = roles
   .map((r) => r.company.split(' · ')[0])
   .filter((company) => company !== 'Independent');
 
-const fadeUp = {
-  hidden: { opacity: 0, y: 28 },
-  visible: { opacity: 1, y: 0 },
-};
+/** Values count up once on enter (initCounters reads data-count). */
+const stats = [
+  { value: '4.5+', label: 'years of experience' },
+  { value: '15+', label: 'projects shipped' },
+  { value: '240+', label: 'microservices in the banking platform I worked on', highlight: true },
+];
 
 const principles = [
   {
@@ -30,110 +33,67 @@ const principles = [
   },
 ];
 
+const reveal = (order: number) => ({
+  initial: { opacity: 0, y: 20 },
+  whileInView: { opacity: 1, y: 0 },
+  viewport: { once: true, margin: '-40px' },
+  transition: { duration: DUR_REVEAL, delay: order * REVEAL_STAGGER, ease: EASE_OUT },
+});
+
 const About: React.FC = () => {
   return (
     <section id="about" className="about-section">
       <div className="about-container">
-        {/* Text content */}
         <div className="about-text-content">
-          <motion.div
-            className="section-header"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: '-50px' }}
-            variants={fadeUp}
-            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-          >
-            <h2 className="section-title">About <span className="accent">Me</span></h2>
-          </motion.div>
+          <motion.header className="section-header" {...reveal(0)}>
+            <p className="section-label">About</p>
+            <h2 className="section-title">I started writing Java in college and never stopped.</h2>
+          </motion.header>
 
-          <motion.p
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={fadeUp}
-            transition={{ duration: 0.6, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-          >
-            I started writing Java in college and never stopped. With more than four years of work experience, I've shipped banking platforms, built AI trading systems,
-            improved a web crawler, developed microservices, and designed, built, and operated a subscription SaaS solo, from system design through billing integration and production deployment.
+          <motion.p {...reveal(1)}>
+            With 4.5+ years of work experience, I have shipped banking platforms, built trading
+            systems, improved a web crawler, developed microservices, and designed, built and
+            operated a subscription SaaS solo, from system design through billing to production.
           </motion.p>
-          <motion.p
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={fadeUp}
-            transition={{ duration: 0.6, delay: 0.18, ease: [0.16, 1, 0.3, 1] }}
-          >
-            My core stack is Java, Kotlin, and Spring Boot on the backend, React and Supabase
-            on the frontend and data layer - but I'm comfortable across the entire stack. I thrive
-            in environments where I can solve real problems with clean, maintainable code.
+          <motion.p {...reveal(2)}>
+            My core stack is Java, Kotlin and Spring Boot on the backend, React and Supabase on the
+            frontend and data layer.
           </motion.p>
 
-          {/* Stats strip */}
-          <motion.div
-            className="stats-strip"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={fadeUp}
-            transition={{ duration: 0.6, delay: 0.26, ease: [0.16, 1, 0.3, 1] }}
-          >
-            <div className="stat-item">
-              <span className="stat-number" data-count="4+">4+</span>
-              <span className="stat-label">Years Experience</span>
-            </div>
-            <div className="stat-divider" />
-            <div className="stat-item">
-              <span className="stat-number" data-count="15+">15+</span>
-              <span className="stat-label">Projects</span>
-            </div>
-            <div className="stat-divider" />
-            <div className="stat-item">
-              <span className="stat-number" data-count="15+">15+</span>
-              <span className="stat-label">Technologies</span>
-            </div>
-          </motion.div>
+          <div className="stats-grid">
+            {stats.map((s, i) => (
+              <motion.div
+                key={s.label}
+                className="stat-tile"
+                data-highlight={s.highlight || undefined}
+                {...reveal(i + 3)}
+              >
+                <span className="sr-only">{s.value}</span>
+                <span className="stat-number" data-count={s.value} aria-hidden="true">
+                  {s.value}
+                </span>
+                <span className="stat-label">{s.label}</span>
+              </motion.div>
+            ))}
+          </div>
 
-          <motion.p
-            className="about-previously"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={fadeUp}
-            transition={{ duration: 0.6, delay: 0.32, ease: [0.16, 1, 0.3, 1] }}
-          >
+          <motion.p className="about-previously" {...reveal(6)}>
             Previously: {previously.join(' · ')}
           </motion.p>
         </div>
 
-        {/* Engineering principles */}
-        <motion.aside
-          className="principles-card"
-          initial={{ opacity: 0, x: 24 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true, margin: '-50px' }}
-          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-        >
-          <span className="principles-card-label">How I work</span>
-          <h3 className="principles-card-title">Engineering principles</h3>
+        <aside className="principles-card">
+          <motion.p className="section-label" {...reveal(0)}>How I work</motion.p>
+          <motion.h3 className="principles-card-title" {...reveal(1)}>Engineering principles</motion.h3>
           <div className="principles-list">
             {principles.map((p, idx) => (
-              <motion.div
-                className="principles-list-item"
-                key={p.title}
-                initial={{ opacity: 0, x: -12 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: 0.15 + idx * 0.08, ease: [0.16, 1, 0.3, 1] }}
-              >
-                <div>
-                  <h4>{p.title}</h4>
-                  <p>{p.desc}</p>
-                </div>
+              <motion.div className="principles-list-item" key={p.title} {...reveal(idx + 2)}>
+                <h4>{p.title}</h4>
+                <p>{p.desc}</p>
               </motion.div>
             ))}
           </div>
-        </motion.aside>
+        </aside>
       </div>
     </section>
   );
