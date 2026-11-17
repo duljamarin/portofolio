@@ -10,6 +10,12 @@ const ArrowRightIcon = () => (
   </svg>
 );
 
+const ChevronDown = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+    <polyline points="6 9 12 15 18 9" />
+  </svg>
+);
+
 /* Rotating line. The word list is data: add, remove or reorder freely. */
 const ROTATING_PREFIX = 'I build';
 const ROTATING_WORDS = ['systems that scale.', 'fintech products', 'SaaS products'];
@@ -199,11 +205,19 @@ const Hero: React.FC = () => {
 
       <div className="hero-bottom">
         <p className="hero-previously">{PREVIOUSLY}</p>
-        <a href="#how" className="hero-scroll-cue">
-          <span className="hero-scroll-mouse" aria-hidden="true">
-            <span className="hero-scroll-wheel" />
+        {/* Gold pill with a rotating light border; a packet runs along a mini
+            track, echoing the "How I build" diagram it scrolls to. */}
+        <a href="#how" className="hero-cue">
+          <span className="hero-cue-inner">
+            <span className="hero-cue-track" aria-hidden="true">
+              <span className="hero-cue-packet" />
+            </span>
+            <span className="hero-cue-text">Scroll to follow a request through my stack</span>
+            <span className="hero-cue-arrows" aria-hidden="true">
+              <ChevronDown />
+              <ChevronDown />
+            </span>
           </span>
-          Scroll to follow a request through my stack
         </a>
       </div>
     </section>

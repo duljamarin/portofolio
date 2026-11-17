@@ -687,50 +687,137 @@ a:hover {
   color: var(--paper);
 }
 
-.hero-scroll-cue {
+.hero-cue {
+  position: relative;
+  display: inline-flex;
+  padding: 1.5px;
+  border-radius: var(--radius-pill);
+  /* Only an arc of the border is lit; it travels round (see --angle in Projects). */
+  background: conic-gradient(
+    from var(--angle, 0deg),
+    var(--signal-light) 0deg,
+    var(--signal) 90deg,
+    color-mix(in srgb, var(--signal) 22%, transparent) 90deg,
+    color-mix(in srgb, var(--signal) 22%, transparent) 360deg
+  );
+  animation: deckAngle 4s linear infinite;
+  box-shadow: 0 0 calc(var(--space) * 4) color-mix(in srgb, var(--signal) 25%, transparent);
+  transition: box-shadow 300ms var(--ease-out), transform 300ms var(--ease-out);
+}
+
+.hero-cue-inner {
   display: inline-flex;
   align-items: center;
-  gap: 12px;
-  min-height: 44px;
-  font-size: 0.95rem;
+  gap: 14px;
+  min-height: 52px;
+  padding: 0 20px 0 18px;
+  border-radius: var(--radius-pill);
+  font-family: var(--font-display);
+  font-size: 0.98rem;
+  font-weight: 600;
   color: var(--paper);
+  background: color-mix(in oklab, var(--ink), var(--signal) 8%);
+  transition: background 300ms var(--ease-out), color 300ms var(--ease-out);
 }
 
-.hero-scroll-cue:hover {
-  color: var(--signal);
-}
-
-.hero-scroll-mouse {
+/* Mini track with a packet and comet trail */
+.hero-cue-track {
   position: relative;
   flex-shrink: 0;
-  width: 22px;
-  height: 34px;
-  border: 1.5px solid var(--signal);
-  border-radius: 12px;
-}
-
-.hero-scroll-wheel {
-  position: absolute;
-  top: 6px;
-  left: 50%;
-  width: 3px;
-  height: 7px;
-  margin-left: -1.5px;
+  width: 46px;
+  height: 2px;
   border-radius: 2px;
-  background: var(--signal-light);
-  animation: heroScrollWheel 1.8s var(--ease-out) infinite;
+  background: color-mix(in srgb, var(--signal) 30%, transparent);
 }
 
-@keyframes heroScrollWheel {
-  0%   { transform: translateY(0); opacity: 1; }
-  70%  { transform: translateY(10px); opacity: 0; }
-  100% { transform: translateY(0); opacity: 0; }
+.hero-cue-packet {
+  position: absolute;
+  top: -4px;
+  left: 0;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 40% 40%, #FFF4D6, var(--signal-light) 45%, var(--signal) 100%);
+  box-shadow: 0 0 8px var(--signal-light), 0 0 16px color-mix(in srgb, var(--signal) 70%, transparent);
+  animation: heroCuePacket 1.8s var(--ease-out) infinite;
+}
+
+.hero-cue-packet::before {
+  content: '';
+  position: absolute;
+  top: 3px;
+  right: 6px;
+  width: 22px;
+  height: 4px;
+  border-radius: 4px;
+  background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--signal-light) 70%, transparent));
+}
+
+@keyframes heroCuePacket {
+  0%   { transform: translateX(-4px); opacity: 0; }
+  15%  { opacity: 1; }
+  80%  { opacity: 1; }
+  100% { transform: translateX(40px); opacity: 0; }
+}
+
+/* Two chevrons cascading downwards */
+.hero-cue-arrows {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  margin-left: 2px;
+  color: var(--signal-light);
+  line-height: 0;
+}
+
+.hero-cue-arrows svg {
+  margin-top: -6px;
+  animation: heroCueChevron 1.6s var(--ease-out) infinite;
+}
+
+.hero-cue-arrows svg:first-child {
+  margin-top: 0;
+}
+
+.hero-cue-arrows svg:last-child {
+  animation-delay: 0.2s;
+}
+
+@keyframes heroCueChevron {
+  0%   { transform: translateY(-3px); opacity: 0.2; }
+  50%  { transform: translateY(2px); opacity: 1; }
+  100% { transform: translateY(-3px); opacity: 0.2; }
+}
+
+.hero-cue:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--glow), 0 0 calc(var(--space) * 8) color-mix(in srgb, var(--signal) 35%, transparent);
+}
+
+.hero-cue:hover .hero-cue-inner {
+  color: var(--ink);
+  background: var(--gold-gradient);
+}
+
+.hero-cue:hover .hero-cue-track {
+  background: color-mix(in srgb, var(--ink) 30%, transparent);
+}
+
+.hero-cue:hover .hero-cue-arrows {
+  color: var(--ink);
+}
+
+.hero-cue:focus-visible {
+  outline: 2px solid var(--signal);
+  outline-offset: 4px;
 }
 
 /* Pause decorative loops while the hero is off screen */
 .hero[data-inview="false"] .hero-portrait::before,
 .hero[data-inview="false"] .hero-portrait-sheen,
-.hero[data-inview="false"] .hero-scroll-wheel {
+.hero[data-inview="false"] .hero-cue,
+.hero[data-inview="false"] .hero-cue-packet,
+.hero[data-inview="false"] .hero-cue-arrows svg {
   animation-play-state: paused;
 }
 
@@ -742,8 +829,17 @@ a:hover {
   .hero-portrait-sheen {
     display: none;
   }
-  .hero-scroll-wheel {
+  .hero-cue,
+  .hero-cue-packet,
+  .hero-cue-arrows svg {
     animation: none;
+  }
+  .hero-cue-packet {
+    transform: translateX(18px);
+  }
+  .hero-cue,
+  .hero-cue-inner {
+    transition: none;
   }
   .hero-portrait-frame,
   .btn-primary,
