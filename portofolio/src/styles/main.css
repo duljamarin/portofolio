@@ -2109,7 +2109,7 @@ a:hover {
 }
 
 /* ============================================
-   OFFER SECTION: what I offer
+   OFFER SECTION: pointer spotlight cards
    ============================================ */
 .offer-section {
   padding: clamp(80px, 10vw, 140px) 24px;
@@ -2118,15 +2118,87 @@ a:hover {
 }
 
 .offer-grid {
-  margin-top: var(--space-6);
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: var(--space-6) var(--space-3);
+  gap: var(--space-3);
 }
 
 .offer-card {
-  border-top: calc(var(--rule) * 2) solid var(--signal);
-  padding-top: var(--space-3);
+  --mx: 50%;
+  --my: 0%;
+  position: relative;
+  padding: var(--space-4);
+  border-radius: 20px;
+  background:
+    radial-gradient(420px 320px at var(--mx) var(--my), color-mix(in srgb, var(--signal) 20%, transparent), transparent 65%),
+    var(--surface);
+  border: 1px solid var(--line);
+  transition: transform 400ms var(--ease-out), border-color 400ms var(--ease-out);
+  isolation: isolate;
+}
+
+/* Gold border that only shows near the pointer */
+.offer-card::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  padding: 1px;
+  border-radius: inherit;
+  background: radial-gradient(220px 220px at var(--mx) var(--my), var(--signal), transparent 70%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 300ms var(--ease-out);
+  pointer-events: none;
+}
+
+@media (hover: hover) {
+  .offer-card:hover {
+    transform: translateY(-4px);
+  }
+  .offer-card:hover::before {
+    opacity: 1;
+  }
+}
+
+@media (hover: none) {
+  .offer-card {
+    background: var(--surface);
+  }
+}
+
+.offer-icon {
+  display: inline-grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  margin-bottom: var(--space-3);
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--signal) 10%, transparent);
+  border: 1px solid color-mix(in srgb, var(--signal) 30%, transparent);
+}
+
+.offer-icon svg {
+  width: 26px;
+  height: 26px;
+  fill: none;
+  stroke: var(--signal-light);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.offer-icon svg > * {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  transition: stroke-dashoffset 1.4s var(--ease-out);
+  transition-delay: calc(var(--i, 0) * var(--stagger) + 200ms);
+}
+
+.offer-grid[data-revealed] .offer-icon svg > * {
+  stroke-dashoffset: 0;
 }
 
 .offer-card-title {
@@ -2149,6 +2221,304 @@ a:hover {
 @media (max-width: 900px) {
   .offer-grid {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .offer-card,
+  .offer-card::before {
+    transition: none;
+  }
+  .offer-icon svg > * {
+    stroke-dashoffset: 0;
+    transition: none;
+  }
+}
+
+/* ============================================
+   MENTORING SECTION
+   ============================================ */
+.mentoring-section {
+  position: relative;
+  padding: clamp(80px, 10vw, 140px) 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+  isolation: isolate;
+}
+
+.mentoring-glow {
+  position: absolute;
+  inset: 10% -10% auto;
+  height: 60%;
+  z-index: -1;
+  background: radial-gradient(ellipse 50% 50% at 50% 40%, color-mix(in srgb, var(--signal) 10%, transparent), transparent 70%);
+  pointer-events: none;
+}
+
+.mentor-highlight {
+  color: var(--signal-light);
+}
+
+.mentor-grid {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: var(--space-3);
+  align-items: stretch;
+}
+
+.mentor-card {
+  padding: 1px;
+  border-radius: 22px;
+  background: var(--line);
+}
+
+/* Featured card: shimmering gold border, gradient travels round in 6s */
+.mentor-card[data-featured] {
+  padding: 1.5px;
+  background: linear-gradient(
+    110deg,
+    var(--signal-deep),
+    var(--signal-light),
+    var(--signal),
+    var(--signal-light),
+    var(--signal-deep)
+  );
+  background-size: 300% 100%;
+  box-shadow: 0 0 calc(var(--space) * 6) color-mix(in srgb, var(--signal) 18%, transparent);
+  animation: mentorShimmer 6s linear infinite;
+}
+
+@keyframes mentorShimmer {
+  from { background-position: 0% 50%; }
+  to   { background-position: 300% 50%; }
+}
+
+.mentoring-section[data-inview="false"] .mentor-card[data-featured] {
+  animation-play-state: paused;
+}
+
+.mentor-card-inner {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  height: 100%;
+  padding: var(--space-4);
+  border-radius: 21px;
+  background: color-mix(in oklab, var(--ink), var(--paper) 3%);
+}
+
+.mentor-card-inner .card-label {
+  margin: 0;
+}
+
+.mentor-card-title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 30px;
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: var(--paper);
+}
+
+.mentor-price {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+}
+
+.mentor-price-main {
+  font-family: var(--font-display);
+  font-size: 40px;
+  font-weight: 600;
+  line-height: 1.1;
+  color: var(--signal-light);
+  text-shadow: 0 0 22px color-mix(in srgb, var(--signal) 40%, transparent);
+}
+
+.mentor-price-local {
+  font-size: 0.95rem;
+  color: var(--paper);
+}
+
+.mentor-bullets {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.mentor-bullets li {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  line-height: 1.5;
+  color: var(--paper);
+}
+
+.mentor-bullets svg {
+  flex-shrink: 0;
+  margin-top: 4px;
+  color: var(--signal);
+}
+
+.mentor-text {
+  margin: 0;
+  line-height: 1.6;
+  color: var(--paper);
+}
+
+.mentor-topics {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.mentor-topic {
+  padding: 6px 12px;
+  font-size: 0.88rem;
+  color: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
+}
+
+.mentor-topic[data-highlight] {
+  color: var(--signal);
+  border-color: var(--signal);
+}
+
+.mentor-cta {
+  justify-content: center;
+  margin-top: auto;
+  min-height: 48px;
+}
+
+/* How it works */
+.mentor-steps {
+  list-style: none;
+  margin: var(--space-6) 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-3);
+  counter-reset: none;
+}
+
+.mentor-step {
+  display: flex;
+  gap: var(--space-2);
+  align-items: flex-start;
+}
+
+.mentor-step-num {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  font-family: var(--font-display);
+  font-weight: 600;
+  color: var(--ink);
+  background: var(--gold-gradient);
+  box-shadow: var(--glow);
+}
+
+.mentor-step-title {
+  margin: 0 0 4px;
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--paper);
+}
+
+.mentor-step-text {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: var(--paper);
+}
+
+/* Booking channels */
+.mentor-book {
+  margin-top: var(--space-6);
+  padding: var(--space-4);
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  background: var(--surface);
+  text-align: center;
+  scroll-margin-top: 120px;
+}
+
+.mentor-book-heading {
+  margin: 0 0 var(--space-3);
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--paper);
+}
+
+.mentor-channels {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-2);
+}
+
+.mentor-channel {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 48px;
+  padding: 0 22px;
+  font-family: var(--font-display);
+  font-weight: 600;
+  color: var(--paper);
+  border: 1px solid color-mix(in srgb, var(--signal) 35%, transparent);
+  border-radius: var(--radius-pill);
+  transition: border-color 250ms var(--ease-out), color 250ms var(--ease-out), box-shadow 250ms var(--ease-out), transform 250ms var(--ease-out);
+}
+
+.mentor-channel svg {
+  color: var(--signal);
+}
+
+.mentor-channel:hover {
+  color: var(--signal-light);
+  border-color: var(--signal);
+  box-shadow: var(--glow);
+  transform: translateY(-2px);
+}
+
+@media (max-width: 900px) {
+  .mentor-grid,
+  .mentor-steps {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .mentor-card-inner,
+  .mentor-book {
+    padding: var(--space-3);
+  }
+  .mentor-channel {
+    flex: 1 1 calc(50% - var(--space-2));
+    justify-content: center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mentor-card[data-featured] {
+    animation: none;
+  }
+  .mentor-channel {
+    transition: none;
   }
 }
 

@@ -126,18 +126,20 @@ export function initCounters(): () => void {
 const LENIS_LERP = 0.1;
 let lenis: Lenis | null = null;
 
+/** Scrolls to a y position or an element, honoring the element's scroll-margin-top. */
 export function scrollToTarget(target: string | HTMLElement | number, offset = 0): void {
-  if (lenis) {
-    lenis.scrollTo(target, { offset });
-    return;
-  }
   let top: number;
   if (typeof target === 'number') {
     top = target;
   } else {
     const el = typeof target === 'string' ? document.querySelector<HTMLElement>(target) : target;
     if (!el) return;
-    top = el.getBoundingClientRect().top + window.scrollY;
+    const margin = parseFloat(getComputedStyle(el).scrollMarginTop) || 0;
+    top = el.getBoundingClientRect().top + window.scrollY - margin;
+  }
+  if (lenis) {
+    lenis.scrollTo(top + offset);
+    return;
   }
   window.scrollTo({ top: top + offset, behavior: prefersReducedMotion() ? 'auto' : 'smooth' });
 }

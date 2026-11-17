@@ -6,6 +6,7 @@ import HowIBuild from './components/HowIBuild';
 import About from './components/About';
 import Projects from './components/Projects';
 import Offer from './components/Offer';
+import Mentoring from './components/Mentoring';
 import Skills from './components/Skills';
 import TestimonialsSection from './components/TestimonialsSection';
 import EducationSection from './components/EducationSection';
@@ -57,7 +58,7 @@ const App: React.FC = () => {
         <HowIBuild />
         <Projects />
         <Offer />
-        {/* Mentoring (Phase 4) */}
+        <Mentoring />
         <About />
         <Skills />
         <TestimonialsSection />
