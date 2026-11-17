@@ -5,7 +5,6 @@ import { contact, emailHref } from '../data/contact';
 import { sections } from '../data/nav';
 import { EASE_OUT } from '../animations';
 import CopyEmailButton from './CopyEmailButton';
-import { useInViewAttr } from '../hooks/useInViewAttr';
 
 const ArrowUpIcon = () => (
   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -90,7 +89,6 @@ const Footer: React.FC = () => {
   // Fires once the footer starts to show; it sits at the end of the page, so
   // it must not wait for a scroll position the page may never reach.
   const shown = useInView(ref, { once: true, amount: 0.15 });
-  useInViewAttr(ref);
 
   return (
     <footer className="footer" ref={ref}>
@@ -104,10 +102,6 @@ const Footer: React.FC = () => {
               Marin <span>Dulja</span>
             </a>
             <p className="footer-tagline">Full-stack engineer · Java, Spring Boot, React</p>
-            <p className="footer-status">
-              <span className="footer-status-dot" aria-hidden="true" />
-              Available for remote B2B contract work
-            </p>
           </motion.div>
 
           <motion.nav className="footer-nav" aria-label="Footer" {...reveal(1, shown)}>
