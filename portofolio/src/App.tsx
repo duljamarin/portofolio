@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { MotionConfig } from 'framer-motion';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
+import HowIBuild from './components/HowIBuild';
 import About from './components/About';
 import Projects from './components/Projects';
 import Offer from './components/Offer';
@@ -51,7 +52,7 @@ const App: React.FC = () => {
         <div className="scroll-progress" ref={scrollBarRef} />
         <Navbar />
         <Hero />
-        {/* HowIBuild (Phase 2) */}
+        <HowIBuild />
         <Projects />
         <Offer />
         {/* Mentoring (Phase 4) */}

@@ -769,6 +769,496 @@ a:hover {
 }
 
 /* ============================================
+   HOW I BUILD: pinned scroll story
+   Geometry lives in src/data/howIBuild.ts; JS writes only transforms and
+   CSS custom properties (--fill, --progress, --diagram-scale).
+   ============================================ */
+.how-wrap {
+  position: relative;
+  height: calc(100vh * 4);
+}
+
+.how-wrap[data-pinned="false"] {
+  height: auto;
+}
+
+.how-stage {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  padding: 96px 24px var(--space-4);
+  isolation: isolate;
+}
+
+.how-wrap[data-pinned="false"] .how-stage {
+  position: relative;
+  height: auto;
+  padding: clamp(80px, 10vw, 140px) 24px;
+}
+
+.how-inner {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.how-header {
+  margin-bottom: var(--space-4);
+}
+
+.how-header .section-title {
+  max-width: 760px;
+}
+
+.how-body {
+  display: grid;
+  grid-template-columns: minmax(260px, 0.8fr) 1.3fr;
+  gap: var(--space-6);
+  align-items: center;
+}
+
+/* ---------- Background ---------- */
+.how-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.how-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(color-mix(in srgb, var(--paper) 3.5%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--paper) 3.5%, transparent) 1px, transparent 1px);
+  background-size: 48px 48px;
+  -webkit-mask-image: radial-gradient(ellipse 80% 70% at 50% 50%, #000 40%, transparent 100%);
+  mask-image: radial-gradient(ellipse 80% 70% at 50% 50%, #000 40%, transparent 100%);
+}
+
+.how-blob {
+  position: absolute;
+  top: 20%;
+  left: 45%;
+  width: 520px;
+  height: 520px;
+  border-radius: 50%;
+  background: radial-gradient(circle closest-side, color-mix(in srgb, var(--signal) 16%, transparent), transparent);
+  filter: blur(20px);
+  animation: howBlobDrift 18s ease-in-out infinite alternate;
+}
+
+@keyframes howBlobDrift {
+  from { transform: translate(-20%, -10%); }
+  to   { transform: translate(15%, 20%); }
+}
+
+.how-scan {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 30%;
+  background: linear-gradient(to bottom, transparent, color-mix(in srgb, var(--signal-light) 6%, transparent), transparent);
+  animation: howScan 7s linear infinite;
+}
+
+@keyframes howScan {
+  from { transform: translateY(-100%); }
+  to   { transform: translateY(400%); }
+}
+
+.how-spark {
+  position: absolute;
+  bottom: -10px;
+  left: var(--x);
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--signal-light);
+  box-shadow: 0 0 8px var(--signal);
+  opacity: 0;
+  animation: howSpark var(--dur) linear var(--delay) infinite;
+}
+
+@keyframes howSpark {
+  0%   { transform: translateY(0); opacity: 0; }
+  10%  { opacity: 0.9; }
+  80%  { opacity: 0.5; }
+  100% { transform: translateY(-100vh); opacity: 0; }
+}
+
+.how-bignum {
+  position: absolute;
+  right: 2%;
+  bottom: -6%;
+  font-family: var(--font-display);
+  font-size: 360px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  color: transparent;
+  -webkit-text-stroke: 2px color-mix(in srgb, var(--signal) 16%, transparent);
+}
+
+.how-wrap[data-inview="false"] .how-blob,
+.how-wrap[data-inview="false"] .how-scan,
+.how-wrap[data-inview="false"] .how-spark,
+.how-wrap[data-inview="false"] .how-node[data-latest="true"]::before,
+.how-wrap[data-inview="false"] .how-node[data-latest="true"]::after {
+  animation-play-state: paused;
+}
+
+/* ---------- Steps ---------- */
+.how-steps-wrap {
+  position: relative;
+  --progress: 0;
+}
+
+.how-steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.how-steps-line {
+  display: none;
+}
+
+.how-step {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: var(--space-2);
+  width: 100%;
+  min-height: 44px;
+  padding: 12px 16px 14px;
+  text-align: left;
+  font: inherit;
+  color: var(--paper);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 14px;
+  cursor: pointer;
+  opacity: 0.45;
+  transition: opacity 550ms var(--ease-out), background 550ms var(--ease-out), border-color 550ms var(--ease-out);
+}
+
+.how-step[data-state="done"] {
+  opacity: 0.75;
+}
+
+.how-step[data-state="active"] {
+  opacity: 1;
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--signal-light) 12%, transparent), color-mix(in srgb, var(--signal-deep) 8%, transparent));
+  border-color: color-mix(in srgb, var(--signal) 55%, transparent);
+}
+
+.how-step:hover {
+  opacity: 1;
+}
+
+.how-step:focus-visible {
+  outline: 2px solid var(--signal);
+  outline-offset: 2px;
+}
+
+.how-step-num {
+  grid-row: span 2;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--signal);
+  padding-top: 0.35em;
+}
+
+/* Laid out at the active size (24px); inactive titles are scaled to 19/24. */
+.how-step-title {
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  color: var(--paper);
+  transform-origin: left center;
+  transform: scale(calc(19 / 24));
+  transition: transform 550ms var(--ease-out), color 550ms var(--ease-out);
+}
+
+.how-step[data-state="active"] .how-step-title {
+  transform: scale(1);
+  color: var(--signal-light);
+}
+
+.how-step-text {
+  grid-column: 2;
+  font-size: 0.92rem;
+  line-height: 1.5;
+  color: var(--paper);
+}
+
+.how-step-bar {
+  grid-column: 2;
+  margin-top: 10px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--line);
+  overflow: hidden;
+}
+
+.how-step-bar-fill {
+  display: block;
+  height: 100%;
+  background: var(--gold-gradient);
+  transform-origin: left center;
+  transform: scaleX(var(--fill, 0));
+}
+
+/* ---------- Diagram ---------- */
+.how-figure {
+  margin: 0;
+  min-width: 0;
+}
+
+.how-diagram-box {
+  position: relative;
+  width: min(100%, calc((100vh - 330px) * 820 / 444));
+  aspect-ratio: 820 / 444;
+  margin: 0 auto;
+  --diagram-scale: 1;
+}
+
+.how-diagram {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform-origin: 0 0;
+  transform: scale(var(--diagram-scale));
+}
+
+.how-lines {
+  position: absolute;
+  inset: 0;
+  overflow: visible;
+}
+
+.how-line-base,
+.how-line-fill {
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.how-line-base {
+  stroke: var(--line);
+}
+
+.how-line-fill {
+  stroke: var(--signal);
+  stroke-dasharray: 1 1;
+  stroke-dashoffset: calc(1 - var(--fill, 0));
+  filter: drop-shadow(0 0 4px color-mix(in srgb, var(--signal) 60%, transparent));
+}
+
+.how-node {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  padding: 6px;
+  text-align: center;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  transition: transform 550ms var(--ease-out), border-color 550ms var(--ease-out), background 550ms var(--ease-out), box-shadow 550ms var(--ease-out);
+}
+
+.how-node[data-visited="true"] {
+  border-color: var(--signal);
+  background: color-mix(in oklab, var(--ink), var(--signal) 10%);
+}
+
+.how-node[data-latest="true"] {
+  transform: scale(1.08);
+  box-shadow: var(--glow);
+}
+
+.how-node[data-latest="true"]::before,
+.how-node[data-latest="true"]::after {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  border: 1px solid var(--signal);
+  pointer-events: none;
+  animation: howRipple 1.8s var(--ease-out) infinite;
+}
+
+.how-node[data-latest="true"]::after {
+  animation-delay: 0.9s;
+}
+
+@keyframes howRipple {
+  from { transform: scale(1); opacity: 0.7; }
+  to   { transform: scale(1.45); opacity: 0; }
+}
+
+.how-node-name {
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--paper);
+}
+
+.how-node-sub {
+  font-size: 10.5px;
+  line-height: 1.25;
+  color: var(--paper);
+  transition: color 550ms var(--ease-out);
+}
+
+.how-node[data-visited="true"] .how-node-sub {
+  color: var(--signal-light);
+}
+
+.how-badge {
+  position: absolute;
+  left: 50%;
+  margin-left: -60px;
+  width: 120px;
+  padding: 3px 0;
+  text-align: center;
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+  color: var(--ink);
+  background: var(--gold-gradient);
+  border-radius: var(--radius-pill);
+  box-shadow: var(--glow);
+}
+
+.how-badge[data-place="above"] {
+  bottom: calc(100% + 10px);
+}
+
+.how-badge[data-place="below"] {
+  top: calc(100% + 10px);
+}
+
+/* Packet: orb + comet trail; each orb is translated to its point by JS. */
+.how-packet {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.how-orb {
+  position: absolute;
+  top: -9px;
+  left: -9px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 40% 40%, #FFF4D6, var(--signal-light) 45%, var(--signal) 100%);
+  box-shadow:
+    0 0 8px var(--signal-light),
+    0 0 22px color-mix(in srgb, var(--signal) 70%, transparent);
+  will-change: transform;
+}
+
+/* Ghosts are sized (not scaled) so the JS translate keeps them on the path. */
+.how-orb-ghost {
+  top: calc(-9px * var(--ghost-scale));
+  left: calc(-9px * var(--ghost-scale));
+  width: calc(18px * var(--ghost-scale));
+  height: calc(18px * var(--ghost-scale));
+  opacity: var(--ghost-alpha);
+  box-shadow: none;
+}
+
+.how-caption {
+  margin-top: var(--space-2);
+  text-align: center;
+  font-size: 0.95rem;
+  color: var(--paper);
+}
+
+.how-caption em {
+  font-style: normal;
+  font-weight: 600;
+  color: var(--signal-light);
+}
+
+/* ---------- Narrow: no pin, vertical list with a progress line ---------- */
+@media (max-width: 900px) {
+  .how-body {
+    grid-template-columns: 1fr;
+  }
+  .how-figure .how-diagram-box {
+    display: none;
+  }
+  .how-caption {
+    text-align: left;
+  }
+  .how-steps-wrap {
+    padding-left: 20px;
+  }
+  .how-steps-line {
+    display: block;
+    position: absolute;
+    left: 0;
+    top: 8px;
+    bottom: 8px;
+    width: 2px;
+    border-radius: 2px;
+    background: var(--line);
+    overflow: hidden;
+  }
+  .how-steps-line-fill {
+    display: block;
+    width: 100%;
+    height: 100%;
+    background: var(--gold-gradient);
+    box-shadow: var(--glow);
+    transform-origin: top center;
+    transform: scaleY(var(--progress));
+  }
+  .how-bignum {
+    font-size: 200px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .how-blob,
+  .how-scan,
+  .how-spark,
+  .how-node[data-latest="true"]::before,
+  .how-node[data-latest="true"]::after {
+    animation: none;
+  }
+  .how-scan,
+  .how-spark,
+  .how-node[data-latest="true"]::before,
+  .how-node[data-latest="true"]::after {
+    display: none;
+  }
+}
+
+/* ============================================
    ABOUT SECTION: principles + text
    ============================================ */
 .about-section {
