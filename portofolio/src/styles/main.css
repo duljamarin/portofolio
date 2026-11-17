@@ -802,7 +802,8 @@ a:hover {
    ============================================ */
 .how-wrap {
   position: relative;
-  height: calc(100vh * 4);
+  /* --how-steps is set from STEPS.length in HowIBuild.tsx */
+  height: calc(100vh * var(--how-steps, 4));
 }
 
 .how-wrap[data-pinned="false"] {
@@ -937,7 +938,17 @@ a:hover {
 .how-wrap[data-inview="false"] .how-blob,
 .how-wrap[data-inview="false"] .how-scan,
 .how-wrap[data-inview="false"] .how-spark,
-.how-wrap[data-inview="false"] .how-node[data-latest="true"]::before,
+.how-wrap[data-inview="false"] .how-node[data-delivered] {
+  border-color: var(--signal-light);
+  background: color-mix(in oklab, var(--ink), var(--signal) 24%);
+  box-shadow: var(--glow), 0 0 calc(var(--space) * 9) color-mix(in srgb, var(--signal) 35%, transparent);
+}
+
+.how-node[data-delivered] .how-node-name {
+  color: var(--signal-light);
+}
+
+.how-node[data-latest="true"]::before,
 .how-wrap[data-inview="false"] .how-node[data-latest="true"]::after {
   animation-play-state: paused;
 }
@@ -1027,8 +1038,20 @@ a:hover {
   color: var(--signal-light);
 }
 
-.how-step-text {
+.how-step-text-wrap {
   grid-column: 2;
+  display: grid;
+  grid-template-rows: 1fr;
+  transition: grid-template-rows 450ms var(--ease-out);
+}
+
+.how-wrap[data-pinned="true"] .how-step:not([data-state="active"]) .how-step-text-wrap {
+  grid-template-rows: 0fr;
+}
+
+.how-step-text {
+  min-height: 0;
+  overflow: hidden;
   font-size: 0.92rem;
   line-height: 1.5;
   color: var(--paper);

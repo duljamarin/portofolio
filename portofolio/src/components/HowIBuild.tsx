@@ -36,9 +36,18 @@ const NODE_ARRIVAL = NODES.map((n) =>
   n.on === 'main' ? distanceTo(mainPath, center(n)) : FORK + distanceTo(branchPath, center(n))
 );
 
-/** Step starts: Edge at 0, Service just past the gateway, Event back at A, Consumers at the fork. */
-const STEP_START = [0, mainPath.lengthTo[1] + SERVICE_STEP_LEAD, mainPath.lengthTo[4], FORK];
-const STEP_END = STEP_START.map((_, i) => STEP_START[i + 1] ?? TOTAL);
+/**
+ * The story runs past the end of the path: after both packets arrive, step 05
+ * holds Services B and C highlighted for as long as step 04 took (FORK to TOTAL).
+ */
+const STORY_TOTAL = TOTAL + (TOTAL - FORK);
+/** At the start of step 05 the arrived packets fade out over this distance, as if absorbed. */
+const ABSORB = (STORY_TOTAL - TOTAL) * 0.3;
+
+/** Step starts: Edge at 0, Service just past the gateway, Event back at A,
+ *  Consumers at the fork, Delivered when both packets reach B and C. */
+const STEP_START = [0, mainPath.lengthTo[1] + SERVICE_STEP_LEAD, mainPath.lengthTo[4], FORK, TOTAL];
+const STEP_END = STEP_START.map((_, i) => STEP_START[i + 1] ?? STORY_TOTAL);
 
 type Line = { key: string; run: Run; points: string; length: number };
 const toPoints = (pts: Pt[]) => pts.map((p) => `${p.x},${p.y}`).join(' ');
@@ -143,20 +152,21 @@ const HowIBuild: React.FC = () => {
   });
 
   const distanceFor = useCallback(
-    (progress: number) => (reduceMotion ? TOTAL : clamp01(progress) * TOTAL),
+    (progress: number) => (reduceMotion ? STORY_TOTAL : clamp01(progress) * STORY_TOTAL),
     [reduceMotion]
   );
 
-  const [story, setStory] = useState<StoryState>(() => storyStateAt(reduceMotion ? TOTAL : 0));
+  const [story, setStory] = useState<StoryState>(() => storyStateAt(reduceMotion ? STORY_TOTAL : 0));
 
   /** Continuous visuals: written straight to the DOM (transforms and CSS vars only). */
   const paint = useCallback((d: number) => {
     const place = (el: HTMLElement | null, p: Pt) => {
       if (el) el.style.transform = `translate3d(${p.x}px, ${p.y}px, 0)`;
     };
+    const absorbed = 1 - clamp01((d - TOTAL) / ABSORB);
     const paintPacket = (root: HTMLDivElement | null, path: typeof mainPath, dist: number) => {
       if (!root) return;
-      root.style.opacity = dist >= 0 ? '1' : '0';
+      root.style.opacity = dist >= 0 ? String(absorbed) : '0';
       const parts = root.children;
       place(parts[0] as HTMLElement, pointAt(path, dist));
       TRAIL.forEach(([behind], i) => {
@@ -176,7 +186,7 @@ const HowIBuild: React.FC = () => {
     STEP_START.forEach((s, i) => {
       barRefs.current[i]?.style.setProperty('--fill', String(clamp01((d - s) / (STEP_END[i] - s))));
     });
-    stepsRef.current?.style.setProperty('--progress', String(d / TOTAL));
+    stepsRef.current?.style.setProperty('--progress', String(d / STORY_TOTAL));
   }, []);
 
   const update = useCallback(
@@ -215,7 +225,7 @@ const HowIBuild: React.FC = () => {
     const top = wrap.getBoundingClientRect().top + window.scrollY;
     const travel = pinned ? wrap.offsetHeight - window.innerHeight : 0;
     // +1px lands just inside the step's range.
-    scrollToTarget(top + (STEP_START[i] / TOTAL) * travel + 1);
+    scrollToTarget(top + (STEP_START[i] / STORY_TOTAL) * travel + 1);
   };
 
   const { activeStep, latest } = story;
@@ -226,6 +236,8 @@ const HowIBuild: React.FC = () => {
       ref={wrapRef}
       className="how-wrap"
       data-pinned={pinned}
+      // One viewport of scroll per step.
+      style={{ '--how-steps': STEPS.length } as React.CSSProperties}
       aria-labelledby="how-heading"
     >
       <div className="how-stage">
@@ -284,7 +296,10 @@ const HowIBuild: React.FC = () => {
                       >
                         <span className="how-step-num">{step.number}</span>
                         <span className="how-step-title">{step.title}</span>
-                        <span className="how-step-text">{step.text}</span>
+                        {/* Pinned: only the active step opens its text (grid-rows 0fr -> 1fr). */}
+                        <span className="how-step-text-wrap">
+                          <span className="how-step-text">{step.text}</span>
+                        </span>
                         <span className="how-step-bar" aria-hidden="true">
                           <span
                             className="how-step-bar-fill"
@@ -326,6 +341,8 @@ const HowIBuild: React.FC = () => {
                         className="how-node"
                         data-visited={visited}
                         data-latest={isLatest}
+                        // Step 05: the consumers stay lit as the finished state.
+                        data-delivered={activeStep === STEPS.length - 1 && NODE_ARRIVAL[idx] === TOTAL ? true : undefined}
                         style={{ left: n.x, top: n.y, width: n.w, height: n.h }}
                       >
                         <span className="how-node-name">{n.name}</span>

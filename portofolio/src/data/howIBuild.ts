@@ -50,7 +50,7 @@ export const NODES: DiagramNode[] = [
   { id: 'db', x: 330, y: 340, w: 110, h: 64, name: 'PostgreSQL', sub: 'transaction', on: 'main', badge: { text: 'Committed', place: 'below' } },
   { id: 'q', x: 500, y: 190, w: 130, h: 64, name: 'Queue', sub: 'RabbitMQ · Kafka', on: 'main', badge: { text: 'Event published', place: 'above' } },
   { id: 'b', x: 680, y: 100, w: 130, h: 64, name: 'Service B', sub: 'Spring Boot', on: 'main', badge: { text: 'Handled', place: 'above' } },
-  { id: 'c', x: 680, y: 280, w: 130, h: 64, name: 'Service C', sub: 'Spring Boot', on: 'branch' },
+  { id: 'c', x: 680, y: 280, w: 130, h: 64, name: 'Service C', sub: 'Spring Boot', on: 'branch', badge: { text: 'Handled', place: 'below' } },
 ];
 
 export const STEPS: Step[] = [
@@ -73,6 +73,11 @@ export const STEPS: Step[] = [
     number: '04',
     title: 'Consumers',
     text: 'Services B and C consume the event on their own. Idempotent handlers make retries safe.',
+  },
+  {
+    number: '05',
+    title: 'Delivered',
+    text: 'Both services have handled the event. One request: committed once, published once, processed safely by every service that needs it.',
   },
 ];
 
