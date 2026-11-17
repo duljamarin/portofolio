@@ -109,7 +109,8 @@ const Navbar: React.FC = () => {
         <button
           className={`nav-hamburger${mobileOpen ? ' open' : ''}`}
           onClick={() => setMobileOpen(!mobileOpen)}
-          aria-label="Toggle navigation menu"
+          aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
+          aria-expanded={mobileOpen}
         >
           <span />
           <span />
