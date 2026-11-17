@@ -1,5 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { LockIn, SparkBurst } from './fx/LockIn';
+import { SplitReveal } from './fx/SplitReveal';
 
 const StarIcon = () => (
   <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
@@ -12,6 +14,7 @@ const testimonials = [
     name: 'Jonas Figu',
     role: 'Software Developer',
     date: 'June 28, 2025',
+    highlight: 'highly recommend him for any team looking for both technical excellence and strong mentorship',
     text: `I had the privilege of working alongside Marin Dulja at Candidatis, where he worked as a Java Developer and my mentor. From day one, Marin stood out not only for his deep technical expertise in Java and backend systems, but also for his patience, clarity, and dedication to helping others grow.
 
 As a mentor, Marin was incredibly generous with his time and knowledge. He had a unique ability to break down complex concepts into manageable, understandable pieces, which made a huge difference in my development as a programmer. His code reviews were always insightful, focused not just on pointing out issues, but on teaching better practices.
@@ -24,6 +27,7 @@ Anyone would be lucky to have Marin on their team. I'm grateful to have learned 
     name: 'Abbass Faytaroony',
     role: 'Senior Software Engineer (Java | Kotlin) @ Genesys',
     date: 'April 10, 2025',
+    highlight: 'the kind of developer who lifts a team technically and culturally',
     text: `I was fortunate enough to mentor Marin when working for Noema Consulting, where we collaborated on the backend development. Marin grasped Kotlin really fast and was making meaningful contributions within a very short time. He also became Azure Developer Associate certified soon after joining, which reflects his determination and quick learning abilities.
 
 What stood out most was Marin's positive attitude and professionalism. He was always polite, receptive to feedback, and genuinely curious. Very soon, he learned the codebase and improved/extended it. Marin is the kind of developer who lifts a team technically and culturally, and I'd gladly work with him again.`,
@@ -35,9 +39,17 @@ const fadeUp = {
   visible: { opacity: 1, y: 0 },
 };
 
-const testimonialReveal = {
-  hidden: { opacity: 0, y: 28 },
-  visible: { opacity: 1, y: 0 },
+/** Wraps the highlight phrase in <mark>; its gold underline draws in on lock. */
+const withHighlight = (paragraph: string, phrase: string) => {
+  const at = paragraph.indexOf(phrase);
+  if (at < 0) return paragraph;
+  return (
+    <>
+      {paragraph.slice(0, at)}
+      <mark className="testimonial-highlight">{phrase}</mark>
+      {paragraph.slice(at + phrase.length)}
+    </>
+  );
 };
 
 const TestimonialsSection: React.FC = () => {
@@ -51,39 +63,51 @@ const TestimonialsSection: React.FC = () => {
         variants={fadeUp}
         transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
       >
-        <h2 className="section-title">Words of <span className="accent">Appreciation</span></h2>
+        <SplitReveal
+          className="section-title"
+          text={[{ text: 'Words of ' }, { text: 'Appreciation', className: 'accent' }]}
+        />
         <p className="section-subtitle">Reflections from peers and mentors I've worked with.</p>
       </motion.div>
 
       <div className="testimonials-grid">
         {testimonials.map((t, idx) => (
-          <motion.article
-            className="testimonial-card"
-            key={t.name}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: '-50px' }}
-            variants={testimonialReveal}
-            transition={{ duration: 0.75, delay: idx * 0.15, ease: [0.16, 1, 0.3, 1] }}
-          >
-            <div className="testimonial-stars" aria-label="5 out of 5 stars">
-              {Array.from({ length: 5 }).map((_, i) => (
-                <StarIcon key={i} />
-              ))}
-            </div>
+          <LockIn as="article" className="testimonial-card fx-ring" key={t.name} index={idx}>
+            {({ locked }) => (
+              <>
+                <span className="testimonial-quote" aria-hidden="true">&ldquo;</span>
+                <div className="testimonial-stars" role="img" aria-label="5 out of 5 stars">
+                  {Array.from({ length: 5 }).map((_, i) => (
+                    <motion.span
+                      key={i}
+                      className="testimonial-star"
+                      initial={false}
+                      animate={locked ? { scale: [0.4, 1.5, 1], rotate: [-30, 12, 0] } : { scale: 1, rotate: 0 }}
+                      transition={{ duration: 0.55, delay: 0.08 * i, ease: 'easeOut' }}
+                    >
+                      <StarIcon />
+                    </motion.span>
+                  ))}
+                  <SparkBurst className="testimonial-burst" scale={0.8} />
+                </div>
 
-            <div className="testimonial-text">
-              {t.text.split('\n\n').map((paragraph, pIdx) => (
-                <p key={pIdx}>{paragraph}</p>
-              ))}
-            </div>
+                <div className="testimonial-text">
+                  {t.text.split('\n\n').map((paragraph, pIdx) => (
+                    <p key={pIdx}>{withHighlight(paragraph, t.highlight)}</p>
+                  ))}
+                </div>
 
-            <div className="testimonial-author">
-              <span className="testimonial-name">{t.name}</span>
-              <span className="testimonial-role">{t.role}</span>
-              <span className="testimonial-date">{t.date}</span>
-            </div>
-          </motion.article>
+                <div className="testimonial-author">
+                  <span className="testimonial-avatar" aria-hidden="true">
+                    {t.name.split(' ').map((part) => part[0]).join('')}
+                  </span>
+                  <span className="testimonial-name">{t.name}</span>
+                  <span className="testimonial-role">{t.role}</span>
+                  <span className="testimonial-date">{t.date}</span>
+                </div>
+              </>
+            )}
+          </LockIn>
         ))}
       </div>
     </section>

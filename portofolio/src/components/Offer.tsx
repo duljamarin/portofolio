@@ -1,6 +1,8 @@
-import React, { useRef } from 'react';
-import { motion, useInView } from 'framer-motion';
-import { DUR_REVEAL, EASE_OUT, REVEAL_STAGGER } from '../animations';
+import React from 'react';
+import { motion } from 'framer-motion';
+import { DUR_REVEAL, EASE_OUT } from '../animations';
+import { LockIn, SparkBurst } from './fx/LockIn';
+import { SplitReveal } from './fx/SplitReveal';
 
 /* Stroke icons. Every shape has pathLength=1 so CSS can draw it in with
    stroke-dasharray: 1 and stroke-dashoffset 1 -> 0 on reveal. */
@@ -59,9 +61,6 @@ const trackPointer = (e: React.PointerEvent<HTMLElement>) => {
 };
 
 const Offer: React.FC = () => {
-  const gridRef = useRef<HTMLDivElement>(null);
-  const revealed = useInView(gridRef, { once: true, margin: '-60px' });
-
   return (
     <section id="offer" className="offer-section">
       <motion.header
@@ -72,28 +71,24 @@ const Offer: React.FC = () => {
         transition={{ duration: DUR_REVEAL, ease: EASE_OUT }}
       >
         <p className="section-label">What I offer</p>
-        <h2 className="section-title">Ways I can help your team or product ship.</h2>
+        <SplitReveal className="section-title" text="Ways I can help your team or product ship." />
       </motion.header>
 
-      <div className="offer-grid" ref={gridRef} data-revealed={revealed || undefined}>
+      <div className="offer-grid">
         {offers.map((o, idx) => {
           const Icon = o.icon;
           return (
-            <motion.article
-              className="offer-card"
-              key={o.title}
-              onPointerMove={trackPointer}
-              initial={{ opacity: 0, y: 24 }}
-              animate={revealed ? { opacity: 1, y: 0 } : undefined}
-              transition={{ duration: DUR_REVEAL, delay: idx * REVEAL_STAGGER, ease: EASE_OUT }}
-              style={{ '--i': idx } as React.CSSProperties}
-            >
-              <span className="offer-icon">
-                <Icon />
-              </span>
-              <h3 className="offer-card-title">{o.title}</h3>
-              <p className="offer-card-desc">{o.desc}</p>
-            </motion.article>
+            // LockIn flips the card in; on lock the icon draws itself and sparks fly.
+            <LockIn key={o.title} className="offer-lockin fx-ring" index={idx} intensity={0.8}>
+              <article className="offer-card" onPointerMove={trackPointer}>
+                <span className="offer-icon">
+                  <Icon />
+                  <SparkBurst className="offer-burst" scale={0.6} />
+                </span>
+                <h3 className="offer-card-title">{o.title}</h3>
+                <p className="offer-card-desc">{o.desc}</p>
+              </article>
+            </LockIn>
           );
         })}
       </div>

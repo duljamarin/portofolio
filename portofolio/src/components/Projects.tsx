@@ -5,6 +5,7 @@ import GalleryModal from './GalleryModal';
 import { animateCountText, DUR_REVEAL, EASE_OUT, formatCount, parseCount, scrollToTarget } from '../animations';
 import { useInViewAttr } from '../hooks/useInViewAttr';
 import { useMediaQuery } from '../hooks/useMediaQuery';
+import { SplitReveal } from './fx/SplitReveal';
 
 /* ============================================
    STACK: SOURCE OF TRUTH
@@ -31,9 +32,12 @@ const TYPE_LABEL: Record<Project['type'], string> = {
   contractor: 'Contractor',
 };
 
+/** Types that get their own filter chip ("Main" stays reachable through All). */
+const FILTER_TYPES: Project['type'][] = ['fullstack', 'contractor'];
+
 const filterOptions: { key: string; label: string; count: number }[] = [
   { key: 'all', label: 'All', count: projects.length },
-  ...(Object.keys(TYPE_LABEL) as Project['type'][])
+  ...FILTER_TYPES
     .map((type) => ({ key: type, label: TYPE_LABEL[type], count: projects.filter((p) => p.type === type).length }))
     .filter((opt) => opt.count > 0),
 ];
@@ -210,7 +214,7 @@ const Projects: React.FC = () => {
         >
           <div>
             <p className="section-label">Selected work</p>
-            <h2 className="projects-title">Projects</h2>
+            <SplitReveal className="projects-title" text="Projects" />
           </div>
           <div className="project-filter" role="tablist" aria-label="Filter projects by type">
             {filterOptions.map((opt) => (

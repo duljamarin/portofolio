@@ -1,6 +1,8 @@
 // Portfolio projects data for the app.
 // Each project includes title, description, links, tags and type.
 // One screenshot per project (gallery[0]); the deck and the gallery modal both read it.
+// Projects without a screenshot use a backend-themed Unsplash photo (free Unsplash License).
+const unsplash = (id: string) => `https://images.unsplash.com/${id}?auto=format&fit=crop&w=1200&q=70`;
 
 export type Project = {
   title: string;
@@ -70,6 +72,7 @@ export const projects: Project[] = [
     ],
     tags: ['Full Time Job', 'Spring Cloud', 'Spring Boot', 'Microservices', 'Alarm Management'],
     type: 'main',
+    label: 'Full-time · Sabanet',
   },
   {
     title: 'The Literary Heaven',
@@ -97,19 +100,23 @@ export const projects: Project[] = [
   {
     title: 'Therapism',
     description: 'Mental health platform, built with Java, Spring Boot, PostgreSQL, and Spring AI.',
+    gallery: [unsplash('photo-1558494949-ef010cbdcc31')],
     links: [
       { label: 'GitHub', url: 'https://github.com/duljamarin/Therapism' }
     ],
     tags: ['Personal Project', 'Java', 'Spring Boot', 'PostgreSQL', 'Spring AI', 'Backend'],
     type: 'main',
+    label: 'Personal project · Backend',
   },
   {
     title: 'Quotes Social Network',
     description: 'Quote sharing platform with authentication, posting, commenting, and liking features.',
+    gallery: [unsplash('photo-1555066931-4365d14bab8c')],
     links: [
       { label: 'GitHub', url: 'https://github.com/duljamarin/QuotesSocialNetworkBE' }
     ],
     tags: ['Personal Project', 'Social Network', 'Backend', 'Java', 'API integration', 'Spring Boot', 'Hibernate', 'JPA'],
     type: 'main',
+    label: 'Personal project · Backend',
   },
 ];

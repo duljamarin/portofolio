@@ -1,35 +1,22 @@
-import React, { useEffect, useRef } from 'react';
+import React, { Suspense, lazy, useEffect, useRef } from 'react';
 import { MotionConfig } from 'framer-motion';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
-import HowIBuild from './components/HowIBuild';
-import About from './components/About';
-import Projects from './components/Projects';
-import Offer from './components/Offer';
-import Mentoring from './components/Mentoring';
-import Skills from './components/Skills';
-import TestimonialsSection from './components/TestimonialsSection';
-import EducationSection from './components/EducationSection';
-import Contact from './components/Contact';
-import Footer from './components/Footer';
 import {
-  initCounters,
   initCursorSpotlight,
   initScrollProgress,
   initSmoothScroll,
   printConsoleEasterEgg,
 } from './animations';
 
+// Sections after the hero load as a separate chunk (see BelowFold).
+const BelowFold = lazy(() => import('./components/BelowFold'));
+
 const App: React.FC = () => {
   const scrollBarRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     window.scrollTo(0, 0);
-
-    let countersCleanup: (() => void) | undefined;
-    const timer = setTimeout(() => {
-      countersCleanup = initCounters();
-    }, 100);
 
     const smoothScrollCleanup = initSmoothScroll();
     const cursorCleanup = initCursorSpotlight();
@@ -39,8 +26,6 @@ const App: React.FC = () => {
     printConsoleEasterEgg();
 
     return () => {
-      clearTimeout(timer);
-      countersCleanup?.();
       smoothScrollCleanup();
       cursorCleanup?.();
       scrollCleanup?.();
@@ -55,16 +40,10 @@ const App: React.FC = () => {
         <div className="scroll-progress" ref={scrollBarRef} />
         <Navbar />
         <Hero />
-        <HowIBuild />
-        <Projects />
-        <Offer />
-        <Mentoring />
-        <About />
-        <Skills />
-        <TestimonialsSection />
-        <EducationSection />
-        <Contact />
-        <Footer />
+        {/* The fallback holds a screen of space so the hero never jumps. */}
+        <Suspense fallback={<div style={{ minHeight: '100vh' }} />}>
+          <BelowFold />
+        </Suspense>
       </div>
     </MotionConfig>
   );

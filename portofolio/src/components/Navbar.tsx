@@ -26,19 +26,18 @@ const Navbar: React.FC = () => {
 
   useEffect(() => {
     // Active section tracking via scroll position, robust for tall sections
-    // Keep each element paired with its index in `sections`, so a missing
-    // section never shifts the highlight onto its neighbour.
-    const tracked = sections
-      .map((s, idx) => ({ idx, el: document.querySelector<HTMLElement>(s.href) }))
-      .filter((t): t is { idx: number; el: HTMLElement } => !!t.el);
-
-    if (!tracked.length) return;
 
     // Cache section bounds so the scroll handler never reads layout (offsetTop/
     // offsetHeight) per frame: that read-after-scroll is what triggers forced
     // reflow. Recompute only when layout can actually change (page height).
+    // Sections are looked up on every measure: they arrive in a lazy chunk after
+    // the nav mounts. Each element keeps its index in `sections`, so a missing
+    // section never shifts the highlight onto its neighbour.
     let bounds: Array<{ idx: number; top: number; bottom: number }> = [];
     const measure = () => {
+      const tracked = sections
+        .map((s, idx) => ({ idx, el: document.querySelector<HTMLElement>(s.href) }))
+        .filter((t): t is { idx: number; el: HTMLElement } => !!t.el);
       bounds = tracked.map(({ idx, el }) => ({
         idx,
         top: el.offsetTop,

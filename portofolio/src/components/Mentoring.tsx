@@ -5,6 +5,8 @@ import { FaEnvelope, FaGraduationCap, FaLinkedin, FaWhatsapp } from 'react-icons
 import { mentoring, type Offer } from '../data/mentoring';
 import { DUR_REVEAL, EASE_OUT, REVEAL_STAGGER } from '../animations';
 import { useInViewAttr } from '../hooks/useInViewAttr';
+import { LockIn, SparkBurst } from './fx/LockIn';
+import { SplitReveal } from './fx/SplitReveal';
 
 const CHANNEL_ICON: Record<string, IconType> = {
   Email: FaEnvelope,
@@ -27,46 +29,58 @@ const reveal = (order: number) => ({
 });
 
 const OfferCard: React.FC<{ offer: Offer; order: number }> = ({ offer, order }) => (
-  <motion.article className="mentor-card" data-featured={offer.featured || undefined} {...reveal(order)}>
-    <div className="mentor-card-inner">
-      <p className="card-label">{offer.label}</p>
-      <h3 className="mentor-card-title">{offer.title}</h3>
-      <p className="mentor-price">
-        <span className="mentor-price-main">{offer.price.main}</span>
-        <span className="mentor-price-local">{offer.price.local}</span>
-      </p>
+  <LockIn className="mentor-lockin fx-ring" index={order}>
+    {({ locked }) => (
+      <article className="mentor-card" data-featured={offer.featured || undefined}>
+        <div className="mentor-card-inner">
+          <p className="card-label">{offer.label}</p>
+          <h3 className="mentor-card-title">{offer.title}</h3>
+          <p className="mentor-price">
+            <motion.span
+              className="mentor-price-main"
+              initial={false}
+              animate={locked ? { scale: [0.6, 1.18, 1] } : { scale: 1 }}
+              transition={{ duration: 0.6, ease: 'easeOut' }}
+            >
+              {offer.price.main}
+              {offer.featured && <SparkBurst className="mentor-burst" />}
+            </motion.span>
+            <span className="mentor-price-local">{offer.price.local}</span>
+          </p>
 
-      {offer.bullets && (
-        <ul className="mentor-bullets">
-          {offer.bullets.map((b) => (
-            <li key={b}>
-              <CheckIcon />
-              <span>{b}</span>
-            </li>
-          ))}
-        </ul>
-      )}
+          {offer.bullets && (
+            <ul className="mentor-bullets">
+              {offer.bullets.map((b) => (
+                <li key={b}>
+                  <CheckIcon />
+                  <span>{b}</span>
+                </li>
+              ))}
+            </ul>
+          )}
 
-      {offer.text && <p className="mentor-text">{offer.text}</p>}
+          {offer.text && <p className="mentor-text">{offer.text}</p>}
 
-      {offer.topics && (
-        <ul className="mentor-topics" aria-label="Topics">
-          {offer.topics.map((t) => (
-            <li key={t.name} className="mentor-topic" data-highlight={t.highlight || undefined}>
-              {t.name}
-            </li>
-          ))}
-        </ul>
-      )}
+          {offer.topics && (
+            <ul className="mentor-topics" aria-label="Topics">
+              {offer.topics.map((t) => (
+                <li key={t.name} className="mentor-topic" data-highlight={t.highlight || undefined}>
+                  {t.name}
+                </li>
+              ))}
+            </ul>
+          )}
 
-      <a
-        href={offer.cta.href}
-        className={offer.cta.variant === 'gold' ? 'btn-primary mentor-cta' : 'btn-ghost mentor-cta'}
-      >
-        {offer.cta.label}
-      </a>
-    </div>
-  </motion.article>
+          <a
+            href={offer.cta.href}
+            className={offer.cta.variant === 'gold' ? 'btn-primary mentor-cta' : 'btn-ghost mentor-cta'}
+          >
+            {offer.cta.label}
+          </a>
+        </div>
+      </article>
+    )}
+  </LockIn>
 );
 
 const Mentoring: React.FC = () => {
@@ -80,11 +94,14 @@ const Mentoring: React.FC = () => {
 
       <motion.header className="section-header" {...reveal(0)}>
         <p className="section-label">{mentoring.label}</p>
-        <h2 className="section-title">
-          {heading.before}
-          <span className="mentor-highlight">{heading.highlight}</span>
-          {heading.after}
-        </h2>
+        <SplitReveal
+          className="section-title"
+          text={[
+            { text: heading.before },
+            { text: heading.highlight, className: 'mentor-highlight' },
+            { text: heading.after },
+          ]}
+        />
         <p className="section-subtitle">{mentoring.sub}</p>
       </motion.header>
 
@@ -96,35 +113,37 @@ const Mentoring: React.FC = () => {
 
       <ol className="mentor-steps">
         {steps.map((step, i) => (
-          <motion.li key={step.title} className="mentor-step" {...reveal(i)}>
+          <LockIn as="li" key={step.title} className="mentor-step" index={i} intensity={0.5}>
             <span className="mentor-step-num" aria-hidden="true">{i + 1}</span>
             <div>
               <h3 className="mentor-step-title">{step.title}</h3>
               <p className="mentor-step-text">{step.text}</p>
             </div>
-          </motion.li>
+          </LockIn>
         ))}
       </ol>
 
-      <motion.div id={book.id} className="mentor-book" {...reveal(0)}>
-        <h3 className="mentor-book-heading">{book.heading}</h3>
-        <div className="mentor-channels">
-          {book.channels.map((ch) => {
-            const Icon = CHANNEL_ICON[ch.name];
-            return (
-              <a
-                key={ch.name}
-                href={ch.href}
-                className="mentor-channel"
-                {...(ch.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-              >
-                {Icon && <Icon aria-hidden="true" />}
-                {ch.name}
-              </a>
-            );
-          })}
+      <LockIn className="mentor-book-lockin fx-ring" intensity={0.5}>
+        <div id={book.id} className="mentor-book">
+          <h3 className="mentor-book-heading">{book.heading}</h3>
+          <div className="mentor-channels">
+            {book.channels.map((ch) => {
+              const Icon = CHANNEL_ICON[ch.name];
+              return (
+                <a
+                  key={ch.name}
+                  href={ch.href}
+                  className="mentor-channel"
+                  {...(ch.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+                >
+                  {Icon && <Icon aria-hidden="true" />}
+                  {ch.name}
+                </a>
+              );
+            })}
+          </div>
         </div>
-      </motion.div>
+      </LockIn>
     </section>
   );
 };

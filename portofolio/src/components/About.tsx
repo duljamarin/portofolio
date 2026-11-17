@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { roles } from '../data/experience';
-import { DUR_REVEAL, EASE_OUT, REVEAL_STAGGER } from '../animations';
+import { DUR_REVEAL, EASE_OUT, REVEAL_STAGGER, initCounters } from '../animations';
+import { LockIn, SparkBurst } from './fx/LockIn';
+import { SplitReveal } from './fx/SplitReveal';
 
 const previously = roles
   .map((r) => r.company.split(' · ')[0])
@@ -41,13 +43,16 @@ const reveal = (order: number) => ({
 });
 
 const About: React.FC = () => {
+  // Stat tiles count up once on enter (data-count).
+  useEffect(() => initCounters(), []);
+
   return (
     <section id="about" className="about-section">
       <div className="about-container">
         <div className="about-text-content">
           <motion.header className="section-header" {...reveal(0)}>
             <p className="section-label">About</p>
-            <h2 className="section-title">I started writing Java in college and never stopped.</h2>
+            <SplitReveal className="section-title" text="I started writing Java in college and never stopped." />
           </motion.header>
 
           <motion.p {...reveal(1)}>
@@ -62,18 +67,16 @@ const About: React.FC = () => {
 
           <div className="stats-grid">
             {stats.map((s, i) => (
-              <motion.div
-                key={s.label}
-                className="stat-tile"
-                data-highlight={s.highlight || undefined}
-                {...reveal(i + 3)}
-              >
-                <span className="sr-only">{s.value}</span>
-                <span className="stat-number" data-count={s.value} aria-hidden="true">
-                  {s.value}
-                </span>
-                <span className="stat-label">{s.label}</span>
-              </motion.div>
+              <LockIn key={s.label} className="stat-lockin fx-ring" index={i} intensity={0.7}>
+                <div className="stat-tile" data-highlight={s.highlight || undefined}>
+                  <span className="sr-only">{s.value}</span>
+                  <span className="stat-number" data-count={s.value} aria-hidden="true">
+                    {s.value}
+                  </span>
+                  <span className="stat-label">{s.label}</span>
+                  <SparkBurst className="stat-burst" scale={s.highlight ? 1 : 0.7} />
+                </div>
+              </LockIn>
             ))}
           </div>
 
@@ -87,10 +90,10 @@ const About: React.FC = () => {
           <motion.h3 className="principles-card-title" {...reveal(1)}>Engineering principles</motion.h3>
           <div className="principles-list">
             {principles.map((p, idx) => (
-              <motion.div className="principles-list-item" key={p.title} {...reveal(idx + 2)}>
+              <LockIn className="principles-list-item" key={p.title} index={idx} intensity={0.4}>
                 <h4>{p.title}</h4>
                 <p>{p.desc}</p>
-              </motion.div>
+              </LockIn>
             ))}
           </div>
         </aside>

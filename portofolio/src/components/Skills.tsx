@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion, useScroll, useSpring, useTransform, useVelocity } from 'framer-motion';
 import type { IconType } from 'react-icons';
 import {
   SiTypescript,
@@ -22,6 +22,11 @@ import {
 import { TbBrandAzure, TbAsterisk, TbSettings } from 'react-icons/tb';
 import { DUR_REVEAL, EASE_OUT } from '../animations';
 import { useInViewAttr } from '../hooks/useInViewAttr';
+import { SplitReveal } from './fx/SplitReveal';
+
+/** Max lean (deg) of the marquee rows at high scroll speed, and the speed (px/s) that reaches it. */
+const MAX_SKEW = 8;
+const SKEW_AT_SPEED = 2500;
 
 type Skill = { name: string; icon: IconType };
 
@@ -71,6 +76,12 @@ const ChipList: React.FC<{ skills: Skill[]; copy?: boolean }> = ({ skills, copy 
 const Skills: React.FC = () => {
   const sectionRef = useRef<HTMLElement>(null);
   useInViewAttr(sectionRef);
+  const reduceMotion = useReducedMotion();
+
+  // The rows lean into the scroll direction, harder the faster you scroll.
+  const { scrollY } = useScroll();
+  const velocity = useSpring(useVelocity(scrollY), { stiffness: 300, damping: 50 });
+  const skewX = useTransform(velocity, [-SKEW_AT_SPEED, 0, SKEW_AT_SPEED], [MAX_SKEW, 0, -MAX_SKEW], { clamp: true });
 
   return (
     <section id="skills" className="skills-section" ref={sectionRef}>
@@ -82,10 +93,10 @@ const Skills: React.FC = () => {
         transition={{ duration: DUR_REVEAL, ease: EASE_OUT }}
       >
         <p className="section-label">Skills</p>
-        <h2 className="section-title">The stack I reach for</h2>
+        <SplitReveal className="section-title" text="The stack I reach for" />
       </motion.header>
 
-      <div className="marquee-rows">
+      <motion.div className="marquee-rows" style={reduceMotion ? undefined : { skewX }}>
         {ROWS.map((row, i) => (
           <div className="marquee" data-direction={i % 2 ? 'right' : 'left'} key={i}>
             {/* Content is duplicated once so the -50% loop is seamless. */}
@@ -95,7 +106,7 @@ const Skills: React.FC = () => {
             </div>
           </div>
         ))}
-      </div>
+      </motion.div>
     </section>
   );
 };

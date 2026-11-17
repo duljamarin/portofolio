@@ -1,14 +1,9 @@
-import React, { useEffect, useRef, useState } from 'react';
-import {
-  motion,
-  useMotionValueEvent,
-  useReducedMotion,
-  useScroll,
-  useSpring,
-  useTransform,
-} from 'framer-motion';
+import React, { useEffect, useRef } from 'react';
+import { motion, useReducedMotion, useTransform, type MotionValue } from 'framer-motion';
 import { animateCountText, formatCount, parseCount } from '../animations';
 import { useInViewAttr } from '../hooks/useInViewAttr';
+import { LockIn, SparkBurst } from './fx/LockIn';
+import { SplitReveal } from './fx/SplitReveal';
 
 const fadeUp = {
   hidden: { opacity: 0, y: 28 },
@@ -49,16 +44,12 @@ const CERTS: Cert[] = [
   },
 ];
 
-/** Sparks that burst out when a card locks in: angle (deg) and distance (px). */
-const SPARKS = Array.from({ length: 14 }, (_, i) => ({
-  angle: (360 / 14) * i + (i % 2 ? 8 : -6),
-  distance: 70 + (i % 3) * 28,
-  delay: (i % 4) * 30,
-}));
-
-/** Scroll progress at which a card counts as "locked in". */
-const LOCK_AT = 0.97;
 const COUNT_UP_MS = 1200;
+
+const EDUCATION = [
+  { degree: 'Bachelor of Computer Science', school: 'University of Tirana · 8.18/10', period: '2015 – 2018', url: 'https://www.unitir.edu.al/' },
+  { degree: 'MSc. of Computer Science', school: 'University of Tirana · 8.1/10', period: '2018 – 2020', url: 'https://www.unitir.edu.al/' },
+];
 
 const ExternalIcon = () => (
   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -97,44 +88,31 @@ const CertStat: React.FC<{ value: string; label: string; run: boolean }> = ({ va
   );
 };
 
-const CertCard: React.FC<{ cert: Cert; index: number }> = ({ cert, index }) => {
-  const reduceMotion = useReducedMotion() ?? false;
-  const ref = useRef<HTMLElement>(null);
-  const [locked, setLocked] = useState(reduceMotion);
-  const isLocked = locked || reduceMotion;
-
-  // 0 when the card's top enters the viewport, 1 when it sits at 65% of the viewport height.
-  const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'center 0.65'] });
-  const progress = useSpring(scrollYProgress, { stiffness: 140, damping: 22, mass: 0.4 });
-
-  const side = index % 2 ? 1 : -1;
-  const rotateX = useTransform(progress, [0, 1], [34, 0]);
-  const rotateY = useTransform(progress, [0, 1], [14 * side, 0]);
-  const y = useTransform(progress, [0, 1], [140, 0]);
-  const scale = useTransform(progress, [0, 1], [0.78, 1]);
-  const opacity = useTransform(progress, [0, 0.35, 1], [0, 0.85, 1]);
-  const barFill = useTransform(scrollYProgress, [0, LOCK_AT], [0, 1]);
-
-  useMotionValueEvent(scrollYProgress, 'change', (p) => {
-    if (p >= LOCK_AT) setLocked(true);
-  });
-
+/** Fills with scroll until the card locks in. */
+const VerifyBar: React.FC<{ progress: MotionValue<number>; locked: boolean }> = ({ progress, locked }) => {
+  const reduceMotion = useReducedMotion();
+  const fill = useTransform(progress, [0, 0.97], [0, 1]);
   return (
-    <motion.article
-      ref={ref}
-      className="cert-card"
-      data-locked={isLocked || undefined}
-      style={reduceMotion ? undefined : { rotateX, rotateY, y, scale, opacity, transformPerspective: 1100 }}
-    >
+    <div className="cert-progress" aria-hidden="true">
+      <span className="cert-progress-track">
+        <motion.span className="cert-progress-fill" style={{ scaleX: reduceMotion || locked ? 1 : fill }} />
+      </span>
+      <span className="cert-progress-label">{locked ? 'Verified' : 'Verifying'}</span>
+    </div>
+  );
+};
+
+const CertCard: React.FC<{ cert: Cert; index: number }> = ({ cert, index }) => (
+  <LockIn as="article" className="cert-card fx-ring" index={index}>
+    {({ locked, progress }) => (
       <div className="cert-card-inner">
         <div className="cert-media">
           <img src={cert.image} alt={cert.alt} width={cert.width} height={cert.height} loading="lazy" decoding="async" />
           <span className="cert-sheen" aria-hidden="true" />
-
-          {isLocked && (
+          {locked && (
             <motion.span
               className="cert-stamp"
-              initial={reduceMotion ? false : { scale: 2.4, rotate: -24, opacity: 0 }}
+              initial={{ scale: 2.4, rotate: -24, opacity: 0 }}
               animate={{ scale: 1, rotate: -9, opacity: 1 }}
               transition={{ type: 'spring', stiffness: 520, damping: 16, mass: 0.7 }}
             >
@@ -142,40 +120,15 @@ const CertCard: React.FC<{ cert: Cert; index: number }> = ({ cert, index }) => {
               Verified
             </motion.span>
           )}
-
-          <span className="cert-burst" aria-hidden="true">
-            {SPARKS.map((s, i) => (
-              <span
-                key={i}
-                className="cert-spark"
-                style={
-                  {
-                    '--a': `${s.angle}deg`,
-                    '--d': `${s.distance}px`,
-                    '--delay': `${s.delay}ms`,
-                  } as React.CSSProperties
-                }
-              />
-            ))}
-          </span>
+          <SparkBurst className="cert-burst" />
         </div>
 
         <div className="cert-info">
           <span className="cert-issuer">{cert.issuer}</span>
           <h3 className="cert-title">{cert.title}</h3>
           {cert.meta && <span className="cert-meta">{cert.meta}</span>}
-          {cert.stat && <CertStat value={cert.stat.value} label={cert.stat.label} run={isLocked} />}
-
-          <div className="cert-progress" aria-hidden="true">
-            <span className="cert-progress-track">
-              <motion.span
-                className="cert-progress-fill"
-                style={reduceMotion ? { scaleX: 1 } : { scaleX: barFill }}
-              />
-            </span>
-            <span className="cert-progress-label">{isLocked ? 'Verified' : 'Verifying'}</span>
-          </div>
-
+          {cert.stat && <CertStat value={cert.stat.value} label={cert.stat.label} run={locked} />}
+          <VerifyBar progress={progress} locked={locked} />
           {cert.verifyUrl && (
             <a href={cert.verifyUrl} target="_blank" rel="noopener noreferrer" className="cert-verify-btn">
               <ExternalIcon />
@@ -184,9 +137,9 @@ const CertCard: React.FC<{ cert: Cert; index: number }> = ({ cert, index }) => {
           )}
         </div>
       </div>
-    </motion.article>
-  );
-};
+    )}
+  </LockIn>
+);
 
 const EducationSection: React.FC = () => {
   const certsRef = useRef<HTMLDivElement>(null);
@@ -202,7 +155,10 @@ const EducationSection: React.FC = () => {
         variants={fadeUp}
         transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
       >
-        <h2 className="section-title">Education & <span className="accent">Certifications</span></h2>
+        <SplitReveal
+          className="section-title"
+          text={[{ text: 'Education & ' }, { text: 'Certifications', className: 'accent' }]}
+        />
       </motion.div>
 
       {/* Certifications: scroll-driven 3D reveal that locks in with a stamp and a spark burst */}
@@ -217,36 +173,16 @@ const EducationSection: React.FC = () => {
 
       {/* Education cards */}
       <div className="education-row">
-        <motion.a
-          className="education-card"
-          href="https://www.unitir.edu.al/"
-          target="_blank"
-          rel="noopener noreferrer"
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          variants={fadeUp}
-          transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-        >
-          <h3>Bachelor of Computer Science</h3>
-          <span className="school">University of Tirana &middot; 8.18/10</span>
-          <span className="period">2015 – 2018</span>
-        </motion.a>
-        <motion.a
-          className="education-card"
-          href="https://www.unitir.edu.al/"
-          target="_blank"
-          rel="noopener noreferrer"
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          variants={fadeUp}
-          transition={{ duration: 0.5, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
-        >
-          <h3>MSc. of Computer Science</h3>
-          <span className="school">University of Tirana &middot; 8.1/10</span>
-          <span className="period">2018 – 2020</span>
-        </motion.a>
+        {EDUCATION.map((e, i) => (
+          <LockIn key={e.degree} className="education-lockin fx-ring" index={i} intensity={0.6}>
+            <a className="education-card" href={e.url} target="_blank" rel="noopener noreferrer">
+              <h3>{e.degree}</h3>
+              <span className="school">{e.school}</span>
+              <span className="period">{e.period}</span>
+              <SparkBurst className="education-burst" scale={0.7} />
+            </a>
+          </LockIn>
+        ))}
       </div>
     </section>
   );

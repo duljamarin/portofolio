@@ -19,6 +19,7 @@ import {
 import { buildPath, clamp01, distanceTo, gapRuns, pointAt, runPoints, type Pt, type Run } from '../lib/path';
 import { scrollToTarget } from '../animations';
 import { useInViewAttr } from '../hooks/useInViewAttr';
+import { SplitReveal } from './fx/SplitReveal';
 
 /* ============================================
    DERIVED GEOMETRY (computed once from MAIN, BRANCH and NODES)
@@ -257,9 +258,11 @@ const HowIBuild: React.FC = () => {
         <div className="how-inner">
           <header className="how-header">
             <p className="section-label">How I build</p>
-            <h2 id="how-heading" className="section-title">
-              Follow one request through a system I would build.
-            </h2>
+            <SplitReveal
+              id="how-heading"
+              className="section-title"
+              text="Follow one request through a system I would build."
+            />
           </header>
 
           <div className="how-body">

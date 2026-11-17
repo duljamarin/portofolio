@@ -4,6 +4,7 @@ import { FaWhatsapp } from 'react-icons/fa';
 import { contact, emailHref } from '../data/contact';
 import { DUR_REVEAL, EASE_OUT, REVEAL_STAGGER } from '../animations';
 import CopyEmailButton from './CopyEmailButton';
+import { SplitReveal } from './fx/SplitReveal';
 
 const ArrowIcon = () => (
   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -30,14 +31,18 @@ const Contact: React.FC = () => {
       <div className="contact-glow" aria-hidden="true" />
       <div className="contact-inner">
         <motion.p className="section-label" {...reveal(0)}>{contact.label}</motion.p>
-        <motion.h2 className="contact-heading" {...reveal(1)}>
-          <span className="contact-heading-line">{contact.heading}</span>
-          <span className="contact-heading-accent">{contact.headingAccent}</span>
-        </motion.h2>
+        <SplitReveal
+          className="contact-heading"
+          stagger={0.08}
+          text={[
+            { text: contact.heading, className: 'contact-heading-line' },
+            { text: contact.headingAccent, className: 'contact-heading-accent' },
+          ]}
+        />
         <motion.p className="contact-statement" {...reveal(2)}>{contact.statement}</motion.p>
 
         <motion.div className="contact-actions" {...reveal(3)}>
-          <a href={emailHref} target="_blank" rel="noopener noreferrer" className="btn-primary contact-cta">
+          <a href={emailHref} target="_blank" rel="noopener noreferrer" className="btn-primary contact-cta fx-pulse">
             {contact.ctaLabel}
             <ArrowIcon />
           </a>
