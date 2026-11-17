@@ -1,13 +1,5 @@
 import React, { useEffect, useState } from 'react';
-
-const sections = [
-  { label: 'Projects', href: '#projects' },
-  { label: 'Offer', href: '#offer' },
-  { label: 'Mentoring', href: '#mentoring' },
-  { label: 'About', href: '#about' },
-  { label: 'Skills', href: '#skills' },
-  { label: 'Contact', href: '#contact' },
-];
+import { sections } from '../data/nav';
 
 const Navbar: React.FC = () => {
   const [activeIdx, setActiveIdx] = useState(-1);
