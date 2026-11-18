@@ -167,6 +167,8 @@ export function initSmoothScroll(): () => void {
       autoRaf: true,
       // Modals and the mobile menu lock the page; let their events scroll natively.
       prevent: (node) => !!node.closest('.gallery-modal-overlay, .nav-mobile-overlay'),
+      // Let overflowing elements (deck card descriptions) scroll first; the page takes over at their ends.
+      allowNestedScroll: true,
     });
   }
 

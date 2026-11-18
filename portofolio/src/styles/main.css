@@ -2171,15 +2171,28 @@ a:hover {
   color: var(--paper);
 }
 
+/* The card height is fixed in deck mode, so the description is the one part that
+   gives: everything else keeps its natural size, and a long description scrolls
+   inside the card (Lenis hands the wheel over via allowNestedScroll). */
+.deck-text > * {
+  flex-shrink: 0;
+}
+
+.deck-text > .deck-desc {
+  flex: 0 1 auto;
+  min-height: calc(3 * 1.6em);
+  overflow-y: auto;
+  overscroll-behavior: auto;
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, var(--signal) 55%, transparent) transparent;
+}
+
 .deck-desc {
   margin: 0;
+  padding-right: 6px;
   font-size: 0.98rem;
   line-height: 1.6;
   color: var(--paper);
-  display: -webkit-box;
-  -webkit-line-clamp: 5;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
 }
 
 .deck-metrics {
@@ -2343,11 +2356,6 @@ a:hover {
 /* List mode (narrow screens or reduced motion): plain vertical cards */
 .projects-section[data-mode="list"] .deck-card {
   height: auto;
-}
-
-.projects-section[data-mode="list"] .deck-desc {
-  display: block;
-  -webkit-line-clamp: unset;
 }
 
 .projects-section[data-mode="list"] .deck-layout {
