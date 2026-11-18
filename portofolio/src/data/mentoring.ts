@@ -30,9 +30,10 @@ export const mentoring = {
       id: 'mock',
       label: 'Start here · 45 min',
       title: 'Mock interview',
-      price: { main: '10 EUR', local: '1000 lekë' },
+      price: { main: '15 EUR', local: '1500 lekë' },
       bullets: [
         'A realistic Java and Spring Boot technical interview',
+        'Also for junior developers preparing for a mid-level role',
         'A written summary of your strengths and gaps after the session',
         'The price is credited back if you continue with 4+ lessons',
       ],
