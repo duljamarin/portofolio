@@ -38,7 +38,7 @@ export const projects: Project[] = [
     title: 'Personal Finance Tracker: Solo-Built SaaS',
     description:
       'A production subscription SaaS for personal finance, architected and shipped solo: React 19 + Vite + Tailwind frontend on a Supabase backend (PostgreSQL, Auth, Edge Functions), with a 15-table schema across 52 versioned migrations. Per-user data isolation via 28 Row-Level Security policies, with plan limits, default-data provisioning, and denormalised totals enforced by 16 Postgres triggers. Full billing lifecycle on Paddle across 5+ Supabase Edge Functions (webhook verification, entitlement checks, customer-portal provisioning, failed-payment recovery, GDPR deletion), plus a Recharts analytics surface, English/Albanian i18n, and an SEO prerender pipeline.',
-    gallery: ['/personal-finances-1.webp'],
+    gallery: ['/personal-finances-1.webp', '/personal-finances-2.webp'],
     links: [
       { label: 'Live Site', url: 'https://personal-finances.app/' },
       { label: 'GitHub', url: 'https://github.com/duljamarin/personal-finance-tracker' }

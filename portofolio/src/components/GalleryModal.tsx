@@ -8,9 +8,13 @@ interface GalleryModalProps {
   onClose: () => void;
 }
 
+// Height-to-width ratio above which an image is treated as a full-page screenshot.
+const TALL_IMAGE_RATIO = 2;
+
 const GalleryModal: React.FC<GalleryModalProps> = ({ images, title, isOpen, onClose }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [closing, setClosing] = useState(false);
+  const [tallImages, setTallImages] = useState<Record<number, boolean>>({});
 
   const handleClose = useCallback(() => {
     setClosing(true);
@@ -66,10 +70,25 @@ const GalleryModal: React.FC<GalleryModalProps> = ({ images, title, isOpen, onCl
           </button>
         )}
 
-        <img
-          src={images[currentIndex]}
-          alt={`${title}, image ${currentIndex + 1}`}
-        />
+        {/* Keyed by index so each image starts scrolled to the top. Full-page
+            screenshots would shrink to a thin strip under object-fit: contain,
+            so tall images keep their width and scroll vertically instead. */}
+        <div
+          key={currentIndex}
+          className={`gallery-modal-frame${tallImages[currentIndex] ? ' is-tall' : ''}`}
+        >
+          <img
+            src={images[currentIndex]}
+            alt={`${title}, image ${currentIndex + 1}`}
+            onLoad={(event) => {
+              const { naturalWidth, naturalHeight } = event.currentTarget;
+              const isTall = naturalHeight / naturalWidth > TALL_IMAGE_RATIO;
+              setTallImages((previous) =>
+                previous[currentIndex] === isTall ? previous : { ...previous, [currentIndex]: isTall }
+              );
+            }}
+          />
+        </div>
 
         {images.length > 1 && (
           <button className="modal-nav modal-nav-next" onClick={goNext} aria-label="Next image">
