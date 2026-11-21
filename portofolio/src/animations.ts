@@ -126,8 +126,15 @@ export function initCounters(): () => void {
 const LENIS_LERP = 0.1;
 let lenis: Lenis | null = null;
 
-/** Scrolls to a y position or an element, honoring the element's scroll-margin-top. */
-export function scrollToTarget(target: string | HTMLElement | number, offset = 0): void {
+/**
+ * Scrolls to a y position or an element, honoring the element's scroll-margin-top.
+ * `immediate` jumps without animation (used for deep links on page load).
+ */
+export function scrollToTarget(
+  target: string | HTMLElement | number,
+  offset = 0,
+  { immediate = false }: { immediate?: boolean } = {}
+): void {
   let top: number;
   if (typeof target === 'number') {
     top = target;
@@ -138,10 +145,78 @@ export function scrollToTarget(target: string | HTMLElement | number, offset = 0
     top = el.getBoundingClientRect().top + window.scrollY - margin;
   }
   if (lenis) {
-    lenis.scrollTo(top + offset);
+    // Lenis clamps to the page height it last measured; the page may have just grown.
+    if (immediate) lenis.resize();
+    lenis.scrollTo(top + offset, { immediate });
     return;
   }
-  window.scrollTo({ top: top + offset, behavior: prefersReducedMotion() ? 'auto' : 'smooth' });
+  const behavior: ScrollBehavior = immediate || prefersReducedMotion() ? 'instant' : 'smooth';
+  window.scrollTo({ top: top + offset, behavior });
+}
+
+/* ============================================
+   DEEP LINKS (marindulja.com/#mentoring)
+   The sections after the hero arrive in a lazy chunk, so the browser's own
+   jump to the hash finds nothing. This waits for the target, jumps to it, and
+   keeps it aligned while images and pinned sections settle the page height.
+   Any user input ends the alignment so it never fights the visitor.
+   ============================================ */
+const HASH_WAIT_MS = 5000;   // give up if the target never appears
+const HASH_SETTLE_MS = 1500; // stop aligning after this long without a layout change
+const USER_INPUT_EVENTS = ['wheel', 'touchstart', 'pointerdown', 'keydown'] as const;
+
+export function scrollToInitialHash(): () => void {
+  const id = decodeURIComponent(window.location.hash.slice(1));
+  if (!id) {
+    window.scrollTo(0, 0);
+    return () => {};
+  }
+
+  let target: HTMLElement | null = null;
+  let settleTimer = 0;
+  let waitTimer = 0;
+  let mutationObserver: MutationObserver | null = null;
+  let resizeObserver: ResizeObserver | null = null;
+
+  const stop = () => {
+    window.clearTimeout(settleTimer);
+    window.clearTimeout(waitTimer);
+    mutationObserver?.disconnect();
+    resizeObserver?.disconnect();
+    USER_INPUT_EVENTS.forEach((type) => window.removeEventListener(type, stop));
+  };
+
+  const align = () => {
+    if (!target) return;
+    scrollToTarget(target, 0, { immediate: true });
+    window.clearTimeout(settleTimer);
+    settleTimer = window.setTimeout(stop, HASH_SETTLE_MS);
+  };
+
+  const startAligning = (el: HTMLElement) => {
+    target = el;
+    mutationObserver?.disconnect();
+    window.clearTimeout(waitTimer);
+    align();
+    resizeObserver = new ResizeObserver(align);
+    resizeObserver.observe(document.body);
+  };
+
+  USER_INPUT_EVENTS.forEach((type) => window.addEventListener(type, stop, { passive: true }));
+
+  const existing = document.getElementById(id);
+  if (existing) {
+    startAligning(existing);
+  } else {
+    mutationObserver = new MutationObserver(() => {
+      const el = document.getElementById(id);
+      if (el) startAligning(el);
+    });
+    mutationObserver.observe(document.body, { childList: true, subtree: true });
+    waitTimer = window.setTimeout(stop, HASH_WAIT_MS);
+  }
+
+  return stop;
 }
 
 export function initSmoothScroll(): () => void {

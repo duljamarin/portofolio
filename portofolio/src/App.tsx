@@ -7,6 +7,7 @@ import {
   initScrollProgress,
   initSmoothScroll,
   printConsoleEasterEgg,
+  scrollToInitialHash,
 } from './animations';
 
 // Sections after the hero load as a separate chunk (see BelowFold).
@@ -16,9 +17,9 @@ const App: React.FC = () => {
   const scrollBarRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    window.scrollTo(0, 0);
-
     const smoothScrollCleanup = initSmoothScroll();
+    // After Lenis exists: a deep link (/#mentoring) lands on its section, otherwise the top.
+    const initialHashCleanup = scrollToInitialHash();
     const cursorCleanup = initCursorSpotlight();
     const scrollCleanup = scrollBarRef.current
       ? initScrollProgress(scrollBarRef.current)
@@ -26,6 +27,7 @@ const App: React.FC = () => {
     printConsoleEasterEgg();
 
     return () => {
+      initialHashCleanup();
       smoothScrollCleanup();
       cursorCleanup?.();
       scrollCleanup?.();
