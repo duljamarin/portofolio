@@ -4861,3 +4861,71 @@ a:hover {
   }
 }
 
+
+/* ============================================
+   HOME BUTTON (top left, every page)
+   Same glass, border and height as the floating nav pill, so the two read as
+   one header. Width/height = the pill's height at each breakpoint.
+   ============================================ */
+.home-button {
+  position: fixed;
+  top: 20px;
+  left: 24px;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 77px;
+  height: 77px;
+  border-radius: 50%;
+  color: var(--paper);
+  background: rgba(13, 17, 23, 0.6);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  transition: var(--transition-slow);
+}
+
+.home-button.scrolled {
+  background: rgba(13, 17, 23, 0.92);
+  border-color: color-mix(in oklab, var(--signal), transparent 90%);
+  box-shadow: 0 8px 32px color-mix(in srgb, var(--ink) 40%, transparent);
+}
+
+.home-button:hover {
+  color: var(--signal);
+  border-color: color-mix(in oklab, var(--signal), transparent 70%);
+}
+
+.home-button:focus-visible {
+  outline: 2px solid var(--signal);
+  outline-offset: 3px;
+}
+
+.home-button svg {
+  transition: transform 250ms var(--ease-out);
+}
+
+.home-button:hover svg {
+  transform: translateY(-2px);
+}
+
+/* Tablets: the full nav pill is about as wide as the screen. Tighter links, and
+   the pill is centered in the space to the right of the home button. */
+@media (min-width: 769px) and (max-width: 1023px) {
+  .floating-nav {
+    left: calc(50% + 51px);
+  }
+  .nav-link {
+    padding: 11px 13px;
+  }
+}
+
+/* Phones: the pill is just the hamburger; the home button matches its height. */
+@media (max-width: 768px) {
+  .home-button {
+    left: 16px;
+    width: 66px;
+    height: 66px;
+  }
+}

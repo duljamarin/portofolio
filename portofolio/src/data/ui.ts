@@ -6,6 +6,7 @@ export const ui: Record<
   Lang,
   {
     nav: { projects: string; freelance: string; mentoring: string; about: string; skills: string; contact: string; cv: string };
+    homeButton: string;
     openMenu: string;
     closeMenu: string;
     breadcrumb: string;
@@ -20,6 +21,7 @@ export const ui: Record<
 > = {
   en: {
     nav: { projects: 'Projects', freelance: 'Freelance', mentoring: 'Mentoring', about: 'About', skills: 'Skills', contact: 'Contact', cv: 'CV' },
+    homeButton: 'Home',
     openMenu: 'Open menu',
     closeMenu: 'Close menu',
     breadcrumb: 'Breadcrumb',
@@ -33,6 +35,7 @@ export const ui: Record<
   },
   sq: {
     nav: { projects: 'Projektet', freelance: 'Freelance', mentoring: 'Mentorim', about: 'Rreth meje', skills: 'Aftësitë', contact: 'Kontakt', cv: 'CV' },
+    homeButton: 'Kreu',
     openMenu: 'Hap menunë',
     closeMenu: 'Mbyll menunë',
     breadcrumb: 'Vendndodhja në faqe',

@@ -1,7 +1,16 @@
 import React, { useEffect, useState } from 'react';
+import { scrollToTarget } from '../animations';
 import { navItems } from '../data/nav';
 import { ui } from '../data/ui';
 import { usePage } from '../pageContext';
+import { pathOf } from '../seo/site';
+
+const HomeIcon = () => (
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <path d="M3 10.5 12 3l9 7.5" />
+    <path d="M5 9.5V20a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1V9.5" />
+  </svg>
+);
 
 const Navbar: React.FC = () => {
   const { pageId, lang } = usePage();
@@ -90,8 +99,28 @@ const Navbar: React.FC = () => {
 
   const closeMobile = () => setMobileOpen(false);
 
+  const homeHref = pathOf('home');
+  /** Every page links to the base URL; on the home page itself it glides to the top instead of reloading. */
+  const goHome = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    closeMobile();
+    if (!onHome || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey) return;
+    event.preventDefault();
+    scrollToTarget(0);
+    history.replaceState(null, '', homeHref);
+  };
+
   return (
     <>
+      <a
+        href={homeHref}
+        className={`home-button${scrolled ? ' scrolled' : ''}`}
+        aria-label={labels.homeButton}
+        aria-current={onHome ? 'page' : undefined}
+        onClick={goHome}
+      >
+        <HomeIcon />
+      </a>
+
       <nav className={`floating-nav${scrolled ? ' scrolled' : ''}`}>
         <div className="nav-links">
           {items.map((item, i) => (
