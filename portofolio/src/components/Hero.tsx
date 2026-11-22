@@ -1,7 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import { DUR_REVEAL, EASE_OUT } from '../animations';
+import { experienceYearsLabel } from '../data/experience';
+import { useHydratedReducedMotion } from '../hooks/useHydrated';
 import { useInViewAttr } from '../hooks/useInViewAttr';
+import { PERSON } from '../seo/site';
 
 const ArrowRightIcon = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -24,13 +27,15 @@ const WORD_HOLD = 2.6;      // s each word stays still
 const WORD_TRANSITION = 0.4; // s slide up, blurred at mid-transition
 const WORD_BLUR = 'blur(3px)';
 
+const [FIRST_NAME, ...LAST_NAME] = PERSON.name.split(' ');
+
 const PREVIOUSLY = 'Previously at ADUS Technologies · Noema Consulting · Candidatis · Sabanet · Comdata Group';
 
 const TILT_MAX = 6;    // deg
 const TILT_GAIN = 14;  // deg per portrait-width of pointer offset
 
 const RotatingWord: React.FC = () => {
-  const reduceMotion = useReducedMotion();
+  const reduceMotion = useHydratedReducedMotion();
   const [index, setIndex] = useState(0);
 
   useEffect(() => {
@@ -131,6 +136,7 @@ const Hero: React.FC = () => {
     };
   }, []);
 
+  // Text keeps its slide (transform only), so the prerendered HTML is never hidden.
   const enter = (order: number) => ({
     initial: { opacity: 1, y: 14 },
     animate: { opacity: 1, y: 0 },
@@ -145,9 +151,12 @@ const Hero: React.FC = () => {
             Full-stack engineer · Java, Spring Boot, React
           </motion.p>
 
+          {/* One h1: the big name, then role and location in a smaller line. */}
           <motion.h1 className="hero-name" {...enter(0)}>
-            <span className="first">Marin</span>
-            <span className="last">Dulja</span>
+            {/* Spaces between the block spans so the text reads "Marin Dulja Java Developer". */}
+            <span className="first">{FIRST_NAME}</span>{' '}
+            <span className="last">{LAST_NAME.join(' ')}</span>{' '}
+            <span className="hero-role">Java Developer · {PERSON.countryName}</span>
           </motion.h1>
 
           <motion.p className="hero-headline" {...enter(1)}>
@@ -158,14 +167,14 @@ const Hero: React.FC = () => {
           </motion.p>
 
           <motion.p className="hero-bio" {...enter(2)}>
-            4.5+ years shipping Java and Spring Boot backends for fintech and banking, plus
+            {experienceYearsLabel()} years shipping Java and Spring Boot backends for fintech and banking, plus
             full-stack products in React. Clean, maintainable, built to hold up in production.
           </motion.p>
 
           <motion.div
             className="hero-ctas"
             ref={ctasRef}
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 1, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: DUR_REVEAL, delay: 0.36, ease: EASE_OUT }}
           >
@@ -182,7 +191,8 @@ const Hero: React.FC = () => {
           <motion.div
             className="hero-portrait"
             ref={portraitRef}
-            initial={{ opacity: 0, scale: 0.96 }}
+            // Starts visible: the portrait is a largest-paint candidate and must not wait for JS.
+            initial={{ opacity: 1, scale: 0.96 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: DUR_REVEAL, delay: 0.2, ease: EASE_OUT }}
           >
@@ -191,7 +201,7 @@ const Hero: React.FC = () => {
               <span className="hero-portrait-sheen" aria-hidden="true" />
               <img
                 src="/hero-portrait-cutout.webp"
-                alt="Marin Dulja"
+                alt={PERSON.name}
                 width={800}
                 height={800}
                 loading="eager"

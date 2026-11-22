@@ -3,7 +3,6 @@ import {
   AnimatePresence,
   motion,
   useMotionValueEvent,
-  useReducedMotion,
   useScroll,
 } from 'framer-motion';
 import {
@@ -18,6 +17,7 @@ import {
 } from '../data/howIBuild';
 import { buildPath, clamp01, distanceTo, gapRuns, pointAt, runPoints, type Pt, type Run } from '../lib/path';
 import { scrollToTarget } from '../animations';
+import { useHydrated, useHydratedReducedMotion } from '../hooks/useHydrated';
 import { useInViewAttr } from '../hooks/useInViewAttr';
 import { SplitReveal } from './fx/SplitReveal';
 
@@ -114,6 +114,9 @@ function storyStateAt(d: number): StoryState {
   return { activeStep, latest };
 }
 
+/** Everything delivered: what reduced motion shows. */
+const FINAL_STORY = storyStateAt(STORY_TOTAL);
+
 const sameState = (a: StoryState, b: StoryState) =>
   a.activeStep === b.activeStep && a.latest === b.latest;
 
@@ -132,7 +135,8 @@ const getNarrow = () => window.matchMedia(NARROW_QUERY).matches;
    COMPONENT
    ============================================ */
 const HowIBuild: React.FC = () => {
-  const reduceMotion = useReducedMotion() ?? false;
+  const hydrated = useHydrated();
+  const reduceMotion = useHydratedReducedMotion();
   const narrow = useSyncExternalStore(subscribeNarrow, getNarrow, () => false);
   const pinned = !narrow && !reduceMotion;
 
@@ -156,7 +160,8 @@ const HowIBuild: React.FC = () => {
     [reduceMotion]
   );
 
-  const [story, setStory] = useState<StoryState>(() => storyStateAt(reduceMotion ? STORY_TOTAL : 0));
+  const [scrollStory, setStory] = useState<StoryState>(() => storyStateAt(0));
+  const story = reduceMotion ? FINAL_STORY : scrollStory;
 
   /** Continuous visuals: written straight to the DOM (transforms and CSS vars only). */
   const paint = useCallback((d: number) => {
@@ -235,7 +240,9 @@ const HowIBuild: React.FC = () => {
       id="how"
       ref={wrapRef}
       className="how-wrap"
-      data-pinned={pinned}
+      // 'auto' until hydration: CSS media queries pin it on wide screens, so the
+      // prerendered layout already matches the device.
+      data-pinned={hydrated ? pinned : 'auto'}
       // One viewport of scroll per step.
       style={{ '--how-steps': STEPS.length } as React.CSSProperties}
       aria-labelledby="how-heading"

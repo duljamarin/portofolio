@@ -1,8 +1,19 @@
 import React, { useEffect, useState } from 'react';
-import { sections } from '../data/nav';
+import { navItems } from '../data/nav';
+import { ui } from '../data/ui';
+import { usePage } from '../pageContext';
 
 const Navbar: React.FC = () => {
-  const [activeIdx, setActiveIdx] = useState(-1);
+  const { pageId, lang } = usePage();
+  const items = navItems(lang);
+  const labels = ui[lang];
+  const onHome = pageId === 'home';
+
+  // On the home page the item of the section in view lights up; on other pages, the page's own item.
+  const pageIndex = items.findIndex((item) => pageId !== 'notFound' && item.pages?.includes(pageId));
+  const [sectionIndex, setSectionIndex] = useState(-1);
+  const activeIndex = onHome ? sectionIndex : pageIndex;
+
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -17,18 +28,19 @@ const Navbar: React.FC = () => {
   }, []);
 
   useEffect(() => {
+    if (!onHome) return;
     // Active section tracking via scroll position, robust for tall sections
 
     // Cache section bounds so the scroll handler never reads layout (offsetTop/
     // offsetHeight) per frame: that read-after-scroll is what triggers forced
     // reflow. Recompute only when layout can actually change (page height).
     // Sections are looked up on every measure: they arrive in a lazy chunk after
-    // the nav mounts. Each element keeps its index in `sections`, so a missing
+    // the nav mounts. Each element keeps its index in `items`, so a missing
     // section never shifts the highlight onto its neighbour.
     let bounds: Array<{ idx: number; top: number; bottom: number }> = [];
     const measure = () => {
-      const tracked = sections
-        .map((s, idx) => ({ idx, el: document.querySelector<HTMLElement>(s.href) }))
+      const tracked = items
+        .map((item, idx) => ({ idx, el: item.section ? document.getElementById(item.section) : null }))
         .filter((t): t is { idx: number; el: HTMLElement } => !!t.el);
       bounds = tracked.map(({ idx, el }) => ({
         idx,
@@ -48,7 +60,7 @@ const Navbar: React.FC = () => {
           break;
         }
       }
-      setActiveIdx(current);
+      setSectionIndex(current);
       ticking = false;
     };
 
@@ -72,28 +84,24 @@ const Navbar: React.FC = () => {
       resizeObserver.disconnect();
       window.removeEventListener('scroll', onScroll);
     };
-  }, []);
+    // items only changes with lang, which is fixed for the page.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [onHome]);
 
-  const handleMobileClick = () => {
-    setMobileOpen(false);
-  };
-
-  const handleNavClick = (_e: React.MouseEvent<HTMLAnchorElement>, _href: string, isMobile = false) => {
-    if (isMobile) handleMobileClick();
-  };
+  const closeMobile = () => setMobileOpen(false);
 
   return (
     <>
       <nav className={`floating-nav${scrolled ? ' scrolled' : ''}`}>
         <div className="nav-links">
-          {sections.map((s, i) => (
+          {items.map((item, i) => (
             <a
-              key={s.href}
-              href={s.href}
-              className={`nav-link${i === activeIdx ? ' active' : ''}`}
-              onClick={(e) => handleNavClick(e, s.href)}
+              key={item.href}
+              href={item.href}
+              className={`nav-link${i === activeIndex ? ' active' : ''}`}
+              aria-current={i === pageIndex ? 'page' : undefined}
             >
-              {s.label}
+              {item.label}
             </a>
           ))}
           <a
@@ -102,14 +110,14 @@ const Navbar: React.FC = () => {
             target="_blank"
             rel="noopener noreferrer"
           >
-            CV
+            {labels.nav.cv}
           </a>
         </div>
 
         <button
           className={`nav-hamburger${mobileOpen ? ' open' : ''}`}
           onClick={() => setMobileOpen(!mobileOpen)}
-          aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
+          aria-label={mobileOpen ? labels.closeMenu : labels.openMenu}
           aria-expanded={mobileOpen}
         >
           <span />
@@ -120,14 +128,15 @@ const Navbar: React.FC = () => {
 
       {/* Mobile overlay */}
       <div className={`nav-mobile-overlay${mobileOpen ? ' open' : ''}`}>
-        {sections.map((s, i) => (
+        {items.map((item, i) => (
           <a
-            key={s.href}
-            href={s.href}
-            className={`mobile-nav-link${i === activeIdx ? ' active' : ''}`}
-            onClick={(e) => handleNavClick(e, s.href, true)}
+            key={item.href}
+            href={item.href}
+            className={`mobile-nav-link${i === activeIndex ? ' active' : ''}`}
+            aria-current={i === pageIndex ? 'page' : undefined}
+            onClick={closeMobile}
           >
-            {s.label}
+            {item.label}
           </a>
         ))}
         <a
@@ -135,9 +144,9 @@ const Navbar: React.FC = () => {
           className="mobile-nav-link mobile-nav-link-cv"
           target="_blank"
           rel="noopener noreferrer"
-          onClick={handleMobileClick}
+          onClick={closeMobile}
         >
-          CV
+          {labels.nav.cv}
         </a>
       </div>
     </>

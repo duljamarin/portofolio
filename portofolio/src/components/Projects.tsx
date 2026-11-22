@@ -1,10 +1,12 @@
 import React, { useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react';
-import { motion, useInView, useMotionValueEvent, useReducedMotion, useScroll } from 'framer-motion';
+import { useInView, useMotionValueEvent, useScroll } from 'framer-motion';
 import { projects, type Project } from '../data/projects';
 import GalleryModal from './GalleryModal';
-import { animateCountText, DUR_REVEAL, EASE_OUT, formatCount, parseCount, scrollToTarget } from '../animations';
+import { animateCountText, formatCount, parseCount, scrollToTarget } from '../animations';
+import { useHydrated, useHydratedReducedMotion } from '../hooks/useHydrated';
 import { useInViewAttr } from '../hooks/useInViewAttr';
 import { useMediaQuery } from '../hooks/useMediaQuery';
+import { Reveal } from './fx/Reveal';
 import { SplitReveal } from './fx/SplitReveal';
 
 /* ============================================
@@ -89,9 +91,11 @@ const ExternalIcon = () => (
 const Metric: React.FC<{ value: string; label: string; start: boolean }> = ({ value, label, start }) => {
   const ref = useRef<HTMLSpanElement>(null);
   const done = useRef(false);
-  const reduceMotion = useReducedMotion();
+  const reduceMotion = useHydratedReducedMotion();
+  const hydrated = useHydrated();
   const parts = parseCount(value);
-  const initial = reduceMotion || !parts ? value : formatCount(parts, 0);
+  // The prerendered HTML shows the real value; the count-up starts from 0 after hydration.
+  const initial = !hydrated || reduceMotion || !parts ? value : formatCount(parts, 0);
 
   useEffect(() => {
     if (!start || done.current || !ref.current) return;
@@ -110,14 +114,17 @@ const Metric: React.FC<{ value: string; label: string; start: boolean }> = ({ va
   );
 };
 
-const Metrics: React.FC<{ items: NonNullable<Project['metrics']>; activated: boolean; listMode: boolean }> = ({
+type DeckMode = 'deck' | 'list' | 'auto';
+
+const Metrics: React.FC<{ items: NonNullable<Project['metrics']>; activated: boolean; mode: DeckMode }> = ({
   items,
   activated,
-  listMode,
+  mode,
 }) => {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, amount: 0.6 });
-  const start = listMode ? inView : activated;
+  // 'auto' is the prerender and hydration pass: nothing counts until the real mode is known.
+  const start = mode === 'list' ? inView : mode === 'deck' && activated;
   return (
     <div className="deck-metrics" ref={ref}>
       {items.map((m) => (
@@ -131,9 +138,13 @@ const Metrics: React.FC<{ items: NonNullable<Project['metrics']>; activated: boo
    SECTION
    ============================================ */
 const Projects: React.FC = () => {
-  const reduceMotion = useReducedMotion() ?? false;
+  const hydrated = useHydrated();
+  const reduceMotion = useHydratedReducedMotion();
   const narrow = useMediaQuery(LIST_QUERY);
-  const deckMode = !narrow && !reduceMotion;
+  // Until hydration the layout is 'auto': CSS media queries pick deck or list, so
+  // phones get the list from the first paint and the HTML matches on hydration.
+  const mode: DeckMode = !hydrated ? 'auto' : !narrow && !reduceMotion ? 'deck' : 'list';
+  const deckMode = mode === 'deck';
 
   const navOffset = useSyncExternalStore(subscribeResize, getNavOffset, () => 0);
   const viewportH = useSyncExternalStore(subscribeResize, getViewportH, () => 0);
@@ -181,14 +192,14 @@ const Projects: React.FC = () => {
       id="projects"
       ref={sectionRef}
       className="projects-section"
-      data-mode={deckMode ? 'deck' : 'list'}
-      data-angle={SUPPORTS_ANGLE ? 'on' : 'off'}
+      data-mode={mode}
+      data-angle={hydrated && SUPPORTS_ANGLE ? 'on' : 'off'}
       style={
-        {
-          '--nav-offset': `${navOffset}px`,
-          '--card-h': `${cardHeight}px`,
-          '--card-gap': `${GAP}px`,
-        } as React.CSSProperties
+        // Before hydration the viewport is unknown: CSS computes the same card
+        // height from --deck-count (see .projects-section in main.css).
+        hydrated
+          ? ({ '--nav-offset': `${navOffset}px`, '--card-h': `${cardHeight}px`, '--card-gap': `${GAP}px` } as React.CSSProperties)
+          : ({ '--deck-count': count, '--card-gap': `${GAP}px` } as React.CSSProperties)
       }
     >
       <div className="projects-bg" aria-hidden="true">
@@ -205,13 +216,7 @@ const Projects: React.FC = () => {
       </div>
 
       <div className="projects-inner">
-        <motion.header
-          className="projects-header"
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-50px' }}
-          transition={{ duration: DUR_REVEAL, ease: EASE_OUT }}
-        >
+        <Reveal as="header" className="projects-header" y={16}>
           <div>
             <p className="section-label">Selected work</p>
             <SplitReveal className="projects-title" text="Projects" />
@@ -231,13 +236,14 @@ const Projects: React.FC = () => {
               </button>
             ))}
           </div>
-        </motion.header>
+        </Reveal>
 
         <div className="deck-layout">
           <div className="deck" ref={deckRef}>
             {filtered.map((project, i) => {
               const covered = deckMode ? Math.max(0, active - i) : 0;
-              const cardStyle: React.CSSProperties = deckMode
+              // Deck positions are harmless in list layout, so 'auto' gets them too.
+              const cardStyle: React.CSSProperties = mode !== 'list'
                 ? {
                     top: `calc(var(--nav-offset) + ${i * OFFSET}px)`,
                     zIndex: i + 1,
@@ -268,8 +274,10 @@ const Projects: React.FC = () => {
                         >
                           <span className="deck-shot-float">
                             <img
-                              src={image}
+                              src={image.src}
                               alt={`${project.title} screenshot`}
+                              width={image.width}
+                              height={image.height}
                               loading="lazy"
                               decoding="async"
                             />
@@ -289,7 +297,7 @@ const Projects: React.FC = () => {
                       <p className="deck-desc">{project.description}</p>
 
                       {project.metrics && project.metrics.length > 0 && (
-                        <Metrics items={project.metrics} activated={i <= active} listMode={!deckMode} />
+                        <Metrics items={project.metrics} activated={i <= active} mode={mode} />
                       )}
 
                       <ul className="deck-tags">

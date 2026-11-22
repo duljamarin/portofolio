@@ -2,12 +2,19 @@
 // Each project includes title, description, links, tags and type.
 // One screenshot per project (gallery[0]); the deck and the gallery modal both read it.
 // Projects without a screenshot use a backend-themed Unsplash photo (free Unsplash License).
-const unsplash = (id: string) => `https://images.unsplash.com/${id}?auto=format&fit=crop&w=1200&q=70`;
+// Every image carries its intrinsic size so <img> gets width/height (no layout shift).
+const unsplash = (id: string, height: number): ProjectImage => ({
+  src: `https://images.unsplash.com/${id}?auto=format&fit=crop&w=1200&q=70`,
+  width: 1200,
+  height,
+});
+
+export type ProjectImage = { src: string; width: number; height: number };
 
 export type Project = {
   title: string;
   description: string;
-  gallery?: string[];
+  gallery?: ProjectImage[];
   video?: string;
   links: { label: string; url: string }[];
   tags: string[];
@@ -16,13 +23,16 @@ export type Project = {
   label?: string;
   /** Headline numbers. The row is not rendered when empty. */
   metrics?: { value: string; label: string }[];
+  /** Shown under "Selected projects" on the freelance page. */
+  featured?: boolean;
 };
 
 export const projects: Project[] = [
   {
     title: 'xBratAI: AI-Driven Alerts Platform at Adus Technologies',
     description: 'Real-time signal-detection and alerting pipeline (RabbitMQ, WebSockets, PostgreSQL, MongoDB) identifying multi-indicator confluences and delivering sub-second alerts to 10,000+ day traders across crypto, forex, and futures. Shipped Stripe subscription billing, community chat, and OneSignal push notifications; delivered 70+ end-to-end tasks in 7 months while cutting post-deployment regressions by 40% through targeted integration test coverage.',
-    gallery: ['/xbrat-ai.webp'],
+    gallery: [{ src: '/xbrat-ai.webp', width: 960, height: 456 }],
+    featured: true,
     links: [
       { label: 'Live Site', url: 'https://xbratai.com/' }
     ],
@@ -38,7 +48,11 @@ export const projects: Project[] = [
     title: 'Personal Finance Tracker: Solo-Built SaaS',
     description:
       'A production subscription SaaS for personal finance, architected and shipped solo: React 19 + Vite + Tailwind frontend on a Supabase backend (PostgreSQL, Auth, Edge Functions), with a 15-table schema across 52 versioned migrations. Per-user data isolation via 28 Row-Level Security policies, with plan limits, default-data provisioning, and denormalised totals enforced by 16 Postgres triggers. Full billing lifecycle on Paddle across 5+ Supabase Edge Functions (webhook verification, entitlement checks, customer-portal provisioning, failed-payment recovery, GDPR deletion), plus a Recharts analytics surface, English/Albanian i18n, and an SEO prerender pipeline.',
-    gallery: ['/personal-finances-1.webp', '/personal-finances-2.webp'],
+    gallery: [
+      { src: '/personal-finances-1.webp', width: 960, height: 600 },
+      { src: '/personal-finances-2.webp', width: 960, height: 5189 },
+    ],
+    featured: true,
     links: [
       { label: 'Live Site', url: 'https://personal-finances.app/' },
       { label: 'GitHub', url: 'https://github.com/duljamarin/personal-finance-tracker' }
@@ -55,7 +69,8 @@ export const projects: Project[] = [
   {
     title: 'Tiger Project at Candidatis',
     description: 'Web Crawler developed for Candidatis.net, automating job ads data extraction and processing',
-    gallery: ['/tiger-candidatis.webp'],
+    gallery: [{ src: '/tiger-candidatis.webp', width: 947, height: 807 }],
+    featured: true,
     links: [
       { label: 'Candidatis Crawler Website', url: 'https://www.candidatis.net/crawler.html' }
     ],
@@ -65,7 +80,8 @@ export const projects: Project[] = [
   {
     title: 'Wikloud',
     description: 'Microservice architecture backend for Sabanet Albania, using Spring Cloud and Spring Boot. Alarm management system for MyPumaSecurity, enabling monitoring and control of alarm systems.',
-    gallery: ['/wikloud-pumasecurity.webp'],
+    gallery: [{ src: '/wikloud-pumasecurity.webp', width: 517, height: 787 }],
+    featured: true,
     links: [
       { label: 'PumaSecurity', url: 'https://www.pumasecurity.it/wellmakers/' },
       { label: 'Company', url: 'https://www.sabanet.it/' }
@@ -78,7 +94,7 @@ export const projects: Project[] = [
     title: 'The Literary Heaven',
     description:
       'A fullstack bookstore e-commerce platform featuring complete online shopping functionality with product browsing, cart management, and checkout flow. Built with React and Tailwind CSS for a modern, responsive interface, powered by Supabase for authentication and data management.',
-    gallery: ['/the-literary-heaven-1.webp'],
+    gallery: [{ src: '/the-literary-heaven-1.webp', width: 960, height: 392 }],
     links: [
       { label: 'Live Site', url: 'https://the-literary-heaven.netlify.app/' },
       { label: 'GitHub', url: 'https://github.com/duljamarin/bookshop-ecommerce' }
@@ -90,7 +106,7 @@ export const projects: Project[] = [
     title: 'ClearSight Clinic Website',
     description:
       'A responsive, production-ready single-page application showcasing modern frontend architecture and UX clarity. Features client-style multi-section layout with proper React Router configuration and Supabase backend integration.',
-    gallery: ['/clearsight-1.webp'],
+    gallery: [{ src: '/clearsight-1.webp', width: 960, height: 454 }],
     links: [
       { label: 'GitHub', url: 'https://github.com/duljamarin/eye-clinic-app' }
     ],
@@ -100,7 +116,7 @@ export const projects: Project[] = [
   {
     title: 'Therapism',
     description: 'Mental health platform, built with Java, Spring Boot, PostgreSQL, and Spring AI.',
-    gallery: [unsplash('photo-1558494949-ef010cbdcc31')],
+    gallery: [unsplash('photo-1558494949-ef010cbdcc31', 673)],
     links: [
       { label: 'GitHub', url: 'https://github.com/duljamarin/Therapism' }
     ],
@@ -111,7 +127,7 @@ export const projects: Project[] = [
   {
     title: 'Quotes Social Network',
     description: 'Quote sharing platform with authentication, posting, commenting, and liking features.',
-    gallery: [unsplash('photo-1555066931-4365d14bab8c')],
+    gallery: [unsplash('photo-1555066931-4365d14bab8c', 800)],
     links: [
       { label: 'GitHub', url: 'https://github.com/duljamarin/QuotesSocialNetworkBE' }
     ],

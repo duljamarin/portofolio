@@ -2,10 +2,12 @@ import React, { useRef } from 'react';
 import { motion } from 'framer-motion';
 import type { IconType } from 'react-icons';
 import { FaEnvelope, FaGraduationCap, FaLinkedin, FaWhatsapp } from 'react-icons/fa';
-import { mentoring, type Offer } from '../data/mentoring';
-import { DUR_REVEAL, EASE_OUT, REVEAL_STAGGER } from '../animations';
+import { mentoring, mentoringCopy, priceLabel, type Offer } from '../data/mentoring';
+import type { Lang } from '../data/lang';
 import { useInViewAttr } from '../hooks/useInViewAttr';
+import { pathOf } from '../seo/site';
 import { LockIn, SparkBurst } from './fx/LockIn';
+import { Reveal } from './fx/Reveal';
 import { SplitReveal } from './fx/SplitReveal';
 
 const CHANNEL_ICON: Record<string, IconType> = {
@@ -21,14 +23,14 @@ const CheckIcon = () => (
   </svg>
 );
 
-const reveal = (order: number) => ({
-  initial: { opacity: 0, y: 24 },
-  whileInView: { opacity: 1, y: 0 },
-  viewport: { once: true, margin: '-50px' },
-  transition: { duration: DUR_REVEAL, delay: order * REVEAL_STAGGER, ease: EASE_OUT },
-});
+const ArrowIcon = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <line x1="5" y1="12" x2="19" y2="12" />
+    <polyline points="12 5 19 12 12 19" />
+  </svg>
+);
 
-const OfferCard: React.FC<{ offer: Offer; order: number }> = ({ offer, order }) => (
+const OfferCard: React.FC<{ offer: Offer; order: number; lang: Lang }> = ({ offer, order, lang }) => (
   <LockIn className="mentor-lockin fx-ring" index={order}>
     {({ locked }) => (
       <article className="mentor-card" data-featured={offer.featured || undefined}>
@@ -42,10 +44,10 @@ const OfferCard: React.FC<{ offer: Offer; order: number }> = ({ offer, order }) 
               animate={locked ? { scale: [0.6, 1.18, 1] } : { scale: 1 }}
               transition={{ duration: 0.6, ease: 'easeOut' }}
             >
-              {offer.price.main}
+              {priceLabel(offer.id, 'main', lang)}
               {offer.featured && <SparkBurst className="mentor-burst" />}
             </motion.span>
-            <span className="mentor-price-local">{offer.price.local}</span>
+            <span className="mentor-price-local">{priceLabel(offer.id, 'local', lang)}</span>
           </p>
 
           {offer.bullets && (
@@ -62,7 +64,7 @@ const OfferCard: React.FC<{ offer: Offer; order: number }> = ({ offer, order }) 
           {offer.text && <p className="mentor-text">{offer.text}</p>}
 
           {offer.topics && (
-            <ul className="mentor-topics" aria-label="Topics">
+            <ul className="mentor-topics" aria-label={mentoringCopy[lang].topicsLabel}>
               {offer.topics.map((t) => (
                 <li key={t.name} className="mentor-topic" data-highlight={t.highlight || undefined}>
                   {t.name}
@@ -83,16 +85,67 @@ const OfferCard: React.FC<{ offer: Offer; order: number }> = ({ offer, order }) 
   </LockIn>
 );
 
+/** The two offer cards (mock interview, 1:1 training). Prices come from mentoring.ts. */
+export const MentorOffers: React.FC<{ lang: Lang }> = ({ lang }) => (
+  <div className="mentor-grid">
+    {mentoringCopy[lang].offers.map((offer, i) => (
+      <OfferCard key={offer.id} offer={offer} order={i} lang={lang} />
+    ))}
+  </div>
+);
+
+export const MentorSteps: React.FC<{ lang: Lang }> = ({ lang }) => (
+  <ol className="mentor-steps">
+    {mentoringCopy[lang].steps.map((step, i) => (
+      <LockIn as="li" key={step.title} className="mentor-step" index={i} intensity={0.5}>
+        <span className="mentor-step-num" aria-hidden="true">{i + 1}</span>
+        <div>
+          <h3 className="mentor-step-title">{step.title}</h3>
+          <p className="mentor-step-text">{step.text}</p>
+        </div>
+      </LockIn>
+    ))}
+  </ol>
+);
+
+export const MentorBook: React.FC<{ lang: Lang }> = ({ lang }) => {
+  const { book } = mentoringCopy[lang];
+  return (
+    <LockIn className="mentor-book-lockin fx-ring" intensity={0.5}>
+      <div id={book.id} className="mentor-book">
+        <h3 className="mentor-book-heading">{book.heading}</h3>
+        <div className="mentor-channels">
+          {book.channels.map((ch) => {
+            const Icon = CHANNEL_ICON[ch.name];
+            return (
+              <a
+                key={ch.name}
+                href={ch.href}
+                className="mentor-channel"
+                {...(ch.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+              >
+                {Icon && <Icon aria-hidden="true" />}
+                {ch.name}
+              </a>
+            );
+          })}
+        </div>
+      </div>
+    </LockIn>
+  );
+};
+
+/** Home page section. The full details live on /mentoring/ and /sq/mentorim-java/. */
 const Mentoring: React.FC = () => {
   const sectionRef = useRef<HTMLElement>(null);
   useInViewAttr(sectionRef);
-  const { heading, offers, steps, book } = mentoring;
+  const { heading, homeLinks } = mentoring;
 
   return (
     <section id="mentoring" className="mentoring-section" ref={sectionRef}>
       <div className="mentoring-glow" aria-hidden="true" />
 
-      <motion.header className="section-header" {...reveal(0)}>
+      <Reveal as="header" className="section-header" y={24}>
         <p className="section-label">{mentoring.label}</p>
         <SplitReveal
           className="section-title"
@@ -103,47 +156,22 @@ const Mentoring: React.FC = () => {
           ]}
         />
         <p className="section-subtitle">{mentoring.sub}</p>
-      </motion.header>
+      </Reveal>
 
-      <div className="mentor-grid">
-        {offers.map((offer, i) => (
-          <OfferCard key={offer.id} offer={offer} order={i} />
-        ))}
-      </div>
+      <MentorOffers lang="en" />
+      <MentorSteps lang="en" />
+      <MentorBook lang="en" />
 
-      <ol className="mentor-steps">
-        {steps.map((step, i) => (
-          <LockIn as="li" key={step.title} className="mentor-step" index={i} intensity={0.5}>
-            <span className="mentor-step-num" aria-hidden="true">{i + 1}</span>
-            <div>
-              <h3 className="mentor-step-title">{step.title}</h3>
-              <p className="mentor-step-text">{step.text}</p>
-            </div>
-          </LockIn>
-        ))}
-      </ol>
-
-      <LockIn className="mentor-book-lockin fx-ring" intensity={0.5}>
-        <div id={book.id} className="mentor-book">
-          <h3 className="mentor-book-heading">{book.heading}</h3>
-          <div className="mentor-channels">
-            {book.channels.map((ch) => {
-              const Icon = CHANNEL_ICON[ch.name];
-              return (
-                <a
-                  key={ch.name}
-                  href={ch.href}
-                  className="mentor-channel"
-                  {...(ch.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-                >
-                  {Icon && <Icon aria-hidden="true" />}
-                  {ch.name}
-                </a>
-              );
-            })}
-          </div>
-        </div>
-      </LockIn>
+      <p className="section-more-links">
+        <a href={pathOf('mentoring')} className="text-link">
+          {homeLinks.details}
+          <ArrowIcon />
+        </a>
+        <a href={pathOf('mentoringSq')} className="text-link" hrefLang="sq" lang="sq">
+          {homeLinks.albanian}
+          <ArrowIcon />
+        </a>
+      </p>
     </section>
   );
 };

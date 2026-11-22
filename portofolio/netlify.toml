@@ -1,0 +1,6 @@
+# Netlify reads this from the site's base directory (portofolio/).
+# `npm run build` builds the client and server bundles, prerenders every page
+# into dist/, then runs the SEO check; a failing check fails the deploy.
+[build]
+  command = "npm run build"
+  publish = "dist"

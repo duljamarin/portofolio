@@ -1,8 +1,9 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { createPortal } from 'react-dom';
+import type { ProjectImage } from '../data/projects';
 
 interface GalleryModalProps {
-  images: string[];
+  images: ProjectImage[];
   title: string;
   isOpen: boolean;
   onClose: () => void;
@@ -78,7 +79,9 @@ const GalleryModal: React.FC<GalleryModalProps> = ({ images, title, isOpen, onCl
           className={`gallery-modal-frame${tallImages[currentIndex] ? ' is-tall' : ''}`}
         >
           <img
-            src={images[currentIndex]}
+            src={images[currentIndex].src}
+            width={images[currentIndex].width}
+            height={images[currentIndex].height}
             alt={`${title}, image ${currentIndex + 1}`}
             onLoad={(event) => {
               const { naturalWidth, naturalHeight } = event.currentTarget;

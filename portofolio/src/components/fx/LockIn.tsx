@@ -1,13 +1,13 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   motion,
   useMotionValueEvent,
-  useReducedMotion,
   useScroll,
   useSpring,
   useTransform,
   type MotionValue,
 } from 'framer-motion';
+import { useHydratedReducedMotion } from '../../hooks/useHydrated';
 
 /** Scroll progress at which an element counts as "locked in". */
 const LOCK_AT = 0.97;
@@ -28,11 +28,18 @@ type LockInProps = {
 /**
  * Scroll-driven 3D entrance that "locks in" once: rotates, rises and scales
  * into place on a spring, then sets data-locked so CSS can fire the ring
- * pulse, spark burst and sheen. Under reduced motion it renders locked and still.
+ * pulse, spark burst and sheen.
+ *
+ * The prerendered HTML and the hydration render show the element in place, so
+ * its text is never shipped hidden. After hydration, an element still below the
+ * viewport goes live (starts hidden off screen and swings in on scroll); one
+ * already on screen stays put and just locks. Under reduced motion it renders
+ * locked and still.
  */
 export const LockIn: React.FC<LockInProps> = ({ as = 'div', className, index = 0, intensity = 1, style, children }) => {
-  const reduceMotion = useReducedMotion() ?? false;
+  const reduceMotion = useHydratedReducedMotion();
   const ref = useRef<HTMLElement>(null);
+  const [live, setLive] = useState(false);
   const [locked, setLocked] = useState(false);
   const isLocked = locked || reduceMotion;
 
@@ -47,8 +54,17 @@ export const LockIn: React.FC<LockInProps> = ({ as = 'div', className, index = 0
   const scale = useTransform(progress, [0, 1], [1 - 0.22 * intensity, 1]);
   const opacity = useTransform(progress, [0, 0.35, 1], [0, 0.85, 1]);
 
+  useEffect(() => {
+    if (reduceMotion) return;
+    const element = ref.current;
+    if (!element) return;
+    const belowViewport = element.getBoundingClientRect().top >= window.innerHeight;
+    const frame = requestAnimationFrame(() => (belowViewport ? setLive(true) : setLocked(true)));
+    return () => cancelAnimationFrame(frame);
+  }, [reduceMotion]);
+
   useMotionValueEvent(scrollYProgress, 'change', (p) => {
-    if (p >= LOCK_AT) setLocked(true);
+    if (live && p >= LOCK_AT) setLocked(true);
   });
 
   const Component = motion[as];
@@ -57,7 +73,7 @@ export const LockIn: React.FC<LockInProps> = ({ as = 'div', className, index = 0
       ref={ref as React.Ref<never>}
       className={`lockin${className ? ` ${className}` : ''}`}
       data-locked={isLocked || undefined}
-      style={reduceMotion ? style : { ...style, rotateX, rotateY, y, scale, opacity, transformPerspective: 1100 }}
+      style={live && !reduceMotion ? { ...style, rotateX, rotateY, y, scale, opacity, transformPerspective: 1100 } : style}
     >
       {typeof children === 'function' ? children({ locked: isLocked, progress: scrollYProgress }) : children}
     </Component>

@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { contact } from '../data/contact';
+import { ui } from '../data/ui';
+import { usePage } from '../pageContext';
 
 const CopyIcon = () => (
   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -40,6 +42,7 @@ interface Props {
  * (no Google account): they still leave with the address in hand.
  */
 const CopyEmailButton: React.FC<Props> = ({ className }) => {
+  const labels = ui[usePage().lang];
   const [copied, setCopied] = useState(false);
   // Each copy gets a new ripple key so the animation restarts from the click point.
   const [ripple, setRipple] = useState<{ key: number; x: number; y: number } | null>(null);
@@ -75,7 +78,7 @@ const CopyEmailButton: React.FC<Props> = ({ className }) => {
         type="button"
         onClick={handleCopy}
         className={`copy-email-btn${className ? ` ${className}` : ''}`}
-        aria-label={`Copy email address ${contact.email}`}
+        aria-label={`${labels.copyEmail} ${contact.email}`}
       >
         {ripple && (
           <span
@@ -90,7 +93,7 @@ const CopyEmailButton: React.FC<Props> = ({ className }) => {
       </button>
       {/* Live region exists before it is filled so screen readers announce it. */}
       <span className="copy-toast" role="status" data-show={copied || undefined}>
-        {copied ? contact.copiedToast : ''}
+        {copied ? labels.emailCopied : ''}
       </span>
     </span>
   );

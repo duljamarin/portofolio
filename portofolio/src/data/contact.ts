@@ -7,9 +7,16 @@ export const contact = {
   headingAccent: "Let's make it hold up.",
   statement: 'Available for backend-heavy Java and Spring Boot work and full-stack React projects, remote, as a B2B contractor.',
   ctaLabel: 'Get in touch',
-  copiedToast: 'Email copied',
   whatsapp: { label: 'WhatsApp', href: 'https://wa.me/355684448934' },
   email: 'duljamarin@gmail.com',
+};
+
+// Public profiles. The footer, the booking channels and the Person JSON-LD
+// (sameAs) all read these.
+export const profiles = {
+  linkedin: 'https://www.linkedin.com/in/marin-dulja/',
+  github: 'https://github.com/duljamarin',
+  instagram: 'https://www.instagram.com/marindulja/',
 };
 
 // Gmail's compose window opens in the browser, so the CTA works even when the

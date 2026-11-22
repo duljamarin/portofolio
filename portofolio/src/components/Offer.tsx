@@ -1,7 +1,8 @@
 import React from 'react';
-import { motion } from 'framer-motion';
-import { DUR_REVEAL, EASE_OUT } from '../animations';
+import { services, type ServiceOffer } from '../data/services';
+import { pathOf } from '../seo/site';
 import { LockIn, SparkBurst } from './fx/LockIn';
+import { Reveal } from './fx/Reveal';
 import { SplitReveal } from './fx/SplitReveal';
 
 /* Stroke icons. Every shape has pathLength=1 so CSS can draw it in with
@@ -34,23 +35,18 @@ const RocketIcon = () => (
   </svg>
 );
 
-const offers = [
-  {
-    title: 'Backend & API development',
-    desc: 'Java, Kotlin, and Spring Boot systems built for scale: REST/GraphQL APIs, event-driven pipelines with Kafka and RabbitMQ, and microservice architectures that hold up under real production traffic.',
-    icon: ServerIcon,
-  },
-  {
-    title: 'Full-stack product delivery',
-    desc: 'End-to-end ownership from database schema to polished React frontend. I ship features, not just backend endpoints - comfortable owning a product across the whole stack.',
-    icon: LayersIcon,
-  },
-  {
-    title: 'Solo SaaS builds',
-    desc: 'From idea to production: auth, billing, data modeling, and deployment. I have taken a subscription SaaS from system design through Paddle billing integration to a live product, solo.',
-    icon: RocketIcon,
-  },
-];
+const ICONS: Record<ServiceOffer['id'], React.FC> = {
+  backend: ServerIcon,
+  fullstack: LayersIcon,
+  saas: RocketIcon,
+};
+
+const ArrowIcon = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <line x1="5" y1="12" x2="19" y2="12" />
+    <polyline points="12 5 19 12 12 19" />
+  </svg>
+);
 
 /** Pointer position as CSS vars; the spotlight and gold border read them. */
 const trackPointer = (e: React.PointerEvent<HTMLElement>) => {
@@ -60,38 +56,44 @@ const trackPointer = (e: React.PointerEvent<HTMLElement>) => {
   el.style.setProperty('--my', `${e.clientY - rect.top}px`);
 };
 
+/** The three service cards. Used by the home Offer section and the freelance page. */
+export const OfferGrid: React.FC = () => (
+  <div className="offer-grid">
+    {services.map((service, idx) => {
+      const Icon = ICONS[service.id];
+      return (
+        // LockIn flips the card in; on lock the icon draws itself and sparks fly.
+        <LockIn key={service.id} className="offer-lockin fx-ring" index={idx} intensity={0.8}>
+          <article className="offer-card" onPointerMove={trackPointer}>
+            <span className="offer-icon">
+              <Icon />
+              <SparkBurst className="offer-burst" scale={0.6} />
+            </span>
+            <h3 className="offer-card-title">{service.title}</h3>
+            <p className="offer-card-desc">{service.desc}</p>
+          </article>
+        </LockIn>
+      );
+    })}
+  </div>
+);
+
 const Offer: React.FC = () => {
   return (
     <section id="offer" className="offer-section">
-      <motion.header
-        className="section-header"
-        initial={{ opacity: 0, y: 16 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-50px' }}
-        transition={{ duration: DUR_REVEAL, ease: EASE_OUT }}
-      >
+      <Reveal as="header" className="section-header" y={16}>
         <p className="section-label">What I offer</p>
         <SplitReveal className="section-title" text="Ways I can help your team or product ship." />
-      </motion.header>
+      </Reveal>
 
-      <div className="offer-grid">
-        {offers.map((o, idx) => {
-          const Icon = o.icon;
-          return (
-            // LockIn flips the card in; on lock the icon draws itself and sparks fly.
-            <LockIn key={o.title} className="offer-lockin fx-ring" index={idx} intensity={0.8}>
-              <article className="offer-card" onPointerMove={trackPointer}>
-                <span className="offer-icon">
-                  <Icon />
-                  <SparkBurst className="offer-burst" scale={0.6} />
-                </span>
-                <h3 className="offer-card-title">{o.title}</h3>
-                <p className="offer-card-desc">{o.desc}</p>
-              </article>
-            </LockIn>
-          );
-        })}
-      </div>
+      <OfferGrid />
+
+      <p className="section-more-links">
+        <a href={pathOf('freelance')} className="text-link">
+          How remote B2B contracting with me works
+          <ArrowIcon />
+        </a>
+      </p>
     </section>
   );
 };

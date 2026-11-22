@@ -3,10 +3,12 @@
 
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Per-page title, description, canonical, hreflang, Open Graph and JSON-LD:
+       written by scripts/prerender.mjs from src/seo/site.ts. -->
+  <!--app-head-->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <!-- Preload the LCP hero portrait so it starts fetching before JS runs -->
-  <link rel="preload" as="image" href="/hero-portrait-cutout.webp" type="image/webp" fetchpriority="high" />
   <!-- Load fonts without blocking first paint: apply once downloaded, fall back via noscript -->
   <link
     href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap"
@@ -21,35 +23,10 @@
   <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
   <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
   <link rel="manifest" href="/site.webmanifest" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>
-    Freelance Full-Stack Developer | Java, Spring Boot, React – Marin Dulja
-  </title>
-
-  <meta name="description"
-    content="Freelance full-stack developer building fast, scalable, and modern websites and web applications. Java, Spring Boot, React.js." />
-
-  <!-- Open Graph / LinkedIn Meta Tags -->
-  <meta property="og:type" content="website" />
-  <meta property="og:title" content="Marin Dulja - Software Engineer Portfolio" />
-  <meta property="og:description"
-    content="Results-driven software engineer passionate about building impactful digital experiences. Full-stack and backend development expertise." />
-  <meta property="og:image" content="https://marindulja.com/og-image.jpg" />
-  <meta property="og:image:type" content="image/jpeg" />
-  <meta property="og:image:width" content="1200" />
-  <meta property="og:image:height" content="630" />
-  <meta property="og:url" content="https://marindulja.com/" />
-
-  <!-- Twitter Card Meta Tags -->
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Marin Dulja - Software Engineer Portfolio" />
-  <meta name="twitter:description"
-    content="Results-driven software engineer passionate about building impactful digital experiences." />
-  <meta name="twitter:image" content="https://marindulja.com/og-image.jpg" />
 </head>
 
 <body>
-  <div id="root"></div>
+  <div id="root"><!--app-html--></div>
   <script type="module" src="/src/main.tsx"></script>
 </body>
 

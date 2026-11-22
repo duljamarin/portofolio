@@ -1,10 +1,15 @@
 import React, { useRef } from 'react';
-import { motion, useInView, useReducedMotion } from 'framer-motion';
+import { motion, useInView } from 'framer-motion';
 import { FaWhatsapp } from 'react-icons/fa';
-import { contact, emailHref } from '../data/contact';
-import { sections } from '../data/nav';
+import { contact, emailHref, profiles } from '../data/contact';
+import { navItems } from '../data/nav';
+import { ui } from '../data/ui';
 import { EASE_OUT } from '../animations';
+import { useHydratedReducedMotion } from '../hooks/useHydrated';
+import { usePage } from '../pageContext';
+import { PERSON, pathOf } from '../seo/site';
 import CopyEmailButton from './CopyEmailButton';
+import { Reveal } from './fx/Reveal';
 
 const ArrowUpIcon = () => (
   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -44,18 +49,21 @@ const WhatsAppIcon = () => <FaWhatsapp aria-hidden="true" />;
 
 const socials = [
   { label: 'Email', href: emailHref, icon: MailIcon },
-  { label: 'LinkedIn', href: 'https://www.linkedin.com/in/marin-dulja/', icon: LinkedInIcon },
-  { label: 'GitHub', href: 'https://github.com/duljamarin', icon: GitHubIcon },
-  { label: 'Instagram', href: 'https://www.instagram.com/marindulja/', icon: InstagramIcon },
+  { label: 'LinkedIn', href: profiles.linkedin, icon: LinkedInIcon },
+  { label: 'GitHub', href: profiles.github, icon: GitHubIcon },
+  { label: 'Instagram', href: profiles.instagram, icon: InstagramIcon },
   { label: contact.whatsapp.label, href: contact.whatsapp.href, icon: WhatsAppIcon },
 ];
 
-const WORDMARK = 'Marin Dulja';
+const WORDMARK = PERSON.name;
+const [FIRST_NAME, ...LAST_NAME] = PERSON.name.split(' ');
+/** Build year, so the server render and the browser always print the same year. */
+const YEAR = __BUILD_DATE__.slice(0, 4);
 const LETTER_STAGGER = 0.045; // s
 
 /** Big outlined name; letters rise in one after another the first time it shows. */
 const Wordmark: React.FC<{ show: boolean }> = ({ show }) => {
-  const reduceMotion = useReducedMotion();
+  const reduceMotion = useHydratedReducedMotion();
   return (
     <p className="footer-wordmark" aria-hidden="true">
       {WORDMARK.split('').map((ch, i) =>
@@ -78,13 +86,9 @@ const Wordmark: React.FC<{ show: boolean }> = ({ show }) => {
   );
 };
 
-const reveal = (order: number, show: boolean) => ({
-  initial: { opacity: 0, y: 20 },
-  animate: show ? { opacity: 1, y: 0 } : undefined,
-  transition: { duration: 0.6, delay: order * 0.08, ease: EASE_OUT },
-});
-
 const Footer: React.FC = () => {
+  const { lang } = usePage();
+  const labels = ui[lang];
   const ref = useRef<HTMLElement>(null);
   // Fires once the footer starts to show; it sits at the end of the page, so
   // it must not wait for a scroll position the page may never reach.
@@ -97,26 +101,26 @@ const Footer: React.FC = () => {
 
       <div className="footer-inner">
         <div className="footer-top">
-          <motion.div className="footer-brand" {...reveal(0, shown)}>
-            <a href="#hero" className="footer-logo">
-              Marin <span>Dulja</span>
+          <Reveal className="footer-brand" duration={0.6}>
+            <a href={pathOf('home')} className="footer-logo">
+              {FIRST_NAME} <span>{LAST_NAME.join(' ')}</span>
             </a>
-            <p className="footer-tagline">Full-stack engineer · Java, Spring Boot, React</p>
-          </motion.div>
+            <p className="footer-tagline">{labels.footerTagline}</p>
+          </Reveal>
 
-          <motion.nav className="footer-nav" aria-label="Footer" {...reveal(1, shown)}>
-            <p className="card-label">Explore</p>
+          <Reveal as="nav" className="footer-nav" aria-label="Footer" duration={0.6} delay={0.08}>
+            <p className="card-label">{labels.footerExplore}</p>
             <ul>
-              {sections.map((s) => (
-                <li key={s.href}>
-                  <a href={s.href} className="footer-nav-link">{s.label}</a>
+              {navItems(lang).map((item) => (
+                <li key={item.href}>
+                  <a href={item.href} className="footer-nav-link">{item.label}</a>
                 </li>
               ))}
             </ul>
-          </motion.nav>
+          </Reveal>
 
-          <motion.div className="footer-connect" {...reveal(2, shown)}>
-            <p className="card-label">Connect</p>
+          <Reveal className="footer-connect" duration={0.6} delay={0.16}>
+            <p className="card-label">{labels.footerConnect}</p>
             <div className="footer-socials">
               {socials.map(({ label, href, icon: Icon }) => (
                 <a
@@ -133,20 +137,20 @@ const Footer: React.FC = () => {
               ))}
             </div>
             <CopyEmailButton className="footer-copy-email" />
-          </motion.div>
+          </Reveal>
         </div>
 
         <Wordmark show={shown} />
 
         <div className="footer-bottom">
           <p className="footer-copy">
-            <span>&copy; {new Date().getFullYear()}</span>
-            <span className="footer-copy-name">Marin Dulja</span>
+            <span>&copy; {YEAR}</span>
+            <span className="footer-copy-name">{PERSON.name}</span>
             <span className="footer-copy-separator" aria-hidden="true">&middot;</span>
-            <span>Built with React &amp; TypeScript</span>
+            <span>{labels.footerBuiltWith}</span>
           </p>
-          <a href="#hero" className="footer-back-to-top">
-            Back to top
+          <a href="#top" className="footer-back-to-top">
+            {labels.backToTop}
             <ArrowUpIcon />
           </a>
         </div>

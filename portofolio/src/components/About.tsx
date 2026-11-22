@@ -1,17 +1,20 @@
 import React, { useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { roles } from '../data/experience';
-import { DUR_REVEAL, EASE_OUT, REVEAL_STAGGER, initCounters } from '../animations';
+import { companyName, experienceYearsLabel, foreignCountriesText, roles } from '../data/experience';
+import { REVEAL_STAGGER, initCounters } from '../animations';
+import { PERSON } from '../seo/site';
+import { Reveal } from './fx/Reveal';
 import { LockIn, SparkBurst } from './fx/LockIn';
 import { SplitReveal } from './fx/SplitReveal';
 
 const previously = roles
-  .map((r) => r.company.split(' · ')[0])
+  .map(companyName)
   .filter((company) => company !== 'Independent');
+
+const years = experienceYearsLabel();
 
 /** Values count up once on enter (initCounters reads data-count). */
 const stats = [
-  { value: '4.5+', label: 'years of experience' },
+  { value: years, label: 'years of experience' },
   { value: '15+', label: 'projects shipped' },
   { value: '240+', label: 'microservices in the banking platform I worked on', highlight: true },
 ];
@@ -35,12 +38,7 @@ const principles = [
   },
 ];
 
-const reveal = (order: number) => ({
-  initial: { opacity: 0, y: 20 },
-  whileInView: { opacity: 1, y: 0 },
-  viewport: { once: true, margin: '-40px' },
-  transition: { duration: DUR_REVEAL, delay: order * REVEAL_STAGGER, ease: EASE_OUT },
-});
+const reveal = (order: number) => ({ delay: order * REVEAL_STAGGER, margin: '-40px' });
 
 const About: React.FC = () => {
   // Stat tiles count up once on enter (data-count).
@@ -50,20 +48,22 @@ const About: React.FC = () => {
     <section id="about" className="about-section">
       <div className="about-container">
         <div className="about-text-content">
-          <motion.header className="section-header" {...reveal(0)}>
+          <Reveal as="header" className="section-header" {...reveal(0)}>
             <p className="section-label">About</p>
             <SplitReveal className="section-title" text="I started writing Java in college and never stopped." />
-          </motion.header>
+          </Reveal>
 
-          <motion.p {...reveal(1)}>
-            With 4.5+ years of work experience, I have shipped banking platforms, built trading
-            systems, improved a web crawler, developed microservices, and designed, built and
-            operated a subscription SaaS solo, from system design through billing to production.
-          </motion.p>
-          <motion.p {...reveal(2)}>
+          <Reveal as="p" {...reveal(1)}>
+            With {years} years of work experience as a software developer, I have shipped banking
+            platforms, built trading systems, improved a web crawler, developed microservices, and
+            designed, built and operated a subscription SaaS solo, from system design through billing
+            to production.
+          </Reveal>
+          <Reveal as="p" {...reveal(2)}>
             My core stack is Java, Kotlin and Spring Boot on the backend, React and Supabase on the
-            frontend and data layer.
-          </motion.p>
+            frontend and data layer. I work from {PERSON.city}, {PERSON.countryName}, and have worked
+            remotely for companies in {foreignCountriesText(PERSON.countryName, 'en')}.
+          </Reveal>
 
           <div className="stats-grid">
             {stats.map((s, i) => (
@@ -80,14 +80,14 @@ const About: React.FC = () => {
             ))}
           </div>
 
-          <motion.p className="about-previously" {...reveal(6)}>
+          <Reveal as="p" className="about-previously" {...reveal(6)}>
             Previously: {previously.join(' · ')}
-          </motion.p>
+          </Reveal>
         </div>
 
         <aside className="principles-card">
-          <motion.p className="section-label" {...reveal(0)}>How I work</motion.p>
-          <motion.h3 className="principles-card-title" {...reveal(1)}>Engineering principles</motion.h3>
+          <Reveal as="p" className="section-label" {...reveal(0)}>How I work</Reveal>
+          <Reveal as="h3" className="principles-card-title" {...reveal(1)}>Engineering principles</Reveal>
           <div className="principles-list">
             {principles.map((p, idx) => (
               <LockIn className="principles-list-item" key={p.title} index={idx} intensity={0.4}>

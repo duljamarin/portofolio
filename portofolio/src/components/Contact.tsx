@@ -1,9 +1,9 @@
 import React from 'react';
-import { motion } from 'framer-motion';
 import { FaWhatsapp } from 'react-icons/fa';
 import { contact, emailHref } from '../data/contact';
-import { DUR_REVEAL, EASE_OUT, REVEAL_STAGGER } from '../animations';
+import { REVEAL_STAGGER } from '../animations';
 import CopyEmailButton from './CopyEmailButton';
+import { Reveal } from './fx/Reveal';
 import { SplitReveal } from './fx/SplitReveal';
 
 const ArrowIcon = () => (
@@ -13,12 +13,7 @@ const ArrowIcon = () => (
   </svg>
 );
 
-const reveal = (order: number) => ({
-  initial: { opacity: 0, y: 20 },
-  whileInView: { opacity: 1, y: 0 },
-  viewport: { once: true, margin: '-50px' },
-  transition: { duration: DUR_REVEAL, delay: order * REVEAL_STAGGER, ease: EASE_OUT },
-});
+const reveal = (order: number) => ({ delay: order * REVEAL_STAGGER });
 
 const Contact: React.FC = () => {
   if (!contact.statement) {
@@ -30,7 +25,7 @@ const Contact: React.FC = () => {
     <section id="contact" className="contact-section">
       <div className="contact-glow" aria-hidden="true" />
       <div className="contact-inner">
-        <motion.p className="section-label" {...reveal(0)}>{contact.label}</motion.p>
+        <Reveal as="p" className="section-label" {...reveal(0)}>{contact.label}</Reveal>
         <SplitReveal
           className="contact-heading"
           stagger={0.08}
@@ -39,9 +34,9 @@ const Contact: React.FC = () => {
             { text: contact.headingAccent, className: 'contact-heading-accent' },
           ]}
         />
-        <motion.p className="contact-statement" {...reveal(2)}>{contact.statement}</motion.p>
+        <Reveal as="p" className="contact-statement" {...reveal(2)}>{contact.statement}</Reveal>
 
-        <motion.div className="contact-actions" {...reveal(3)}>
+        <Reveal className="contact-actions" {...reveal(3)}>
           <a href={emailHref} target="_blank" rel="noopener noreferrer" className="btn-primary contact-cta fx-pulse">
             {contact.ctaLabel}
             <ArrowIcon />
@@ -56,7 +51,7 @@ const Contact: React.FC = () => {
             {contact.whatsapp.label}
           </a>
           <CopyEmailButton className="contact-copy" />
-        </motion.div>
+        </Reveal>
       </div>
     </section>
   );

@@ -1,6 +1,8 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { testimonials } from '../data/testimonials';
 import { LockIn, SparkBurst } from './fx/LockIn';
+import { Reveal } from './fx/Reveal';
 import { SplitReveal } from './fx/SplitReveal';
 
 const StarIcon = () => (
@@ -8,36 +10,6 @@ const StarIcon = () => (
     <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
   </svg>
 );
-
-const testimonials = [
-  {
-    name: 'Jonas Figu',
-    role: 'Software Developer',
-    date: 'June 28, 2025',
-    highlight: 'highly recommend him for any team looking for both technical excellence and strong mentorship',
-    text: `I had the privilege of working alongside Marin Dulja at Candidatis, where he worked as a Java Developer and my mentor. From day one, Marin stood out not only for his deep technical expertise in Java and backend systems, but also for his patience, clarity, and dedication to helping others grow.
-
-As a mentor, Marin was incredibly generous with his time and knowledge. He had a unique ability to break down complex concepts into manageable, understandable pieces, which made a huge difference in my development as a programmer. His code reviews were always insightful, focused not just on pointing out issues, but on teaching better practices.
-
-Beyond his mentorship, Marin consistently brought quality and professionalism to the team. He tackled difficult technical challenges with confidence and precision, always striving for clean, maintainable solutions. His approach to problem-solving, especially under pressure, set a great example for the rest of us.
-
-Anyone would be lucky to have Marin on their team. I'm grateful to have learned from him and highly recommend him for any team looking for both technical excellence and strong mentorship.`,
-  },
-  {
-    name: 'Abbass Faytaroony',
-    role: 'Senior Software Engineer (Java | Kotlin) @ Genesys',
-    date: 'April 10, 2025',
-    highlight: 'the kind of developer who lifts a team technically and culturally',
-    text: `I was fortunate enough to mentor Marin when working for Noema Consulting, where we collaborated on the backend development. Marin grasped Kotlin really fast and was making meaningful contributions within a very short time. He also became Azure Developer Associate certified soon after joining, which reflects his determination and quick learning abilities.
-
-What stood out most was Marin's positive attitude and professionalism. He was always polite, receptive to feedback, and genuinely curious. Very soon, he learned the codebase and improved/extended it. Marin is the kind of developer who lifts a team technically and culturally, and I'd gladly work with him again.`,
-  },
-];
-
-const fadeUp = {
-  hidden: { opacity: 0, y: 28 },
-  visible: { opacity: 1, y: 0 },
-};
 
 /** Wraps the highlight phrase in <mark>; its gold underline draws in on lock. */
 const withHighlight = (paragraph: string, phrase: string) => {
@@ -55,20 +27,13 @@ const withHighlight = (paragraph: string, phrase: string) => {
 const TestimonialsSection: React.FC = () => {
   return (
     <section id="testimonials" className="testimonials-section">
-      <motion.div
-        className="section-header"
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, margin: '-50px' }}
-        variants={fadeUp}
-        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-      >
+      <Reveal className="section-header" y={28}>
         <SplitReveal
           className="section-title"
           text={[{ text: 'Words of ' }, { text: 'Appreciation', className: 'accent' }]}
         />
         <p className="section-subtitle">Reflections from peers and mentors I've worked with.</p>
-      </motion.div>
+      </Reveal>
 
       <div className="testimonials-grid">
         {testimonials.map((t, idx) => (

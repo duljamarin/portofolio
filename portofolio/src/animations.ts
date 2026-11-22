@@ -155,11 +155,11 @@ export function scrollToTarget(
 }
 
 /* ============================================
-   DEEP LINKS (marindulja.com/#mentoring)
-   The sections after the hero arrive in a lazy chunk, so the browser's own
-   jump to the hash finds nothing. This waits for the target, jumps to it, and
-   keeps it aligned while images and pinned sections settle the page height.
-   Any user input ends the alignment so it never fights the visitor.
+   DEEP LINKS (/#mentoring)
+   The page is prerendered, so the browser already jumps to the hash before any
+   JS runs. This re-aligns once Lenis exists, and keeps the target aligned while
+   images and pinned sections settle the page height. Any user input ends the
+   alignment so it never fights the visitor.
    ============================================ */
 const HASH_WAIT_MS = 5000;   // give up if the target never appears
 const HASH_SETTLE_MS = 1500; // stop aligning after this long without a layout change
@@ -167,10 +167,9 @@ const USER_INPUT_EVENTS = ['wheel', 'touchstart', 'pointerdown', 'keydown'] as c
 
 export function scrollToInitialHash(): () => void {
   const id = decodeURIComponent(window.location.hash.slice(1));
-  if (!id) {
-    window.scrollTo(0, 0);
-    return () => {};
-  }
+  // No hash: leave the scroll position alone. The content is already in the
+  // HTML, so the visitor may have started scrolling before hydration.
+  if (!id) return () => {};
 
   let target: HTMLElement | null = null;
   let settleTimer = 0;
@@ -220,19 +219,21 @@ export function scrollToInitialHash(): () => void {
 }
 
 export function initSmoothScroll(): () => void {
-  // In-page anchors go through scrollToTarget in both modes, so hash links
-  // behave the same with Lenis on (smooth) and off (reduced motion).
+  // In-page anchors ("#about", and "/#about" while on the home page) go through
+  // scrollToTarget in both modes, so hash links behave the same with Lenis on
+  // (smooth) and off (reduced motion). Links to other pages load normally.
   const onClick = (e: MouseEvent) => {
     if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey) return;
-    const link = (e.target as HTMLElement).closest<HTMLAnchorElement>('a[href^="#"]');
-    if (!link) return;
-    const hash = link.getAttribute('href');
-    if (!hash || hash === '#') return;
-    const el = document.querySelector<HTMLElement>(hash);
+    const link = (e.target as HTMLElement).closest<HTMLAnchorElement>('a[href*="#"]');
+    if (!link || link.target === '_blank') return;
+    const url = new URL(link.href, window.location.href);
+    const samePage = url.origin === window.location.origin && url.pathname === window.location.pathname;
+    if (!samePage || url.hash.length < 2) return;
+    const el = document.getElementById(decodeURIComponent(url.hash.slice(1)));
     if (!el) return;
     e.preventDefault();
     scrollToTarget(el);
-    history.replaceState(null, '', hash);
+    history.replaceState(null, '', url.hash);
   };
   document.addEventListener('click', onClick);
 
