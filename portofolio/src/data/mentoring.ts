@@ -265,7 +265,7 @@ export const mentoringCopy: Record<Lang, MentoringCopy> = {
       whoHeading: 'Për kë është',
       who: [
         'Studentë që duan të jenë gati për intervistën e parë teknike për një punë me Java.',
-        'Zhvillues junior që përgatiten për një pozicion mid-level dhe duan një vlerësim të qartë, me shkrim, të pikave të forta dhe të mangësive.',
+        'Zhvillues junior që përgatiten për tregun e punës si dhe zhvilues që përgatiten një pozicion mid-level dhe duan një vlerësim të qartë, me shkrim, të pikave të forta dhe të mangësive.',
         'Studentë nga Shqipëria dhe Kosova: seancat janë 100% online, me çmime në lekë dhe në euro.',
       ],
       offersHeading: 'Dy mënyra për të punuar bashkë',
