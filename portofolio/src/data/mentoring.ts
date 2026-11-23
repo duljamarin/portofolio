@@ -168,7 +168,7 @@ export const mentoringCopy: Record<Lang, MentoringCopy> = {
       whoHeading: 'Who it is for',
       who: [
         'Students getting ready for their first technical interview for a Java role.',
-        'Junior developers preparing for a mid-level role who want a clear written read on their strengths and gaps.',
+        'Junior developers entering the job market or aiming for a mid-level role who want a clear written read on their strengths and gaps.',
         'Students in Albania and Kosovo: sessions are 100% online and priced in both lekë and EUR.',
       ],
       offersHeading: 'Two ways to work together',
